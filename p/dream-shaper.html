@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dream Shaper — AI 음성 커버 생성 서비스</title>
+<meta name="description" content="백엔드 인력 이탈로 남은 2주 안에 AI 서버를 직접 구축. 화자 5명 모델 학습 약 194시간, 음정 차이 중앙값 +0.0 cent 검증.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../index.html">← Portfolio</a>
+    <nav>
+      <a href="#what">무엇을</a><a href="#data">데이터</a><a href="#train">학습</a>
+      <a href="#verify">검증</a><a href="#transfer">파일 전송</a><a href="#limits">한계</a>
+      <a href="https://github.com/chlgks2/DreamShaper" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">04 · 2023.09 · 1개월 · 6인</div>
+    <h1>Dream Shaper<br><span style="font-size:.62em;color:var(--ink-2)">AI 음성 커버 생성 서비스</span></h1>
+    <p class="lead">
+      원하는 아티스트의 목소리로 노래를 커버하고, DALL·E 2로 앨범 커버까지 만들어 주는 서비스입니다.
+      <strong>백엔드 인력 이탈로 남은 2주 안에 AI 서버를 직접 구축</strong>해야 했던 프로젝트입니다.
+    </p>
+    <div class="links">
+      <a class="btn" href="https://github.com/chlgks2/DreamShaper" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>화자 5명</b><span>음성 모델 학습</span></div>
+      <div class="kpi"><b>약 194시간</b><span>총 학습 시간</span></div>
+      <div class="kpi"><b>2,527 클립</b><span>데이터 직접 정제</span></div>
+      <div class="kpi"><b>+0.0 cent</b><span>음정 차이 중앙값<br>(0key 설정과 일치)</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="what">
+  <div class="wrap narrow">
+    <h2>무엇을 만들었나</h2>
+    <p>
+      사용자가 곡을 올리고 아티스트를 고르면, 그 목소리로 변환된 커버를 돌려줍니다.
+      여기에 간단한 스케치를 그리면 <strong>DALL·E 2가 앨범 커버</strong>를 만들어 주는 기능을 붙였습니다.
+    </p>
+    <pre><code>가입/로그인 → 아티스트 선택 → 곡 업로드 → /convert  (음성 변환)
+                                → 커버 스케치 → /draw     (앨범 커버)
+                                → 결과 화면 (음원 + 커버)</code></pre>
+
+    <h3>담당 범위 — "백엔드 전담"이 아니라 "AI 서버 구축"입니다</h3>
+    <figure>
+      <img src="../assets/img/ds-arch.png" alt="서비스 아키텍처">
+      <figcaption>React 프론트엔드가 <strong>서로 다른 두 백엔드</strong>를 호출하는 구조였습니다</figcaption>
+    </figure>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:230px">구성요소</th><th>담당</th></tr>
+        <tr><td><strong>AI 서버</strong> — 음성 변환 · 앨범 커버 · S3 연동</td><td><strong>본인</strong></td></tr>
+        <tr><td>인증 서버 — 회원가입 · 로그인</td><td>팀원</td></tr>
+        <tr><td>React 프론트엔드 · Docker Compose · EC2 배포</td><td>팀원</td></tr>
+      </table>
+    </div>
+    <div class="note">
+      <strong>「백엔드를 전담했다」는 정확하지 않습니다.</strong> 인증 서버는 팀원이 만들었습니다.
+      <strong>「AI 서버를 직접 구축했다」</strong> 가 정확하고, 담당 전문성도 더 잘 드러납니다.
+    </div>
+
+    <h4>왜 FastAPI였나</h4>
+    <p>원래 백엔드 담당이 아니었고, 백엔드 인력 이탈로 급하게 서버를 만들어야 하는 상황이었습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:140px">이유</th><th></th></tr>
+        <tr><td><strong>Python 생태계</strong></td><td>추론 코드가 이미 Python — 모델을 서버에 붙이는 비용이 가장 낮았습니다</td></tr>
+        <tr><td><strong>학습 곡선</strong></td><td>남은 일정이 2주 남짓이라 빠르게 익힐 수 있는 것이 중요했습니다</td></tr>
+        <tr><td><strong>자동 문서화</strong></td><td>프론트엔드와 API 스펙을 맞춰야 했는데 문서를 따로 쓸 시간이 없었습니다</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="wrap narrow">
+    <h2>데이터가 결과를 갈랐습니다</h2>
+    <figure>
+      <img src="../assets/img/ds-pipeline.png" alt="데이터 파이프라인">
+      <figcaption>음원 확보 → 반주·잡음 분리 → 정규화 → <strong>전량 청취 검수</strong> → 슬라이스 → 학습</figcaption>
+    </figure>
+    <div class="quote">
+      <strong>자동화하지 않은 유일한 구간이 「전량 청취 검수」입니다.</strong>
+      분리·정규화까지는 도구(UVR5 · Spleeter)가 해주지만,
+      <strong>"이 구간이 학습에 쓸 만한가"는 사람이 들어야 압니다.</strong>
+    </div>
+
+    <h3>화자별 데이터 규모</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th>화자</th><th>클립 수</th><th>학습 시간</th><th>도달 스텝</th></tr>
+        <tr><td>A</td><td>972</td><td>25.2h</td><td>974,000</td></tr>
+        <tr><td>B</td><td>488</td><td>—</td><td>656,000</td></tr>
+        <tr><td>C</td><td>460</td><td>34.9h</td><td>1,000,000</td></tr>
+        <tr><td>D</td><td>439</td><td>39.0h</td><td>1,000,000</td></tr>
+        <tr><td>E</td><td>168</td><td>—</td><td>668,000</td></tr>
+        <tr><td><strong>합계</strong></td><td><strong>2,527</strong></td><td><strong>약 194h</strong></td><td></td></tr>
+      </table>
+    </div>
+    <p>
+      <strong>클립 수 편차가 5.8배(168 ~ 972)입니다.</strong>
+      확보량이 적은 화자는 100만 step에 도달하지 못했습니다 —
+      <strong>결과를 바꾼 것은 모델이 아니라 데이터였습니다.</strong>
+    </p>
+    <p class="note">
+      화자 이름은 밝히지 않습니다. 실존 인물이고 학습 데이터가 크롤링이기 때문입니다.
+    </p>
+  </div>
+</section>
+
+<section id="train">
+  <div class="wrap narrow">
+    <h2>학습 설정</h2>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:170px">항목</th><th>값</th><th>비고</th></tr>
+        <tr><td>인코더</td><td><strong>HuBERT-Soft</strong></td><td>공개 사전학습</td></tr>
+        <tr><td>보코더</td><td><strong>NSF-HiFiGAN</strong></td><td>공개 사전학습</td></tr>
+        <tr><td>샘플레이트 / hop</td><td><strong>24kHz / 128</strong></td><td>기본 512 → 촘촘하게</td></tr>
+        <tr><td>Diffusion</td><td><code>timesteps</code> 1000 · WaveNet <strong>20층 × 256채널</strong></td><td>기본 384 → 축소</td></tr>
+        <tr><td>f0</td><td><strong>50 ~ 1100Hz</strong> · <code>parselmouth</code></td><td></td></tr>
+        <tr><td>학습률 / 배치</td><td><strong>4e-4 / 10</strong> · AMP</td><td></td></tr>
+        <tr><td>추론</td><td><strong>0key</strong> (키 이동 없음) · <code>pndm_speedup</code> <strong>20x</strong></td><td>diffusion 1000스텝을 20배 가속</td></tr>
+      </table>
+    </div>
+    <p>
+      <strong><code>hop_size</code> 를 낮춰 시간 해상도를 올리고, <code>residual_channels</code> 를 줄여 모델 폭을 낮춘 조합</strong>입니다.
+      같은 VRAM에서 가창의 음정 변화를 더 촘촘히 잡으려는 설정입니다.
+    </p>
+
+    <h3>학습 곡선에서 확인한 것</h3>
+    <figure>
+      <img src="../assets/img/ds-curve.png" alt="학습 곡선">
+      <figcaption>로그가 온전한 3개 모델의 <code>tr/mel</code> 을 구간별로 평균한 값</figcaption>
+    </figure>
+    <div class="tablewrap">
+      <table>
+        <tr><th>구간</th><th>평균 mel loss</th></tr>
+        <tr><td>0 ~ 2.5만 step</td><td>0.0450</td></tr>
+        <tr><td>2.5 ~ 5만</td><td>0.0258</td></tr>
+        <tr><td><strong>5 ~ 10만</strong></td><td><strong>0.0214</strong></td></tr>
+        <tr><td>10 ~ 20만</td><td>0.0207</td></tr>
+        <tr><td>70 ~ 100만</td><td>0.0199</td></tr>
+      </table>
+    </div>
+    <p>
+      <strong>5만 step 부근에서 사실상 평탄해집니다.</strong>
+      이후 95만 step(약 30시간)을 더 돌렸지만 손실은 4~10% 개선에 그쳤습니다.
+    </p>
+    <div class="note">
+      당시엔 지표를 보지 않고 최대한 오래 돌리는 게 낫다고 생각했습니다.
+      지금이라면 검증 손실을 보고 조기 종료를 걸었을 것입니다.<br>
+      다만 <strong>mel loss가 음질의 전부는 아닙니다.</strong> 지각 품질은 손실이 평탄해진 뒤에도 좋아질 수 있어,
+      "5만이면 충분했다"가 아니라 <strong>"손실 기준으로는 평탄했다"</strong> 까지만 말할 수 있습니다.
+    </div>
+
+    <h3>모델은 수정하지 않았습니다</h3>
+    <p>
+      원본 <code>diff-svc</code> 와 작업 폴더를 파일 단위로 비교한 결과,
+      바뀐 것은 <code>training/config.yaml</code> · <code>infer.py</code> · <code>inference.ipynb</code> 뿐이었습니다.
+    </p>
+    <div class="quote">
+      <strong>이 프로젝트의 기여는 데이터 확보·정제 · 학습 설정 · 학습 운영 · 결과 검증입니다.</strong>
+      아키텍처를 고친 프로젝트가 아닙니다.
+    </div>
+  </div>
+</section>
+
+<section id="verify">
+  <div class="wrap narrow">
+    <h2>결과 검증 — 무엇이 바뀌고 무엇이 유지됐는가</h2>
+    <figure>
+      <img src="../assets/img/ds-voice.png" alt="음색 변환 전후 비교">
+      <figcaption>원본 보컬과 변환 결과를 같은 구간에서 비교. 음정은 유지되고 <strong>배음 구조만 바뀌는 것</strong>이 확인됩니다</figcaption>
+    </figure>
+    <div class="tablewrap">
+      <table>
+        <tr><th>측정</th><th style="width:130px">값</th><th>의미</th></tr>
+        <tr><td>음정 차이 중앙값</td><td><strong>+0.0 cent</strong></td><td><code>0key</code> 설정(키를 옮기지 않음)과 정확히 일치</td></tr>
+        <tr><td>반음 이내 — 8초 구간</td><td>91.4%</td>
+            <td rowspan="2">구간과 곡 전체를 나눠 제시합니다. 전체 수치가 낮은 것은 무성 구간이 포함되기 때문입니다</td></tr>
+        <tr><td>반음 이내 — 곡 전체 116초</td><td>62.9%</td></tr>
+        <tr><td>에너지 포락선 상관</td><td>0.781</td><td>원곡의 강약 흐름이 유지됨</td></tr>
+      </table>
+    </div>
+
+    <h3>앨범 커버 — DALL·E 2</h3>
+    <figure>
+      <img src="../assets/img/ds-cover.png" alt="앨범 커버 생성">
+      <figcaption>사용자 스케치를 받아 DALL·E 2로 앨범 커버를 생성하고 S3에 저장</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="transfer">
+  <div class="wrap narrow">
+    <h2>파일 전송 — 구조를 바꾼 지점</h2>
+    <figure>
+      <img src="../assets/img/ds-transfer.png" alt="파일 전송 구조 전후">
+      <figcaption>서버 경유 → 클라이언트가 S3에 직접 업로드, 서버는 경로(key)만 받습니다</figcaption>
+    </figure>
+    <p>
+      음원 한 곡이 수십 MB인데 Flask 서버가 전 구간을 받아 들고 있어야 했습니다.
+      <strong>ffmpeg 청크 분할</strong>로 쪼개 보냈지만 조립·타임아웃 문제로 실패했습니다.
+    </p>
+    <pre><code>@app.post("/upload/")
+async def upload_image(file: UploadFile):
+    s3_key = f"uploads/{file.filename}"
+    s3.upload_fileobj(file.file, AWS_BUCKET_NAME, s3_key)
+    image_url = f"https://{AWS_BUCKET_NAME}.s3.amazonaws.com/{s3_key}"
+    return {"file_name": file.filename, "image_url": image_url}</code></pre>
+    <div class="quote">
+      <strong>핵심은 로직이 아니라 전제였습니다.</strong> 청크 분할을 계속 다듬는 대신 이렇게 물었습니다 —<br>
+      <em>"서버가 파일을 받아야 하는가?"</em> 아니오. 클라이언트가 S3에 직접 올리고, 서버는 경로만 안다.
+    </div>
+    <p>
+      다만 <strong>이 답이 항상 옳지는 않았습니다.</strong>
+      3년 뒤 Blind Dating에서는 <strong>반대로 백엔드를 경유</strong>하게 했습니다.
+      GPU 서버에 자격증명을 두지 않는 것이 서버 부하보다 중요했기 때문입니다.
+      <a href="../index.html#approach">같은 문제, 다른 답 →</a>
+    </p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>한계와 배운 점</h2>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:200px">한계</th><th>내용</th></tr>
+        <tr><td><strong>완성 서버 코드 미확보</strong></td>
+            <td><code>/convert</code>·<code>/draw</code> 를 하나로 묶은 완성본을 찾지 못했습니다.
+                구성요소 코드(S3 업로드 · DALL·E 생성 · 폐기된 서버 경유 버전)는 모두 남아 있지만,
+                <strong>엔드포인트 개수·<code>BackgroundTasks</code> 사용 여부 등 구현 세부는 주장하지 않습니다</strong></td></tr>
+        <tr><td><strong>가중치 미공개</strong></td>
+            <td>학습된 화자 모델은 <strong>실존 인물의 음색</strong>이라 배포하지 않습니다.
+                2022년 부정경쟁방지법 개정으로 음성도 보호 대상에 포함됩니다</td></tr>
+        <tr><td>조기 종료 미적용</td>
+            <td>손실이 평탄해진 뒤에도 95만 step을 더 돌렸습니다. 검증 손실 기반 조기 종료를 걸었어야 했습니다</td></tr>
+        <tr><td>AI 서버 로컬 실행</td>
+            <td>GPU가 필요해 EC2에 올리지 않았습니다. 프론트·인증 서버만 Docker Compose로 EC2 배포</td></tr>
+      </table>
+    </div>
+
+    <h3>배운 점</h3>
+    <h4>모델보다 데이터가 결과를 가릅니다</h4>
+    <p>
+      diff-svc 아키텍처는 손대지 않았고, 화자별 결과 차이는 전부 <strong>확보한 데이터의 양과 품질</strong>에서 나왔습니다.
+      클립 수가 5.8배 차이 나는 화자들의 결과가 그대로 그 차이를 반영했습니다.
+    </p>
+    <h4>담당 범위는 정확히 말해야 합니다</h4>
+    <p>
+      "백엔드를 전담했다"는 표현은 인증 서버를 만든 팀원의 몫을 가져오는 말이 됩니다.
+      <strong>"AI 서버를 직접 구축했다"</strong> 가 사실이고, 전문성도 그쪽이 더 잘 드러납니다.
+    </p>
+
+    <div class="prevnext">
+      <a class="btn" href="blind-dating.html">← 이전: Blind Dating</a>
+      <a class="btn" href="../index.html">전체 프로젝트</a>
+      <a class="btn" href="yolo-app.html">다음: 엄마 이게뭐야 →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Dream Shaper · 2023.09</span>
+    <nav>
+      <a href="../index.html">Portfolio</a>
+      <a href="https://github.com/chlgks2/DreamShaper" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

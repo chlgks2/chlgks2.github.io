@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PixG — AI 픽셀 스프라이트 시트 생성기</title>
+<meta name="description" content="프롬프트 한 번으로 게임에 바로 넣을 수 있는 스프라이트 시트를 생성. 메타버스 아카데미 최종 프로젝트 최우수상.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../index.html">← Portfolio</a>
+    <nav>
+      <a href="#what">무엇을</a><a href="#pipeline">파이프라인</a><a href="#post">후처리</a>
+      <a href="#verify">검증</a><a href="#limits">한계</a>
+      <a href="https://github.com/chlgks2/PixG" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">02 · 2023.09 ~ 11 · 6주 · 5인 <span class="badge">최우수상</span></div>
+    <h1>PixG<br><span style="font-size:.62em;color:var(--ink-2)">AI 픽셀 스프라이트 시트 생성기</span></h1>
+    <p class="lead">
+      프롬프트 한 번으로 게임에 바로 넣을 수 있는 스프라이트 시트를 자동 생성합니다.
+      기존 생성형 AI가 <strong>"픽셀 느낌의 이미지"까지만 만들고 멈추는 지점</strong>에서,
+      배경 제거와 균일 배치까지 자동화해 <strong>에셋으로 완성</strong>한 것이 차별점입니다.
+    </p>
+    <div class="links">
+      <a class="btn" href="https://github.com/chlgks2/PixG" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>최우수상</b><span>메타버스 아카데미 2기<br>최종 프로젝트</span></div>
+      <div class="kpi"><b>4 / 4</b><span>정의한 요구조건<br>전부 충족</span></div>
+      <div class="kpi"><b>ZEP 검증</b><span>실제 플랫폼에<br>아바타로 적용</span></div>
+      <div class="kpi"><b>64×64</b><span>프레임 규격 통일<br>8열 격자</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="what">
+  <div class="wrap narrow">
+    <h2>스프라이트 시트는 "이미지가 예쁘면 끝"이 아닙니다</h2>
+    <p>
+      스프라이트 시트는 캐릭터의 여러 동작 프레임을 격자로 모아둔 비트맵입니다.
+      슈퍼마리오·소닉부터 메타버스 플랫폼 ZEP의 아바타까지 2D 캐릭터가 움직이는 모든 곳에 쓰입니다.
+    </p>
+    <p>
+      게임 엔진이 <strong>일정 간격으로 잘라서</strong> 순서대로 보여주기 때문에,
+      한 칸이라도 크기나 위치가 어긋나면 동작이 튑니다.
+      그래서 <strong>"무엇이 충족돼야 실제로 쓸 수 있는가"를 요구조건 4개로 먼저 못박았습니다.</strong>
+    </p>
+
+    <div class="grid2">
+      <figure><img src="../assets/img/pixg-req.png" alt="요구조건 4개"><figcaption>정의한 요구조건 4개</figcaption></figure>
+      <figure><img src="../assets/img/pixg-compare.png" alt="경쟁 비교"><figcaption>DALL·E 3 · Pixelvibe는 2개 충족, PixG는 4개 전부</figcaption></figure>
+    </div>
+
+    <div class="quote">
+      <strong>"픽셀 이미지를 잘 만든다"는 목표로는 무엇을 해야 할지, 언제 끝났다고 할지 알 수 없습니다.</strong>
+      요구조건을 못박은 뒤에야 어떤 기술이 필요한지, 무엇이 부족한지,
+      경쟁 서비스와 무엇이 다른지가 모두 보였습니다.
+    </div>
+
+    <h3>담당 범위</h3>
+    <p>
+      5명(AI 개발자 2 · 데이터 사이언티스트 2 · 프론트엔드 1) 팀에서
+      <strong>Stable Diffusion 이미지 생성 파이프라인 · 배경 제거/화질 복원 후처리 · 후처리 자동화 스크립트</strong>를 담당했습니다.
+      발주처는 한국전파진흥협회입니다.
+    </p>
+
+    <figure style="max-width:480px;margin-left:auto;margin-right:auto">
+      <img src="../assets/img/pixg-service.png" alt="서비스 화면 — 생성 결과 갤러리">
+      <figcaption>서비스의 <strong>생성 결과 갤러리</strong> — 프롬프트와 결과 스프라이트 시트가 함께 보관됩니다<br>
+        <code>Red hair, cute girl</code> · <code>Knight holding sword</code> · <code>Yellow hair, running</code></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="pipeline">
+  <div class="wrap narrow">
+    <h2>생성 파이프라인</h2>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:130px">구간</th><th>설정</th></tr>
+        <tr><td>베이스</td><td>Stable Diffusion 1.5 + 픽셀아트 LoRA · CLIP skip <strong>-2</strong></td></tr>
+        <tr><td>동작 생성</td><td><strong>AnimateDiff</strong> <code>animatediffMotion_v15V2</code> ·
+            context_length 16 · steps 20 / cfg 8 · <code>dpmpp_2m_sde_gpu</code> + karras</td></tr>
+        <tr><td>자세 제어</td><td><strong>ControlNet 2종</strong> — OpenPose <strong>1.0</strong> + Depth <strong>0.2</strong></td></tr>
+        <tr><td>환경</td><td>개인 RTX 3060 6GB / 아카데미 RTX 4090 24GB</td></tr>
+      </table>
+    </div>
+    <p>
+      OpenPose를 1.0으로 강하게 걸어 <strong>동작을 확정</strong>하고,
+      Depth는 0.2로 약하게만 얹어 <strong>입체감만 보조</strong>하도록 역할을 나눴습니다.
+      Depth를 올리면 픽셀아트 특유의 납작한 화풍이 무너집니다.
+    </p>
+
+    <figure>
+      <img src="../assets/img/pixg-arch.png" alt="기술 융합 구조도">
+      <figcaption>생성 → 후처리 → 배치로 이어지는 전체 구조</figcaption>
+    </figure>
+
+    <h3>생성 결과</h3>
+    <div class="gifs">
+      <figure><img src="../assets/img/pixg-run.gif" alt="달리기"><figcaption>달리기</figcaption></figure>
+      <figure><img src="../assets/img/pixg-sword.gif" alt="검 휘두르기"><figcaption>검 휘두르기</figcaption></figure>
+      <figure><img src="../assets/img/pixg-jump.gif" alt="점프"><figcaption>점프</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="post">
+  <div class="wrap narrow">
+    <h2>후처리 — 여기가 이 프로젝트의 실제 작업입니다</h2>
+    <p>생성된 프레임을 <strong>게임 엔진이 바로 읽을 수 있는 에셋으로</strong> 바꾸는 구간입니다.</p>
+
+    <figure>
+      <img src="../assets/img/pixg-pipeline.png" alt="후처리 파이프라인">
+      <figcaption>실제 출력물로 합성한 그림입니다 — 생성 프레임 → 배경 제거 → 규격 통일 → 격자 배치</figcaption>
+    </figure>
+
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:130px">단계</th><th>내용</th></tr>
+        <tr><td><strong>배경 제거</strong></td>
+            <td><strong>InSPyReNet</strong> (<code>transparent_background</code>) — Salient Object Detection 기반.
+                RGBA 출력과 흰 배경 출력을 모두 뽑아 비교했습니다</td></tr>
+        <tr><td><strong>화질 복원</strong></td>
+            <td><strong>ESRGAN 계열 1x 복원</strong> — <code>1x-DeJpeg</code> · <code>1x_PixelSharpen</code><br>
+                <em>해상도를 올리는 업스케일이 아니라</em>, 같은 크기에서 압축 아티팩트만 제거하는 용도입니다</td></tr>
+        <tr><td><strong>규격 통일</strong></td>
+            <td>전 프레임 <strong>64×64</strong> 리사이즈 · 투명 패딩</td></tr>
+        <tr><td><strong>격자 배치</strong></td>
+            <td><strong>8열</strong> 단위로 <code>hstack</code> 후 <code>vstack</code> —
+                게임 엔진이 일정 간격으로 자를 수 있는 형태</td></tr>
+      </table>
+    </div>
+
+    <div class="grid2">
+      <figure><img src="../assets/img/pixg-sheet-sword.png" alt="스프라이트 시트">
+        <figcaption>검 휘두르기 — 프레임당 64×64, 8열 격자</figcaption></figure>
+      <figure><img src="../assets/img/pixg-result.png" alt="스프라이트 시트">
+        <figcaption>달리기 — 배경 투명 처리 완료</figcaption></figure>
+    </div>
+
+    <div class="quote">
+      <strong>"픽셀 느낌의 이미지"와 "게임에 넣을 수 있는 에셋" 사이에 이 구간이 있습니다.</strong>
+      경쟁 서비스가 요구조건 2개에서 멈춘 이유도 여기였습니다.
+    </div>
+  </div>
+</section>
+
+<section id="verify">
+  <div class="wrap narrow">
+    <h2>검증 — 실제로 쓰이는지 확인했습니다</h2>
+    <figure>
+      <img src="../assets/img/pixg-zep-demo.gif" alt="ZEP 시연 영상">
+      <figcaption>생성한 스프라이트 시트를 <strong>ZEP 아바타로 올려 직접 움직여 본 시연</strong> — 방향 전환·걷기 애니메이션이 그대로 동작합니다</figcaption>
+    </figure>
+
+    <figure><img src="../assets/img/pixg-consist.png" alt="일관성 검증">
+      <figcaption>동일 프롬프트·시드 조건에서의 프레임 간 캐릭터 일관성</figcaption></figure>
+    <p>
+      <strong>"이미지가 잘 나왔다"는 자체 평가로 끝내지 않고 실제 사용처에 넣어봤다는 점</strong>이
+      이 프로젝트에서 가장 중요한 검증이었습니다.
+    </p>
+    <p>
+      요구조건 4개를 정의한 이유도 결국 여기에 있었습니다 — <strong>하나라도 빠지면 ZEP에 올라가지 않습니다.</strong>
+      배경이 남으면 아바타 뒤에 사각형이 보이고, 격자 간격이 흔들리면 걷는 동작이 튑니다.
+    </p>
+    <p class="note">
+      데이터 사이언스 파트에서는 별도로 <strong>현직자 인터뷰</strong>를 통해 시장성을 검증했습니다.
+    </p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>한계와 배운 점</h2>
+
+    <div class="note">
+      <strong>일관성은 정량 지표로 측정하지 않았습니다.</strong>
+      "프레임 간 캐릭터가 얼마나 같은가"를 수치로 남기지 않았고, 당시 측정 기록도 없습니다.
+      <strong>「측정하지 않았다」</strong> 로 그대로 기록해 두었습니다.
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">한계</th><th>내용</th></tr>
+        <tr><td><strong>일관성 정량 근거 부재</strong></td>
+            <td>육안 비교로만 판단했습니다. 이 아쉬움이 Emour에서 <strong>평가 체계를 먼저 설계하는</strong> 방식으로 이어졌습니다</td></tr>
+        <tr><td>GPU 메모리 수치 미기록</td>
+            <td>RTX 3060 6GB에서 작업한 것은 확실하지만, OOM 임계값이나 최적화 전후 수치는 로그에 없습니다</td></tr>
+        <tr><td>Flask 연동 코드 소실</td>
+            <td>서버를 붙인 경험은 있으나 코드가 남아 있지 않아, <strong>엔드포인트·설계 세부는 주장하지 않습니다</strong></td></tr>
+        <tr><td>스프라이트 시트 첫 행</td>
+            <td>격자 합성 스크립트가 열 방향만 잘라내고 시드 행을 남겨, 결과물 맨 윗줄이 비어 보입니다</td></tr>
+      </table>
+    </div>
+
+    <h3>배운 점</h3>
+    <h4>1. 문제를 검증 가능한 조건으로 쪼개는 것이 먼저입니다</h4>
+    <p>
+      요구조건 4개를 못박은 뒤에야 <strong>어떤 기술이 필요한지, 무엇이 부족한지, 경쟁 서비스와 무엇이 다른지</strong>가 모두 보였습니다.
+      이 방식은 이후 Blind Dating에서 push/pull 비교표를 만들어 판단하는 방식으로 이어졌습니다.
+    </p>
+    <h4>2. 생성 모델은 마지막 구간이 제품을 결정합니다</h4>
+    <p>
+      이미지 생성 자체는 공개 모델 조합으로 가능했습니다.
+      실제로 시간을 쓴 곳은 <strong>배경 제거·규격 통일·격자 배치</strong>였고, 그게 없으면 에셋이 되지 않습니다.
+    </p>
+    <h4>3. 기술명은 정확해야 합니다</h4>
+    <p>
+      이 프로젝트를 다시 정리하면서 <strong>당시 문서의 기술명 3건이 실제 코드와 달랐다</strong>는 것을 발견했습니다
+      (U2-Net → 실제 InSPyReNet, ESRGAN 업스케일링 → 실제 1x 복원, crop 70% → 실제 64×64 격자).
+      코드를 다시 읽어 전부 정정했습니다.
+    </p>
+
+    <div class="prevnext">
+      <a class="btn" href="emour.html">← 이전: Emour</a>
+      <a class="btn" href="../index.html">전체 프로젝트</a>
+      <a class="btn" href="blind-dating.html">다음: Blind Dating →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>PixG · 2023.09 ~ 11 · 최우수상</span>
+    <nav>
+      <a href="../index.html">Portfolio</a>
+      <a href="https://github.com/chlgks2/PixG" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

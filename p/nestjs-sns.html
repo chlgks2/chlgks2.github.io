@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SNS Clone — NestJS 백엔드</title>
+<meta name="description" content="Flask로 구조가 무너지는 경험을 하고, 프레임워크가 구조를 강제하는 쪽은 어떻게 다른지 확인한 개인 프로젝트.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../index.html">← Portfolio</a>
+    <nav>
+      <a href="#why">왜 만들었나</a><a href="#what">무엇을</a><a href="#learn">배운 점</a>
+      <a href="https://github.com/chlgks2/nestjs_sns" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">06 · 2024.01 ~ 02 · 1개월 · 개인 프로젝트</div>
+    <h1>SNS Clone<br><span style="font-size:.62em;color:var(--ink-2)">NestJS 백엔드</span></h1>
+    <p class="lead">
+      <strong>PixG에서 Flask로 서버를 붙이며 구조가 무너지는 경험</strong>을 하고,
+      프레임워크가 구조를 강제하는 쪽은 어떻게 다른지 확인하기 위해 시작한 개인 프로젝트입니다.
+      설계부터 구현까지 <strong>100% 단독</strong>으로 진행했습니다.
+    </p>
+    <div class="links">
+      <a class="btn" href="https://github.com/chlgks2/nestjs_sns" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>100%</b><span>설계·구현<br>단독 진행</span></div>
+      <div class="kpi"><b>NestJS</b><span>DI · 모듈 구조<br>강제되는 프레임워크</span></div>
+      <div class="kpi"><b>TypeScript</b><span>타입 안정성</span></div>
+      <div class="kpi"><b>TypeORM</b><span>엔티티 관계 설계</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="why">
+  <div class="wrap narrow">
+    <h2>왜 만들었나</h2>
+    <p>
+      <a href="pixg.html">PixG</a>에서 Flask로 이미지 생성 서버를 붙였을 때,
+      라우트와 파일이 늘어날수록 <strong>"어디에 무엇을 둬야 하는가"에 대한 기준이 없어 구조가 흐트러지는</strong> 경험을 했습니다.
+      동작은 하는데 다음에 손댈 때 어디를 봐야 할지 모르는 상태가 됐습니다.
+    </p>
+    <div class="quote">
+      Flask는 최소한만 제공하고 구조를 개발자에게 맡깁니다.
+      <strong>그 자유가 왜 부담이 되는지 겪은 뒤</strong>라,
+      프레임워크가 구조를 강제하는 쪽은 어떻게 다른지 직접 확인하고 싶었습니다.
+    </div>
+    <p>
+      그래서 <strong>모듈 구조와 의존성 주입을 처음부터 강제하는 NestJS</strong>를 골랐고,
+      타입 안정성까지 얻기 위해 TypeScript로 진행했습니다.
+    </p>
+  </div>
+</section>
+
+<section id="what">
+  <div class="wrap narrow">
+    <h2>무엇을 만들었나</h2>
+    <p>
+      유저 · 게시글 · 댓글로 구성된 SNS 백엔드입니다.
+      기능 자체는 평범한 CRUD이지만, <strong>목적이 기능이 아니라 구조를 익히는 것</strong>이었습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:170px">구간</th><th>내용</th></tr>
+        <tr><td><strong>ERD 설계</strong></td><td>유저 · 게시글 · 댓글의 관계 정의, TypeORM 엔티티로 구현</td></tr>
+        <tr><td><strong>RESTful API</strong></td><td>리소스 중심 URL 설계 · 계층 분리(Controller / Service / Repository)</td></tr>
+        <tr><td><strong>JWT 인증</strong></td><td>토큰 발급·검증, Guard로 인가 분리</td></tr>
+        <tr><td><strong>DI 구조</strong></td><td>모듈 단위로 의존성을 선언하고 주입받는 방식 — Flask에서 직접 관리하던 것을 프레임워크에 위임</td></tr>
+      </table>
+    </div>
+
+    <h3>Flask와 무엇이 달랐나</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:180px"></th><th>Flask (PixG)</th><th>NestJS (이 프로젝트)</th></tr>
+        <tr><td>구조</td><td>개발자가 정함 — 기준이 없으면 흐트러짐</td><td><strong>모듈 · 컨트롤러 · 서비스로 강제</strong></td></tr>
+        <tr><td>의존성</td><td>전역 변수·직접 import로 관리</td><td><strong>DI 컨테이너가 주입</strong> — 테스트·교체가 쉬움</td></tr>
+        <tr><td>타입</td><td>런타임에 발견</td><td><strong>컴파일 시점에 발견</strong></td></tr>
+        <tr><td>비용</td><td>시작이 빠름</td><td>초기 학습 곡선이 있음</td></tr>
+      </table>
+    </div>
+    <p class="note">
+      <strong>어느 쪽이 좋다는 이야기가 아닙니다.</strong>
+      Flask는 빠르게 붙일 때 유리하고, 구조가 필요한 시점이 오면 그 자유가 비용이 됩니다.
+      그 경계를 직접 겪어보려고 만든 프로젝트입니다.
+    </p>
+  </div>
+</section>
+
+<section id="learn">
+  <div class="wrap narrow">
+    <h2>배운 점</h2>
+    <div class="quote">
+      이 경험이 이후 <strong>Spring Boot(<a href="emour.html">Emour</a>)와 Django(<a href="blind-dating.html">Blind Dating</a>)처럼
+      구조를 강제하는 프레임워크에 빠르게 적응하는 바탕</strong>이 됐습니다.
+      계층 분리·DI·엔티티 매핑이라는 개념이 이미 손에 익은 상태에서 시작할 수 있었습니다.
+    </div>
+    <ul>
+      <li><strong>구조를 강제하는 프레임워크의 이점은 「다음에 손댈 때」 드러납니다.</strong>
+          만들 때는 번거롭지만, 어디를 봐야 할지가 정해져 있습니다</li>
+      <li><strong>문제를 겪은 뒤에 배우면 이해가 다릅니다.</strong>
+          DI를 문서로 먼저 읽었다면 왜 필요한지 몰랐을 겁니다. Flask에서 의존성이 얽히는 걸 겪고 나서 배웠습니다</li>
+      <li>개인 프로젝트라 <strong>모든 결정을 직접 해야 했습니다.</strong> 팀에서는 나눠 갖던 판단을 전부 혼자 내렸습니다</li>
+    </ul>
+
+    <div class="note">
+      <strong>규모가 작은 프로젝트입니다.</strong> 트래픽·성능 최적화 같은 경험은 여기서 얻지 않았고,
+      그런 내용을 주장하지 않습니다. 이 프로젝트의 목적은 <strong>구조 학습</strong> 하나였습니다.
+    </div>
+
+    <div class="prevnext">
+      <a class="btn" href="yolo-app.html">← 이전: 엄마 이게뭐야</a>
+      <a class="btn" href="../index.html">전체 프로젝트</a>
+      <a class="btn" href="lol-winrate.html">다음: LoL 승률 예측 →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>SNS Clone · 2024.01 ~ 02 · 개인 프로젝트</span>
+    <nav>
+      <a href="../index.html">Portfolio</a>
+      <a href="https://github.com/chlgks2/nestjs_sns" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio — Backend · AI Developer</title>
+<meta name="description" content="AI 모델 학습부터 백엔드 서비스 연동까지. 7개 프로젝트의 설계 판단과 실측값을 정리한 포트폴리오.">
+<meta property="og:title" content="Portfolio — Backend · AI Developer">
+<meta property="og:description" content="AI 모델 학습부터 백엔드 서비스 연동까지. 7개 프로젝트의 설계 판단과 실측값.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="index.html">Portfolio</a>
+    <nav>
+      <a href="#projects">프로젝트</a>
+      <a href="#approach">일하는 방식</a>
+      <a href="#learning">학습 이력</a>
+      <a href="#stack">기술 스택</a>
+      <a href="#contact">연락</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">BACKEND · AI DEVELOPER</div>
+    <h1>늘 새로운 것에<br><span class="hl">도전</span>하는 개발자</h1>
+    <p class="lead">
+      <strong>익숙한 방법보다, 새로운 방법을 먼저 시도합니다.</strong>
+      레퍼런스가 부족한 문제에서도 직접 방법을 찾고, 실패하면 접근을 바꿔 해결해 왔습니다.
+      픽셀 스프라이트 자동 생성부터 음성 변환 서비스까지 —
+      <strong>AI 모델 학습에서 백엔드 연동, 실제 서비스까지 직접 구현했습니다.</strong>
+    </p>
+    <div class="links">
+      <a class="btn primary" href="#projects">프로젝트 보기</a>
+      <a class="btn" href="https://github.com/chlgks2" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://huggingface.co/chlgks" target="_blank" rel="noopener">🤗 HuggingFace</a>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><b>8</b><span>프로젝트<br>팀 6 · 개인 2</span></div>
+      <div class="kpi"><b>291명</b><span>실사용자<br>베타 검증</span></div>
+      <div class="kpi"><b>3회</b><span>AI 공모 수상<br>최우수상 2</span></div>
+      <div class="kpi"><b>3</b><span>공개 모델<br>HuggingFace</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 프로젝트 ─────────────────────────────── -->
+<section id="projects">
+  <div class="wrap">
+    <h2>프로젝트</h2>
+    <p class="sec-sub">각 카드를 누르면 설계 판단·실측값·한계까지 정리한 상세 페이지로 이동합니다.</p>
+
+    <div class="cards">
+
+      <a class="card" href="p/emour.html">
+        <div class="thumb"><img src="assets/img/card-emour.png" alt="Emour" loading="lazy"></div>
+        <div class="body">
+          <div class="top"><span class="name">Emour</span><span class="meta">2026.07~08 · 6주 · 6인</span></div>
+          <div class="desc">커플 대화 감정 분석 메신저. 문장 단위 감정 분류를 맥락 인식 모델로 재설계했습니다.</div>
+          <div class="win">실사용 291명 · 감정분석 정확도 2.2배 · 응답지연 10초 → 1초</div>
+          <div class="tags"><span class="tag on">KcELECTRA</span> <span class="tag on">Spring Boot</span> <span class="tag">FastAPI</span> <span class="tag">Redis</span> <span class="tag">WebSocket</span></div>
+          <div class="more">자세히 보기 →</div>
+        </div>
+      </a>
+
+      <a class="card" href="p/pixg.html">
+        <div class="thumb"><img src="assets/img/card-pixg.gif" alt="PixG 생성 애니메이션" loading="lazy"></div>
+        <div class="body">
+          <div class="top"><span class="name">PixG</span><span class="badge">최우수상</span><span class="meta">2023.09~11 · 6주 · 5인</span></div>
+          <div class="desc">AI 픽셀 스프라이트 시트 생성기. "픽셀 느낌의 이미지"에서 멈추지 않고 게임 에셋으로 완성했습니다.</div>
+          <div class="win">메타버스 플랫폼 ZEP에 업로드해 아바타로 정상 동작 검증</div>
+          <div class="tags"><span class="tag on">Stable Diffusion</span> <span class="tag on">AnimateDiff</span> <span class="tag">ControlNet</span> <span class="tag">InSPyReNet</span></div>
+          <div class="more">자세히 보기 →</div>
+        </div>
+      </a>
+
+      <a class="card" href="p/blind-dating.html">
+        <div class="thumb"><img src="assets/img/card-blind.png" alt="Blind Dating" loading="lazy"></div>
+        <div class="body">
+          <div class="top"><span class="name">Blind Dating</span><span class="meta">2026.05~06 · 5주 · 2인</span></div>
+          <div class="desc">성향 기반 블라인드 소개팅. GPU 예산 제약이 아키텍처를 결정한 프로젝트입니다.</div>
+          <div class="win">호출 방향을 뒤집어(pull) 인바운드 포트 없이 동작하는 GPU 추론 서버 구축</div>
+          <div class="tags"><span class="tag on">Django</span> <span class="tag on">ComfyUI</span> <span class="tag">Channels</span> <span class="tag">SDXL</span> <span class="tag">S3</span></div>
+          <div class="more">자세히 보기 →</div>
+        </div>
+      </a>
+
+      <a class="card" href="p/dream-shaper.html">
+        <div class="thumb"><img src="assets/img/card-dream.png" alt="Dream Shaper" loading="lazy"></div>
+        <div class="body">
+          <div class="top"><span class="name">Dream Shaper</span><span class="meta">2023.09 · 1개월 · 6인</span></div>
+          <div class="desc">AI 음성 커버 생성 서비스. 백엔드 인력 이탈로 남은 2주 안에 AI 서버를 직접 구축했습니다.</div>
+          <div class="win">화자 5명 모델 학습 약 194시간 · 음정 차이 중앙값 +0.0 cent 검증</div>
+          <div class="tags"><span class="tag on">diff-svc</span> <span class="tag on">FastAPI</span> <span class="tag">HuBERT</span> <span class="tag">DALL·E 2</span> <span class="tag">S3</span></div>
+          <div class="more">자세히 보기 →</div>
+        </div>
+      </a>
+
+      <a class="card" href="p/yolo-app.html">
+        <div class="thumb"><img src="assets/img/card-yolo.png" alt="엄마 이게뭐야" loading="lazy"></div>
+        <div class="body">
+          <div class="top"><span class="name">엄마 이게뭐야</span><span class="meta">2023.08~09 · 1개월 · 5인</span></div>
+          <div class="desc">아이가 카메라로 물건을 비추면 AI가 설명하고 말해주는 앱. 관심사를 부모에게 리포트로 보냅니다.</div>
+          <div class="win">94클래스 5,576장 직접 라벨링 · 클래스 불균형 발견·개선</div>
+          <div class="tags"><span class="tag on">YOLOv8</span> <span class="tag on">MediaPipe</span> <span class="tag">Flask</span> <span class="tag">gTTS</span> <span class="tag">SQLite</span></div>
+          <div class="more">자세히 보기 →</div>
+        </div>
+      </a>
+
+      <a class="card" href="p/nestjs-sns.html">
+        <div class="thumb"><img src="assets/img/card-nestjs.png" alt="SNS Clone" loading="lazy"></div>
+        <div class="body">
+          <div class="top"><span class="name">SNS Clone</span><span class="meta">2024.01~02 · 1개월 · 개인</span></div>
+          <div class="desc">NestJS 백엔드. 구조가 무너지는 경험을 하고, 프레임워크가 구조를 강제하는 쪽은 어떻게 다른지 확인한 프로젝트입니다.</div>
+          <div class="win">설계부터 구현까지 100% 단독 · DI 구조 · TypeORM 관계 설계</div>
+          <div class="tags"><span class="tag on">NestJS</span> <span class="tag on">TypeScript</span> <span class="tag">TypeORM</span> <span class="tag">PostgreSQL</span></div>
+          <div class="more">자세히 보기 →</div>
+        </div>
+      </a>
+
+      <a class="card" href="p/hlauncher.html">
+        <div class="thumb"><img src="assets/img/card-hlauncher.png" alt="H런처" loading="lazy"></div>
+        <div class="body">
+          <div class="top"><span class="name">H런처</span><span class="badge">진행 중</span><span class="meta">2026.09~ · 개인</span></div>
+          <div class="desc">StarCraft 안티치트 · 블랙리스트 런처. 단종된 제품을 리버스 엔지니어링해 Go로 다시 만들고 있습니다.</div>
+          <div class="win">단종된 제품을 분석해 재구현 · 8,559 LOC · 외부 메모리 읽기로 대기방 배틀태그 조회</div>
+          <div class="tags"><span class="tag on">Go</span> <span class="tag on">Win32 API</span> <span class="tag">WebView2</span> <span class="tag">리버스 엔지니어링</span></div>
+          <div class="more">자세히 보기 →</div>
+        </div>
+      </a>
+
+      <a class="card" href="p/lol-winrate.html">
+        <div class="thumb"><img src="assets/img/card-lol.png" alt="LoL 승률 예측" loading="lazy"></div>
+        <div class="body">
+          <div class="top"><span class="name">LoL 승률 예측</span><span class="meta">2023.07 · 2주 · 3인</span></div>
+          <div class="desc">크롤링부터 학습까지 파이프라인을 처음부터 끝까지 직접 만들어 본 첫 프로젝트입니다.</div>
+          <div class="win">여기서 겪은 전처리의 무게가 이후 데이터를 직접 설계하는 작업의 출발점</div>
+          <div class="tags"><span class="tag on">Python</span> <span class="tag">Scikit-Learn</span> <span class="tag">크롤링</span></div>
+          <div class="more">자세히 보기 →</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── 일하는 방식 ─────────────────────────── -->
+<section id="approach">
+  <div class="wrap">
+    <h2>일하는 방식</h2>
+    <p class="sec-sub">프로젝트를 관통하는 두 가지입니다.</p>
+
+    <h3>① 지표가 실제 사용 환경을 반영하는지 의심합니다</h3>
+    <p>
+      Emour에서 커플 문장 gold셋 macro-F1 <strong>0.73</strong> 을 기록한 모델을 배포했습니다.
+      그런데 실제 대화 흐름에 적용하자 <strong>0.175로 급락</strong>했습니다.
+    </p>
+    <div class="quote">
+      여기서 두 가지를 확인했습니다. 문장 단위 모델이라 맥락을 못 읽는다는 것,
+      그리고 <strong>0.73이라는 숫자 자체가 실제 사용 환경을 전혀 반영하지 못한 지표였다</strong>는 것.<br>
+      두 번째가 더 중요했습니다. <strong>모델을 고치기 전에 평가 방식을 고쳐야 했습니다.</strong>
+    </div>
+    <p>
+      평가 체계를 다시 설계하는 과정에서 <strong>평가셋 오염으로 점수가 뒤집히는 현상</strong>도 발견했습니다.
+      우리가 만든 데이터가 test에 섞이면 새 모델이 자동으로 유리해집니다.
+      비교 기준을 <strong>우리 데이터를 전혀 학습하지 않은 모델</strong>로 고정해 데이터 누수를 0으로 만든 뒤에야
+      「2.2배 개선」이 방어할 수 있는 수치가 됐습니다.
+    </p>
+    <p class="note">
+      이 습관은 <strong>지표를 남기지 않아 아쉬웠던 2023년 「엄마 이게뭐야」</strong>의 경험에서 나왔습니다.
+      그때는 개선 여부를 육안으로만 판단했고, mAP를 before/after로 기록하지 않았습니다.
+    </p>
+
+    <h3>② 비어 있는 자리에 먼저 손을 들었습니다</h3>
+    <p>세 번 다 <strong>제 담당이 아니었습니다.</strong> 맡지 않아도 되는 자리였고, 맡겠다고 한 건 제 선택이었습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:132px">언제</th><th style="width:300px">그때 비어 있던 것</th><th>내가 한 선택</th></tr>
+        <tr><td><strong><a href="p/emour.html">Emour</a></strong><br><span style="color:var(--sub)">마감 1주일 전</span></td>
+            <td>팀의 감정 분류 모델이 <strong>서비스에 쓸 수 없는 수준</strong>이었고,
+                남은 일정 안에 손댈 사람이 없었습니다</td>
+            <td><strong>제가 하겠다고 했습니다.</strong> 1주일 안에 4차까지 반복하고
+                테스트 서버를 배포해 <strong>291명 실사용 검증</strong>까지 마쳤습니다</td></tr>
+        <tr><td><strong><a href="p/dream-shaper.html">Dream Shaper</a></strong><br><span style="color:var(--sub)">남은 2주</span></td>
+            <td>백엔드 인력이 빠지면서 <strong>서버가 통째로 비었습니다</strong></td>
+            <td>남은 일정 안에 끝낼 수 있는 쪽으로 <strong>FastAPI를 골라 AI 서버를 직접 세웠습니다.</strong>
+                기술 취향이 아니라 마감이 기준이었습니다</td></tr>
+        <tr><td><strong><a href="p/hlauncher.html">H런처</a></strong><br><span style="color:var(--sub)">진행 중</span></td>
+            <td>쓰던 안티치트 런처가 <strong>단종돼 대체재가 사라졌습니다</strong></td>
+            <td>Go도 Win32도 처음 보는 판이었지만 <strong>그대로 걸어 들어갔습니다.</strong>
+                단종된 제품을 분석해 재구현 중이고, 지금 <strong>8,559줄</strong>입니다</td></tr>
+      </table>
+    </div>
+    <div class="quote">
+      <strong>안 해본 일이라서 못 한다고 말한 적은 없습니다.</strong>
+      문법과 API는 배우면 되고, 남는 것은 <strong>무엇이 잘못됐는지 찾아내고 두 방식 중 하나를 고르는 판단</strong>입니다.
+      그 판단을 쌓아온 것이 지금 제가 가진 것입니다.
+    </div>
+
+    <h3>같은 문제, 다른 답 — 파일 전송 구조</h3>
+    <p>3년에 걸쳐 같은 문제를 세 번 만났고, <strong>매번 지켜야 할 것이 달라 답도 달랐습니다.</strong></p>
+    <div class="tablewrap">
+      <table>
+        <tr><th>프로젝트</th><th>방식</th><th>우선한 것</th></tr>
+        <tr><td><strong>Dream Shaper</strong><br><span style="color:var(--sub)">2023.09</span></td>
+            <td>클라이언트 → S3 직접</td>
+            <td>서버가 대용량 음원 트래픽에서 빠지는 것</td></tr>
+        <tr><td><strong>Blind Dating</strong><br><span style="color:var(--sub)">2026.06</span></td>
+            <td>워커 → 백엔드 → S3</td>
+            <td><strong>GPU 서버에 자격증명을 두지 않는 것</strong> — 일부러 반대로 갔습니다</td></tr>
+        <tr><td><strong>Emour</strong><br><span style="color:var(--sub)">2026.08</span></td>
+            <td><code>FileStorage</code> 인터페이스 추상화</td>
+            <td>DB에 전체 URL이 아니라 key만 저장해 저장소 이전 비용을 없애는 것</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── 학습 이력 ───────────────────────────── -->
+<section id="learning">
+  <div class="wrap">
+    <h2>배우고 — 바로 만듭니다</h2>
+    <p class="sec-sub">2022년부터 교육 과정 4개를 이수했고, <strong>배운 것은 매번 그 자리에서 프로젝트로 나왔습니다.</strong></p>
+
+    <div class="kpis">
+      <div class="kpi"><b>4개</b><span>이수한 교육 과정<br>2022 ~ 현재</span></div>
+      <div class="kpi"><b>3,300h+</b><span>누적 이수시간<br>4개 과정 합계</span></div>
+      <div class="kpi"><b>8</b><span>남긴 프로젝트<br>과정마다 산출물</span></div>
+      <div class="kpi"><b>5회</b><span>수상 · 선정<br>공모 3 · 월간베스트 2</span></div>
+    </div>
+
+    <div class="tl">
+
+      <div class="tl-row">
+        <div class="tl-year">2022</div>
+        <div class="tl-body">
+          <div class="tl-item">
+            <span class="tl-kind k-edu">교육</span><span class="tl-t">메타버스 아카데미 1기 — 네트워크 / 서버</span><span class="tl-when">2022.05 ~ 12 · 900h+ · 한국전파진흥협회</span>
+            <div class="tl-d">서버가 무엇인지부터 시작했습니다. 네트워크 기초 · Node.js · SQL · Linux 환경 구축.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-year">2023</div>
+        <div class="tl-body">
+          <div class="tl-item">
+            <span class="tl-kind k-edu">교육</span><span class="tl-t">메타버스 아카데미 2기 — AI</span><span class="tl-when">2023.04 ~ 11 · 900h+ · 한국전파진흥협회</span>
+            <div class="tl-d">서버에서 AI로 옮겨 왔습니다. 딥러닝 · 생성형 AI(Stable Diffusion) · 컴퓨터 비전(YOLO) · FastAPI/Flask.</div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-kind k-proj">프로젝트</span><span class="tl-t">과정 중 4개를 연달아 만들었습니다</span>
+            <div class="tl-d">
+              <a href="p/lol-winrate.html">LoL 승률 예측</a>(07) →
+              <a href="p/yolo-app.html">엄마 이게뭐야</a>(08~09) →
+              <a href="p/dream-shaper.html">Dream Shaper</a>(09) →
+              <a href="p/pixg.html">PixG</a>(09~11)
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-kind k-award">성과</span><span class="tl-t">한 해에 최우수상 2회</span>
+            <div class="tl-d">
+              인공지능 해커톤 대회 <strong>최우수상</strong>(08 · 진천군수) ·
+              메타버스 아카데미 최종 프로젝트 <strong>최우수상</strong>(12 · <a href="p/pixg.html">PixG</a>).<br>
+              자격증도 같은 해에 땄습니다 — <strong>AI-900</strong>(05) · <strong>AZ-900</strong>(11), Microsoft Azure Fundamentals.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-year">2024</div>
+        <div class="tl-body">
+          <div class="tl-item">
+            <span class="tl-kind k-proj">프로젝트</span><span class="tl-t"><a href="p/nestjs-sns.html">SNS Clone</a> — 혼자 만든 백엔드</span><span class="tl-when">2024.01 ~ 02</span>
+            <div class="tl-d">교육 과정 밖에서, 구조가 무너지는 경험을 스스로 확인하려고 만든 개인 프로젝트입니다.</div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-kind k-award">성과</span><span class="tl-t">인공지능 경진대회 우수상</span><span class="tl-when">2024.01 · Microsoft × 인공지능기술교육협의회</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-kind k-edu">교육</span><span class="tl-t">이어드림스쿨 4기</span><span class="tl-when">2024.03 ~ 2025.02 · 652h · 중소벤처기업진흥공단</span>
+            <div class="tl-d">
+              쓸 줄만 알던 모델의 안쪽을 배웠습니다 — 딥러닝 이론(Optimizer · Regularization · Transformer) ·
+              NLP/LLM(BERT · GPT · PEFT · Quantization) · Vision(Detection · Segmentation) ·
+              Diffusion(VAE · CLIP · DreamBooth · ComfyUI).
+              <strong>부스트캠프 AI Tech 준비과정 30h</strong>(06)을 병행했습니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-year">2025</div>
+        <div class="tl-body">
+          <div class="tl-item">
+            <span class="tl-kind k-edu">교육</span><span class="tl-t">이어드림스쿨 4기 수료</span><span class="tl-when">2025.02 · 652h</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-kind k-proj">개인 학습</span><span class="tl-t">알고리즘 · AI 모델 개인 학습</span><span class="tl-when">2025.03 ~ 12</span>
+            <div class="tl-d">
+              과정 사이의 기간입니다. 알고리즘 문제 풀이를 이어갔고, AI 모델은 혼자 붙잡고 있었습니다.
+              <strong>산출물로 남긴 것이 없어 이 구간은 성과로 쓰지 않습니다.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-year">2026</div>
+        <div class="tl-body">
+          <div class="tl-item">
+            <span class="tl-kind k-edu">교육</span><span class="tl-t">삼성 청년 SW 아카데미 (SSAFY) 15기</span><span class="tl-when">2026.01 ~ · 925h</span>
+            <div class="tl-d">AI 쪽에 치우쳐 있던 것을 되돌리려고 갔습니다 — Python · Django · Vue.js · MySQL · 알고리즘 · REST API 설계.</div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-kind k-award">성과</span><span class="tl-t">「월간베스트」 2회 연속 선정</span><span class="tl-when">2026.02 · 03 · 반 익명 투표</span>
+            <div class="tl-d">
+              「가장 많이 알려준 사람」을 매달 반 인원이 익명 투표로 뽑습니다.
+              오전 강의를 듣고 그날 내용을 정리해 반 전체에 공유한 것을 두 달 동안 이어갔고,
+              <strong>재학 중 1인당 상한이 2회라 더 받을 수 없었습니다.</strong>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-kind k-proj">프로젝트</span><span class="tl-t">다시 세 개를 만들고 있습니다</span>
+            <div class="tl-d">
+              <a href="p/blind-dating.html">Blind Dating</a>(05~06) →
+              <a href="p/emour.html">Emour</a>(07~08) →
+              <a href="p/hlauncher.html">H런처</a>(09~, 진행 중)
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="quote">
+      <strong>네 번의 과정에서 방향이 매번 달랐습니다</strong> — 서버 → AI → 모델의 안쪽 → 다시 백엔드.
+      옮길 때마다 <strong>직전 과정에서 부족하다고 느낀 것이 다음 과정을 고른 이유</strong>였습니다.
+      배우고 싶은 것이 생기면 그때마다 과정을 찾아 들어갔고, 그 사이를 프로젝트로 메워 왔습니다.
+    </div>
+  </div>
+</section>
+
+<!-- ── 기술 스택 ───────────────────────────── -->
+<section id="stack">
+  <div class="wrap">
+    <h2>기술 스택</h2>
+    <p class="sec-sub">실제로 프로젝트에 적용한 것만 적었습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:150px">구분</th><th>기술</th><th style="width:280px">어디서 썼는가</th></tr>
+        <tr><td><strong>언어</strong></td><td>Python · Java 17 · TypeScript · JavaScript</td><td>—</td></tr>
+        <tr><td><strong>백엔드</strong></td>
+            <td>Spring Boot · Django / DRF · FastAPI · NestJS · Flask</td>
+            <td>Emour · Blind Dating · Dream Shaper · SNS Clone · 엄마 이게뭐야</td></tr>
+        <tr><td><strong>인증 / 보안</strong></td>
+            <td>JWT (Access·Refresh 분리) · OAuth 2.0(Google) · BCrypt · Spring Security</td>
+            <td>Emour — Refresh만 Redis에 TTL 저장해 토큰 회수 수단 확보, 계정 열거 방지</td></tr>
+        <tr><td><strong>실시간 통신</strong></td>
+            <td>WebSocket (STOMP) · Django Channels · channels-redis</td>
+            <td>Blind Dating — <code>BaseMiddleware</code> 상속해 쿼리스트링 JWT 인증 직접 구현</td></tr>
+        <tr><td><strong>데이터베이스</strong></td>
+            <td>MySQL · PostgreSQL · Redis · SQLite · MongoDB</td><td>—</td></tr>
+        <tr><td><strong>ORM</strong></td>
+            <td>Spring Data JPA / Hibernate · Django ORM · TypeORM</td><td>세 프레임워크 모두 실전 사용</td></tr>
+        <tr><td><strong>NLP</strong></td><td>KcELECTRA · HuggingFace Transformers · kiwipiepy</td>
+            <td>Emour — 감정 15종 분류, 문장쌍 맥락 인코딩</td></tr>
+        <tr><td><strong>Vision</strong></td><td>YOLOv8 · MediaPipe · SAM · IP-Adapter FaceID · InsightFace</td>
+            <td>엄마 이게뭐야 커스텀 학습 · Blind Dating 아바타 생성</td></tr>
+        <tr><td><strong>생성형 AI</strong></td>
+            <td>Stable Diffusion (SD1.5 / SDXL) · LoRA · ControlNet · AnimateDiff · ComfyUI · DALL·E 2</td>
+            <td>PixG · Blind Dating · Dream Shaper</td></tr>
+        <tr><td><strong>음성</strong></td><td>SVC · RVC · HuBERT · NSF-HiFiGAN · UVR5</td>
+            <td>Dream Shaper — 화자 5명 모델 학습</td></tr>
+        <tr><td><strong>인프라</strong></td>
+            <td>AWS S3 · EC2 · Docker · Docker Compose · GitLab CI/CD · Linux GPU 서버</td><td>—</td></tr>
+      </table>
+    </div>
+    <p class="note">
+      <strong>알고리즘</strong> — 백준 기준 골드 3~4 수준. 계정이 남아 있지 않아 링크로 증명하지는 않습니다.
+    </p>
+  </div>
+</section>
+
+<!-- ── 공개 모델 ───────────────────────────── -->
+<section id="models">
+  <div class="wrap">
+    <h2>공개 모델</h2>
+    <p class="sec-sub">Emour에서 학습한 한국어 감정 분류 모델을 HuggingFace에 공개했습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th>모델</th><th>단계</th><th style="width:170px">test macro-F1</th></tr>
+        <tr><td><a href="https://huggingface.co/chlgks/emour-emotion-kcelectra" target="_blank" rel="noopener"><code>emour-emotion-kcelectra</code></a></td>
+            <td>문장 단위 (baseline)</td><td>—</td></tr>
+        <tr><td><a href="https://huggingface.co/chlgks/emour-emotion-kcelectra-context" target="_blank" rel="noopener"><code>-context</code></a></td>
+            <td>맥락 인식</td><td>0.387 <span style="color:var(--sub)">(n=111)</span></td></tr>
+        <tr><td><a href="https://huggingface.co/chlgks/emour-emotion-kcelectra-context-v2" target="_blank" rel="noopener"><strong><code>-context-v2</code></strong></a></td>
+            <td>맥락 + <strong>실사용자 로그 재학습</strong></td><td><strong>0.5065</strong> <span style="color:var(--sub)">(n=660)</span></td></tr>
+      </table>
+    </div>
+    <p class="note">
+      두 맥락 모델의 점수는 <strong>서로 다른 test 분할</strong>에서 측정한 것이라 직접 비교할 수 없습니다.
+      누수 없는 동일 기준에서 방어되는 수치는 <strong>0.175 → 0.39 (2.2배)</strong> 입니다.
+    </p>
+  </div>
+</section>
+
+<!-- ── 연락 ────────────────────────────────── -->
+<section id="contact">
+  <div class="wrap">
+    <h2>연락</h2>
+    <div class="links" style="margin-top:20px">
+      <a class="btn primary" href="mailto:duddngud3@gmail.com">duddngud3@gmail.com</a>
+      <a class="btn" href="https://github.com/chlgks2" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://huggingface.co/chlgks" target="_blank" rel="noopener">🤗 HuggingFace</a>
+    </div>
+    <div class="quote" style="margin-top:32px">
+      <strong>이 포트폴리오의 모든 수치는 코드·로그·체크포인트에서 직접 확인한 실측값입니다.</strong><br>
+      확인되지 않는 항목은 적지 않았고, 측정하지 않은 것은 <strong>「측정하지 않았다」</strong> 로 남겼습니다.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Backend · AI Developer</span>
+    <nav>
+      <a href="#projects">프로젝트</a>
+      <a href="https://github.com/chlgks2" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://huggingface.co/chlgks" target="_blank" rel="noopener">HuggingFace</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

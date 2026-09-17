@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emour — 커플 대화 감정 분석 메신저</title>
+<meta name="description" content="문장 단위 감정 분류를 맥락 인식 모델로 재설계해 실사용 정확도 2.2배 개선. 응답 지연 10초 → 1초.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../index.html">← Portfolio</a>
+    <nav>
+      <a href="#what">무엇을</a><a href="#ai">AI 모델</a><a href="#backend">백엔드</a>
+      <a href="#limits">한계</a>
+      <a href="https://github.com/chlgks2/Emour" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">01 · 2026.07.06 ~ 08.10 · 6주 · 6인</div>
+    <h1>Emour<br><span style="font-size:.62em;color:var(--ink-2)">커플 대화 감정 분석 메신저</span></h1>
+    <p class="lead">
+      대화 속 감정을 AI가 분석해 보여주는 커플 메신저입니다.
+      문장 단위 감정 분류를 <strong>맥락 인식 모델로 재설계</strong>해 실제 대화 정확도를 2.2배 개선했고,
+      백엔드에서는 타이머 배치를 실시간 처리로 전환해 응답 지연을 10초에서 약 1초로 줄였습니다.
+    </p>
+    <div class="links">
+      <a class="btn" href="https://github.com/chlgks2/Emour" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://huggingface.co/chlgks/emour-emotion-kcelectra-context-v2" target="_blank" rel="noopener">🤗 학습 모델</a>
+      <a class="btn" href="https://biainmaze0507-alt.github.io/emour-landing/index.html" target="_blank" rel="noopener">🌐 랜딩페이지</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>291명</b><span>베타 실사용자<br>(약 145쌍)</span></div>
+      <div class="kpi"><b>2.2배</b><span>감정분석 정확도<br>macro-F1 0.175 → 0.39</span></div>
+      <div class="kpi"><b>10초 → 1초</b><span>감정분석 응답 지연</span></div>
+      <div class="kpi"><b>3,648건</b><span>학습 데이터<br>전량 직접 구축</span></div>
+    </div>
+
+    <div class="video">
+      <video controls preload="metadata" playsinline src="../assets/video/emour-demo.mp4">
+        브라우저가 영상 재생을 지원하지 않습니다.
+        <a href="../assets/video/emour-demo.mp4">영상 내려받기</a>
+      </video>
+    </div>
+    <p class="video-cap">
+      <b>서비스 시연 영상</b> — 재생 버튼을 누르면 소리와 함께 재생됩니다.
+      배포 서버는 2026년 8월 10일 운영이 종료돼, 동작은 이 영상과
+      <a href="https://biainmaze0507-alt.github.io/emour-landing/index.html" target="_blank" rel="noopener">랜딩페이지</a>에서 확인하실 수 있습니다.
+    </p>
+  </div>
+</div>
+
+<section id="what">
+  <div class="wrap narrow">
+    <h2>무엇을 만들었나</h2>
+    <p>
+      텍스트 대화에는 표정·억양 같은 비언어적 단서가 없습니다.
+      커뮤니케이션 이론의 <strong>단서탈락관점(cues-filtered-out perspective)</strong> 은
+      이 단서 결핍 때문에 상대가 전하려는 정서적 의도를 파악하기 어려워진다고 설명합니다.
+    </p>
+    <div class="quote">
+      <strong>"그래, 네 마음대로 해"</strong> 한 문장이 불만으로도, 평범한 수긍으로도 읽히는 이유입니다.<br>
+      감정을 분석해 시각화하면 이 단서를 보완할 수 있다는 가설에서 출발했습니다.
+    </div>
+    <p>
+      커플이 1:1로 대화하는 메신저를 기본으로, 대화의 감정을 <strong>15종</strong>으로 분류해 실시간으로 표시합니다.
+      여기에 커플룸 단위의 사진 앨범, 오늘의 기분·일정·한 줄 일기, 감정 흐름 대시보드를 붙였습니다.
+    </p>
+
+    <h3>담당 범위</h3>
+    <p>6인 팀 프로젝트입니다. <strong>아래가 본인이 담당한 부분이며, 나머지는 팀원들이 맡았습니다.</strong></p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">파트</th><th>담당 내용</th></tr>
+        <tr><td><strong>AI 감정 분류 모델</strong></td>
+            <td>전 과정 단독 — 라벨 체계 설계 · 데이터 3,648건 구축 · 학습 · 평가 체계 · 추론 서버 · HF 배포</td></tr>
+        <tr><td><strong>인증 (auth)</strong></td>
+            <td>3단계 회원가입(이메일 인증 선행) · JWT Access/Refresh 분리 · Google 소셜 로그인 · SMTP 발송</td></tr>
+        <tr><td><strong>회원 (member)</strong></td>
+            <td><code>app_user</code> 엔티티 · 상태 관리 · 소프트 탈퇴 · 마이페이지 · 동시성 제어</td></tr>
+        <tr><td><strong>앨범 (album)</strong></td>
+            <td>커플룸 스코프 · <code>FileStorage</code> 저장소 추상화 · 소유권 검증 · <code>/photos</code> 4개 엔드포인트</td></tr>
+        <tr><td><strong>감정분석 실시간화</strong></td>
+            <td>팀원이 구현한 배치 파이프라인을 <strong>idle 타이머 제거 + 폴링마다 즉시 분석</strong>으로 전환</td></tr>
+      </table>
+    </div>
+    <p class="note">
+      감정분석 파이프라인의 <strong>초기 구현은 팀원</strong>이 맡았고,
+      본인은 <strong>AI 서버와의 계약(스키마·15라벨)을 고정</strong>하고 <strong>배치 → 실시간 전환</strong>을 담당했습니다.
+    </p>
+
+    <h3>AI 파트는 원래 제 역할이 아니었습니다</h3>
+    <p>
+      배정된 역할은 백엔드였습니다. 팀에 AI 담당이 따로 있었지만
+      <strong>모델이 서비스에 쓸 수 있는 수준으로 나오지 않았습니다.</strong>
+      감정 분석은 이 서비스의 핵심이라 그것이 없으면 제품이 성립하지 않았습니다.
+    </p>
+    <p><strong>마감 약 1주일 전, 백엔드 담당 도메인을 마친 뒤 제가 하겠다고 나섰습니다.</strong></p>
+    <p>
+      당시 <strong>모델 학습·파인튜닝 경험이 없었습니다.</strong>
+      그때까지 다룬 것은 Vision(YOLOv8)과 음성(SVC)이었고, 텍스트 분류 모델을 직접 학습해본 적이 없었습니다.
+      자신 있는 상태가 아니었지만, 남은 1주일 동안 과거에 배운 것을 되살려 모델을 만들었습니다.
+    </p>
+    <div class="quote">
+      결과적으로 <strong>1주일 안에 모델을 4차까지 반복</strong>하고,
+      테스트 서버를 배포해 <strong>291명의 실사용 검증</strong>까지 마쳤습니다.
+    </div>
+  </div>
+</section>
+
+<section id="ai">
+  <div class="wrap narrow">
+    <h2>AI — 감정 분류 모델</h2>
+
+    <h3>라벨 체계 15종 — '관계 신호' 축을 추가했습니다</h3>
+    <p>
+      일반적인 감정 분류에 <strong>관계 신호</strong> 축을 따로 설계했습니다.
+      커플 대화에서는 감정의 긍부정보다 <em>상대에게 무엇을 전하려는 발화인지</em>가 더 중요한 경우가 많다고 판단했습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:130px">분류</th><th>라벨</th></tr>
+        <tr><td>긍정</td><td>기쁨 · 설렘 · 편안</td></tr>
+        <tr><td>중립</td><td>걱정 · 놀람 · 평범 · 부끄러움 · 궁금</td></tr>
+        <tr><td>부정</td><td>슬픔 · 화남 · 당황 · 힘듦</td></tr>
+        <tr><td><strong>관계 신호</strong></td><td><strong>고마움 · 미안함 · 서운함</strong></td></tr>
+      </table>
+    </div>
+
+    <h3>1주일 동안의 4차 반복</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:70px">차수</th><th>학습 데이터</th><th style="width:240px">결과</th></tr>
+        <tr><td><strong>1차</strong></td><td>AI Hub 감성대화 말뭉치를 15라벨로 변환 + 합성 보강</td>
+            <td>gold셋 <strong>0.73</strong> / 실제 대화 흐름 <strong>0.175</strong></td></tr>
+        <tr><td><strong>2차</strong></td><td>팀원들과 15감정 롤플레잉 대화를 직접 구축, 한 줄씩 라벨링</td>
+            <td>성능 상승, 그러나 <strong>맥락을 못 잡음</strong></td></tr>
+        <tr><td><strong>3차</strong></td><td>라벨링 방식 전환 — 앞 10개 발화 + 마지막 1줄 단위</td>
+            <td>macro-F1 <strong>0.39</strong> (1차 대비 2.2배)</td></tr>
+        <tr><td><strong>4차</strong></td><td>테스트 서버 배포 → 291명 실사용 → 유저 로그 재라벨링</td>
+            <td>최종 모델 → HuggingFace 공개</td></tr>
+      </table>
+    </div>
+
+    <h3>문제 — 잘 나온 지표가 실사용에서 무너졌다</h3>
+    <p>
+      커플 문장 gold셋 153문장에서 <strong>macro-F1 0.73</strong> 을 기록했고, 이 수치로 배포했습니다.
+      그런데 실제 대화 흐름에 적용하자 <strong>0.175로 급락</strong>했습니다.
+    </p>
+    <ol>
+      <li>문장 단위 모델이라 <strong>맥락을 읽지 못합니다.</strong></li>
+      <li><strong>0.73이라는 숫자 자체가 실제 사용 환경을 전혀 반영하지 못한 지표였습니다.</strong></li>
+    </ol>
+    <div class="quote">두 번째가 더 중요한 문제였습니다. <strong>모델을 고치기 전에 평가 방식을 고쳐야 했습니다.</strong></div>
+
+    <h3>원인 — 모델이 아니라 라벨링 단위였다</h3>
+    <p>
+      기존에는 대화를 <strong>한 줄씩</strong> 보고 라벨링했습니다. 그러나 실제 대화에서 감정은 앞선 흐름이 결정합니다.
+      <code>"됐어"</code> 는 화남일 수도 편안일 수도 있고, <code>"괜찮아"</code> 는 편안일 수도 서운함일 수도 있습니다.
+    </p>
+    <p>
+      <strong>직전 10개 발화를 묶어 맥락을 파악한 뒤 대상 문장의 감정을 판단</strong>하는 방식으로 전환했습니다.
+      같은 문장이라도 흐름에 따라 감정이 달라진다는 사실을
+      <strong>모델 구조가 아니라 라벨 단계부터</strong> 반영한 것이 핵심 전환점이었습니다.
+    </p>
+    <pre><code>학습·추론·백엔드 전송 형식을 모두 문장쌍으로 일치시켰습니다
+
+  [CLS] 맥락(최대 10발화) [SEP] 대상 문장 [SEP]
+
+  tokenizer(context, target, truncation="longest_first", max_length=128)</code></pre>
+
+    <figure>
+      <img class="bare" src="../assets/img/emour-perf.png" alt="맥락 인식 모델 전환 효과">
+      <figcaption>
+        비교 기준을 <strong>우리 데이터를 학습하지 않은 배포 모델</strong>로 고정해 데이터 누수를 0으로 만든 뒤 측정했습니다.
+        모델을 비교하는 과정에서 평가셋 오염으로 점수가 뒤집히는 현상을 발견해 잡은 것입니다.
+      </figcaption>
+    </figure>
+
+    <h3>학습 데이터를 전량 직접 구축했습니다</h3>
+    <figure>
+      <img class="bare" src="../assets/img/emour-data.png" alt="학습 데이터 구성">
+      <figcaption>
+        공개 말뭉치(AI Hub)는 상담체에 가까워 커플 채팅 도메인과 달랐습니다.
+        팀원들과 상황(1주일차·2년차·싸움·놀람당황)을 나눠 롤플레잉하고,
+        배포 후에는 실사용자 대화를 추출해 <strong>3인 교차 라벨링</strong>했습니다.
+      </figcaption>
+    </figure>
+
+    <h4>대조쌍 150건 — 모델이 맥락 대신 키워드를 외우는 것을 막았습니다</h4>
+    <p>
+      감정 단어가 문장에 직접 있으면(예: <code>"짜증나"</code>) 모델이 맥락을 보지 않고
+      그 키워드만으로 판단하는 <strong>지름길 학습(shortcut)</strong> 이 생깁니다.
+      맥락을 넣어도 모델이 무시하면 구조 변경이 무의미합니다.
+    </p>
+    <p>
+      그래서 <strong>같은 문장이 앞선 맥락에 따라 다른 감정을 갖는 쌍</strong>을 만들었습니다.
+      문장만으로는 두 샘플을 구분할 수 없으므로 <strong>맥락을 봐야만 손실이 줄어듭니다.</strong>
+      대조쌍은 학습 전용으로만 쓰고 평가에는 넣지 않았습니다.
+    </p>
+
+    <h3>최종 모델 — 실사용자 로그로 재학습</h3>
+    <p>
+      3차 모델로 테스트 서버를 열었고 <strong>291명이 가입해 이용</strong>했습니다.
+      여기서 얻은 것이 가장 좋은 학습 데이터였습니다.
+      사용자들이 실제로 주고받은 대화 로그를 저장해 팀원들과 다시 라벨링하고,
+      그 데이터로 재학습한 모델이 최종 결과물이 됐습니다.
+    </p>
+    <figure>
+      <img class="bare" src="../assets/img/emour-labels.png" alt="최종 모델 라벨별 성능">
+      <figcaption>
+        HuggingFace에 함께 올린 <code>eval_report.txt</code> 실측값입니다.
+        15종 다중분류에서 랜덤 추측의 macro-F1은 약 0.067 수준입니다.
+      </figcaption>
+    </figure>
+    <div class="note">
+      <strong>3차 모델(0.39)과 최종 모델(0.5065)은 test 분할이 다릅니다.</strong>
+      최종 모델의 test는 실사용자 데이터가 들어와 111건 → 660건으로 커졌고 분포도 달라졌습니다.
+      <strong>「0.39에서 0.5065로 올랐다」고 말할 수 없어</strong>, 공개한 모델 카드에도 그렇게 적어두었습니다.
+      누수 없는 동일 기준에서 방어되는 수치는 <strong>0.175 → 0.39 (2.2배)</strong> 입니다.
+    </div>
+
+    <h3>모델을 인프라에 두지 않은 판단</h3>
+    <p>학습한 모델을 서버에 직접 올리는 대신, <strong>HuggingFace Hub에 올리고 서버가 기동 시 받아 쓰는 구조</strong>를 택했습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th>인프라에 모델 직접 배치</th><th>HuggingFace에서 받아 쓰기 <strong>(채택)</strong></th></tr>
+        <tr><td>모델을 바꿀 때마다 배포 파이프라인을 거쳐야 함</td><td><code>.env</code> 의 모델 경로만 바꾸고 재시작</td></tr>
+        <tr><td>서버 이미지가 모델 크기만큼 무거워짐</td><td>서버 이미지는 코드만</td></tr>
+        <tr><td>모델과 코드의 생애주기가 묶임</td><td><strong>분리됨</strong> — 이전 경로로 되돌리면 롤백 완료</td></tr>
+      </table>
+    </div>
+    <p>
+      1주일 안에 모델을 4차까지 갈아끼워야 했으므로 <strong>교체 비용을 낮추는 것이 가장 중요한 요구</strong>였습니다.
+      이 판단 덕에 베타 테스트 중 모델 교체가 안전한 작업이 됐습니다.
+    </p>
+
+    <h3>띄어쓰기 하나에 오분류가 났습니다</h3>
+    <p>
+      <code>기분나빠</code>(붙여 쓴 표기)가 오분류되는 것을 발견했습니다. 원인은 subword 토크나이저였습니다.
+      띄어 쓴 <code>기분 나빠</code>와 토큰 분해가 달라져 학습하지 않은 표기가 됩니다.
+    </p>
+    <p>
+      먼저 <strong>데이터 증강</strong>을 시도했지만
+      <strong>학습에 포함하지 않은 다른 붙임 표기는 여전히 못 잡았습니다</strong> — 증강은 본 것만 커버합니다.
+      <strong>추론 전 띄어쓰기 교정(kiwipiepy)</strong> 으로 입력을 정규화해
+      <strong>재학습 없이 서버 코드 변경만으로</strong> 해결했습니다.
+    </p>
+    <div class="quote">
+      <strong>입력 정규화와 데이터 증강은 유효 범위가 다릅니다.</strong>
+      증강은 분포 안의 변형에, 정규화는 분포 밖의 변형에 유효합니다. 그 경계를 실험으로 구분했습니다.
+    </div>
+  </div>
+</section>
+
+<section id="backend">
+  <div class="wrap narrow">
+    <h2>백엔드</h2>
+
+    <h3>감정 분석이 최대 10초 늦게 나왔습니다</h3>
+    <p>
+      초기 구현은 <strong>"10개 누적 또는 10초 idle"</strong> 배치였습니다.
+      메시지를 모아 한 번에 분석하면 AI 서버 호출을 줄일 수 있습니다.
+      그런데 대화가 뜸하면 10개가 모이지 않고, idle 타이머가 만료될 때까지 최대 10초를 기다려야 했습니다.
+      실제로 베타 테스트에서 <strong>"감정분석이 느리다"</strong> 는 피드백을 받았습니다.
+    </p>
+    <figure>
+      <img class="bare" src="../assets/img/emour-realtime.png" alt="배치 → 실시간 전환">
+      <figcaption>
+        앙상블(단문+맥락)과 조건부 라우팅도 함께 측정해 비교한 뒤,
+        이득 대비 비용과 복잡도를 근거로 「맥락 단독 + 즉시 분석」을 채택했습니다.
+      </figcaption>
+    </figure>
+
+    <h4>AI 계약을 먼저 고정했습니다</h4>
+    <pre><code>POST /analyze
+{
+  "context": [{"speaker": "A", "text": "오늘 약속 취소됐어"}],   // 최대 10개, 읽기전용
+  "target":  [{"message_id": 101, "speaker": "B", "text": "됐어"}]
+}
+→ {"101": {"emotion": "서운함"}}        // 응답 개수는 항상 target 개수와 일치</code></pre>
+    <p>
+      스키마와 15라벨을 고정해 <strong>모델을 교체 가능한 구성요소로 취급</strong>했습니다.
+      맥락 모델을 배포할 때 백엔드 코드 변경이 필요 없었고, <strong>무중단 롤백</strong>이 가능했습니다.
+    </p>
+
+    <h3>담당 도메인 구현</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:120px">도메인</th><th>내용</th></tr>
+        <tr><td><strong>인증</strong></td>
+            <td>
+              이메일 인증을 <strong>선행</strong>하는 3단계 회원가입 — 인증 완료 후에만 회원 레코드 생성 ·
+              코드는 <code>SecureRandom</code> 6자리, Redis TTL 관리(코드 5분 / 인증완료 30분)<br>
+              JWT Access/Refresh 분리 발급, <strong>Refresh만 Redis에 저장</strong> — 재발급 시 저장값과 대조해
+              탈취·로그아웃 토큰 차단(토큰 회수 수단 확보)<br>
+              Google 소셜 로그인 — ID 토큰을 서버가 <code>tokeninfo</code>로 검증 + <code>aud</code> 일치 확인,
+              client secret 불필요<br>
+              <strong>계정 열거 방지</strong> — 로그인 실패를 "이메일 없음 / 비번 틀림" 구분 없이 동일 응답
+            </td></tr>
+        <tr><td><strong>회원</strong></td>
+            <td>
+              <code>app_user</code> 엔티티 설계 · 상태 관리(<code>ACTIVE/INACTIVE/WITHDRAWN</code>) ·
+              탈퇴는 soft delete + refresh 삭제<br>
+              상태 변경을 setter 대신 의미 메서드(<code>verifyEmail</code> / <code>changePassword</code> / <code>withdraw</code>)로 캡슐화<br>
+              동시성 제어 — <code>PESSIMISTIC_WRITE</code> 락으로 커플 초대방 동시 생성 방지
+            </td></tr>
+        <tr><td><strong>앨범</strong></td>
+            <td>
+              커플룸 단위 스코프 · 소유권 검증 · <code>/photos</code> 업로드·조회·삭제·메모<br>
+              <strong><code>FileStorage</code> 인터페이스로 저장소 추상화</strong> — DB에는 전체 URL이 아니라
+              <strong>key(<code>yyyy/MM/dd/{uuid}.ext</code>)만 저장</strong>하고 응답 시 prefix를 조립해,
+              저장소를 옮겨도 데이터를 고치지 않습니다
+            </td></tr>
+      </table>
+    </div>
+
+    <h3>서비스 구조</h3>
+    <pre><code>[React Client]
+   │  REST / JWT          ↕ WebSocket (STOMP)
+[Spring Boot]  ── Redis (채팅 이벤트 전달 · Refresh TTL)
+   │            ── MySQL (회원 · 커플방 · 채팅 · 분석 결과)
+   │  맥락 최대 10개 + 대상 문장
+[FastAPI + KcELECTRA]  감정 15종 분류</code></pre>
+    <ol>
+      <li>사용자가 메시지를 전송하면 Spring Boot가 MySQL에 저장합니다.</li>
+      <li>미분석 메시지를 <strong>직전 대화 맥락과 함께</strong> AI 서버로 보냅니다. <em>(발신자를 A/B로 매핑해 학습 형식과 일치)</em></li>
+      <li>AI 서버가 문장쌍으로 인코딩해 메시지별 감정을 반환합니다.</li>
+      <li>결과를 저장하고 WebSocket으로 푸시한 뒤 대시보드에서 감정 흐름으로 시각화합니다.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>검증과 한계</h2>
+
+    <h3>베타 테스트 결과</h3>
+    <p>2026.08.05 ~ 08.07, <strong>291명(약 145쌍)</strong> 참여 · 설문 응답 45명.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th>항목</th><th style="width:140px">결과</th></tr>
+        <tr><td>채팅 기능 편리성</td><td>4.56 / 5</td></tr>
+        <tr><td>감정 라벨·아이콘 이해도</td><td>4.40 / 5</td></tr>
+        <tr><td>감정 분석 결과 절반 이상 일치</td><td>66.7%</td></tr>
+        <tr><td>지속 사용 의향</td><td>3.71 / 5</td></tr>
+        <tr><td>지인 추천 의향</td><td>7.29 / 10</td></tr>
+      </table>
+    </div>
+    <p>
+      1차 테스트 피드백 6건을 수집해 개선에 반영했고,
+      그중 <strong>"감정분석이 느림"</strong> 과 <strong>"문맥을 잘 이해하지 못함"</strong> 이
+      위에 적은 실시간 전환과 맥락 모델 작업으로 직접 연결됐습니다.
+    </p>
+
+    <h3>알려진 한계</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">한계</th><th>내용</th></tr>
+        <tr><td><strong>낮은 F1 라벨</strong></td>
+            <td><code>편안</code>·<code>서운함</code>·<code>당황</code> 이 0.28~0.36으로 낮습니다.
+                사람도 라벨이 갈리는 구간이고, 교차 라벨링에서도 이견이 많았습니다</td></tr>
+        <tr><td><strong>평범 라벨 편중</strong></td>
+            <td>test의 40%(261/660)가 <code>평범</code>입니다. 실제 대화 분포를 반영한 것이지만,
+                macro-F1이 소수 라벨에 민감하다는 점을 감안해 읽어야 합니다</td></tr>
+        <tr><td>도메인 제약</td>
+            <td>커플 간 1:1 채팅체를 전제로 학습했습니다. 다른 도메인에서는 성능을 보장할 수 없습니다</td></tr>
+        <tr><td>모델 절대 성능</td>
+            <td>macro-F1 0.5 수준은 실용 서비스로 쓰기에 충분하다고 말하기 어렵습니다.
+                <strong>「누수 없는 기준에서 측정한 개선폭」</strong> 에 의미를 두었습니다</td></tr>
+      </table>
+    </div>
+
+    <h3>배운 것</h3>
+    <div class="quote">
+      AI 서비스의 성능은 배포 시점이 아니라 <strong>운영에서 얻은 데이터를 다시 학습에 반영하는 과정</strong>에서 완성됩니다.<br><br>
+      <strong>공개 데이터 → 직접 만든 데이터 → 실사용 데이터</strong> 순으로 옮겨간 것이 이 프로젝트의 흐름이고,
+      각 단계에서 성능이 오른 이유는 매번 <strong>학습 데이터의 분포가 실제 사용 환경에 가까워졌기</strong> 때문입니다.
+    </div>
+
+    <div class="prevnext">
+      <a class="btn" href="../index.html">← 전체 프로젝트</a>
+      <a class="btn" href="pixg.html">다음: PixG →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Emour · 2026.07 ~ 08</span>
+    <nav>
+      <a href="../index.html">Portfolio</a>
+      <a href="https://github.com/chlgks2/Emour" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://huggingface.co/chlgks/emour-emotion-kcelectra-context-v2" target="_blank" rel="noopener">HuggingFace</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

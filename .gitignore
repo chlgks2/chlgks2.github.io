@@ -1,0 +1,4 @@
+# 로컬 작업 파일
+_shot*.png
+.DS_Store
+Thumbs.db

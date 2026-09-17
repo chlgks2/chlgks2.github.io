@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blind Dating — 성향 기반 블라인드 소개팅</title>
+<meta name="description" content="GPU 예산 제약 아래 호출 방향을 뒤집어 인바운드 포트 없이 동작하는 추론 서버를 구축. 아키텍처 결정을 직접 한 첫 프로젝트.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../index.html">← Portfolio</a>
+    <nav>
+      <a href="#what">무엇을</a><a href="#arch">아키텍처</a><a href="#ux">대기 시간</a>
+      <a href="#pipeline">파이프라인</a><a href="#backend">백엔드</a><a href="#limits">한계</a>
+      <a href="https://github.com/chlgks2/blind_dating" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">03 · 2026.05.22 ~ 06.26 · 5주 · 2인</div>
+    <h1>Blind Dating<br><span style="font-size:.62em;color:var(--ink-2)">성향 기반 블라인드 소개팅</span></h1>
+    <p class="lead">
+      AI 스타일 아바타로 얼굴을 가리고, 설문 응답의 <strong>가중 유사도</strong>로 사람을 연결하는 웹 서비스입니다.
+      <strong>인프라 제약이 아키텍처를 결정한</strong> 프로젝트이고, 아키텍처 결정을 직접 한 첫 프로젝트입니다.
+    </p>
+    <div class="links">
+      <a class="btn" href="https://github.com/chlgks2/blind_dating" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://github.com/chlgks2/blind_dating/blob/main/ai/README.md" target="_blank" rel="noopener">GPU 서버 문서</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>21 / 24</b><span>전체 커밋 중<br>본인 커밋</span></div>
+      <div class="kpi"><b>outbound only</b><span>인바운드 포트<br>개방 불필요</span></div>
+      <div class="kpi"><b>체감 0초</b><span>수십 초 추론 대기를<br>설문과 겹쳐 배치</span></div>
+      <div class="kpi"><b>13종 + 4종</b><span>체크포인트·LoRA<br>비교 후 선정</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="what">
+  <div class="wrap narrow">
+    <h2>무엇을 만들었나</h2>
+    <p>
+      외모나 스펙이 아니라 <strong>성향</strong>으로 사람을 연결하는 소개팅 서비스입니다.
+      사용자는 <code>넷플릭스 vs 유튜브</code>, <code>아침형 vs 저녁형</code> 같은 A/B 질문 21개에 답하고,
+      서버는 질문별 가중치와 성향 유형을 반영해 <strong>0~100점의 궁합 점수</strong>를 계산해 상대를 추천합니다.
+    </p>
+    <p>
+      여기에 <strong>블라인드</strong>를 실제로 구현하기 위해, 얼굴 사진을 그대로 노출하지 않고
+      <strong>업로드한 사진을 AI 스타일 아바타로 변환해 프로필로 사용</strong>합니다.
+      이 아바타 생성을 위해 별도의 <strong>Linux GPU 추론 서버</strong>를 구축했습니다.
+    </p>
+
+    <figure>
+      <img src="../assets/img/bd-before-after.jpg" alt="변환 전후 비교">
+      <figcaption>
+        <strong>구도·포즈·의상 색이 그대로 남아 있는 것</strong>이 이 파이프라인의 목표였습니다.
+        <code>denoise 0.6</code> 으로 부분만 디노이즈해 "이게 내 사진"이라는 감각을 유지하면서 화풍만 바꿉니다.
+        <code>denoise 1.0</code>(txt2img)이면 완전히 다른 사람이 나옵니다.<br>
+        <em>위·아래 두 쌍은 각각 <strong>본인</strong>과 <strong>팀원</strong>의 사진입니다. 두 사람 모두 게재에 동의했습니다. 서비스 사용자의 사진은 포함돼 있지 않습니다.</em>
+      </figcaption>
+    </figure>
+
+    <h3>담당 범위</h3>
+    <p>
+      2인 팀에서 <strong>백엔드 · AI/GPU 파이프라인 · 통합</strong>을 전담했습니다.
+      팀원 1명이 Frontend UI를 맡았고, <strong>프론트–백엔드 API 계약과 폴링 로직 설계는 본인</strong>이 했습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">파트</th><th>담당</th></tr>
+        <tr><td>Backend (<code>backend/</code>)</td><td><strong>본인 전량</strong></td></tr>
+        <tr><td>AI / GPU 서버 (<code>ai/</code>)</td><td><strong>본인 전량</strong></td></tr>
+        <tr><td>프론트–백엔드 연동</td><td><strong>본인</strong></td></tr>
+        <tr><td>Frontend UI</td><td>팀원 1명</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="arch">
+  <div class="wrap narrow">
+    <h2>핵심 설계 ① — 호출 방향을 뒤집었습니다</h2>
+    <p>
+      이미지 1장 생성에 수십 초가 걸리므로 Django 요청–응답 안에서 처리할 수 없고,
+      웹 서버에 CUDA와 모델 수십 GB를 올릴 수도 없었습니다.
+      <strong>GPU 예산이 없어 개인 사설망 머신을 써야 했기 때문에</strong>,
+      push 방식은 고정 IP나 포트포워딩 없이는 성립하지 않았습니다.
+    </p>
+
+    <figure>
+      <img class="bare" src="../assets/img/bd-arch.png" alt="pull 아키텍처">
+      <figcaption>GPU 서버가 Django의 작업 큐를 폴링해 가져가는 구조</figcaption>
+    </figure>
+
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:90px"></th><th>push (Django → GPU)</th><th><strong>pull (GPU → Django) ← 채택</strong></th></tr>
+        <tr><td>응답 지연</td><td>HTTP 타임아웃 발생</td><td>즉시 <code>job_id</code> 반환, 결과는 비동기</td></tr>
+        <tr><td>네트워크</td><td>GPU 서버에 인바운드 포트 개방 필요</td><td><strong>outbound only</strong> — 사설망·유동 IP에서도 동작</td></tr>
+        <tr><td>장애 내성</td><td>GPU 다운 시 요청 유실</td><td>작업이 DB에 <code>pending</code> 으로 잔존</td></tr>
+        <tr><td>확장</td><td>로드밸런서 필요</td><td>워커 프로세스 추가만으로 확장</td></tr>
+      </table>
+    </div>
+
+    <h3>왜 Celery를 쓰지 않았나</h3>
+    <p>
+      브로커(Celery + RabbitMQ)를 추가하지 않고 <strong>기존 DB 테이블을 큐로 사용</strong>한 것은,
+      5주 일정에서 운영 복잡도를 늘리지 않기 위한 의도적 선택입니다.
+      FIFO(<code>ordering = ['created_at']</code>) · 상태 머신 · 실패 사유 전달이라는 당시 요구는 테이블 하나로 충족됐습니다.
+    </p>
+    <div class="quote">
+      <strong>대신 포기한 것이 무엇인지 알고 있습니다.</strong>
+      작업 선점이 원자적이지 않아(<code>filter().first()</code> → <code>save()</code>) 워커가 2대 이상이면 중복 처리가 가능합니다.
+      개선 방향(<code>select_for_update(skip_locked=True)</code>)까지 문서에 적어두었습니다.
+    </div>
+
+    <h3>Django ↔ 워커 API 계약</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:44px">#</th><th style="width:78px">메서드</th><th>엔드포인트</th><th>내용</th></tr>
+        <tr><td>①</td><td><code>GET</code></td><td><code>/ai/next-job/</code></td><td>대기 작업 1건 선점 → 즉시 <code>processing</code> 전환</td></tr>
+        <tr><td>②</td><td><code>POST</code></td><td><code>/ai/complete-upload/</code></td><td><code>multipart</code>로 결과 전송 → <strong>Django가 S3 업로드</strong></td></tr>
+        <tr><td>②'</td><td><code>POST</code></td><td><code>/ai/complete/</code></td><td>실패 통보 (<code>error_message</code> 기록)</td></tr>
+      </table>
+    </div>
+    <div class="quote">
+      ②에서 워커가 S3에 직접 올리지 않고 백엔드에 파일을 넘기는 것은
+      <strong>GPU 서버에 AWS 자격증명을 두지 않기 위한 선택</strong>입니다. 자격증명 보관 지점을 하나로 줄였습니다.
+    </div>
+  </div>
+</section>
+
+<section id="ux">
+  <div class="wrap narrow">
+    <h2>핵심 설계 ② — 수십 초의 대기를 UX로 흡수</h2>
+    <p>
+      비동기로 바꿔도 사용자는 결국 기다립니다.
+      그래서 <strong>대기 구간에, 어차피 반드시 거쳐야 하는 절차를 겹쳐 배치</strong>했습니다.
+    </p>
+    <div class="quote">"이미지 생성 중이에요 → 기다리는 동안 간단한 질문들을 준비했어요"</div>
+    <p>
+      이미지가 GPU에서 생성되는 동안 사용자는 매칭 설문 21문항을 풉니다.
+      설문은 서비스 이용에 <strong>필수인 단계</strong>이므로 <strong>체감 대기 시간이 사실상 0</strong>이 됩니다.
+      프론트는 3초 간격으로 <code>/ai/status/{job_id}/</code> 를 폴링하고,
+      다음 화면에서도 이어서 폴링해 늦게 완료된 이미지를 회수합니다.
+    </p>
+    <p>
+      여기에 <strong>폴백 타임아웃</strong>을 넣어, GPU 워커가 꺼져 있는 환경(팀원 로컬, 발표 시연)에서도
+      약 10.8초 후 다음 화면으로 진행되게 했습니다.
+      <strong>AI 서버 가동 여부와 무관하게 전체 플로우 시연이 가능합니다.</strong>
+    </p>
+    <div class="quote">
+      <strong>성능 문제를 항상 성능으로만 풀 필요는 없었습니다.</strong>
+      수십 초를 몇 초로 줄이는 것은 불가능했지만, 그 시간에 사용자가 다른 필요한 일을 하게 만드는 것은 가능했습니다.
+    </div>
+  </div>
+</section>
+
+<section id="pipeline">
+  <div class="wrap narrow">
+    <h2>ComfyUI 추론 파이프라인</h2>
+    <div class="note">
+      사용한 모델은 <strong>전부 공개 사전학습 모델</strong>이며 파인튜닝은 하지 않았습니다.
+      작업 내용은 <strong>체크포인트·LoRA·IPAdapter·업스케일러를 비교하고 조합해 하나의 추론 파이프라인으로 연결한 것</strong>입니다.
+      가중치 총합 약 69GB는 저장소에 넣지 않고 <code>models/manifest.json</code> + 다운로드 스크립트로 환경을 재구성하게 했습니다.
+    </div>
+
+    <figure>
+      <img class="bare" src="../assets/img/bd-pipeline.png" alt="ComfyUI 파이프라인">
+      <figcaption>5단계 파이프라인과 각 파라미터의 근거</figcaption>
+    </figure>
+
+    <pre><code>LoadImage(원본)
+ ├─ IPAdapterUnifiedLoaderFaceID   FACEID PLUS V2, lora_strength 0.85, provider CUDA
+ └─ VAEEncode
+        ▼
+CheckpointLoaderSimple   dreamshaperXL_lightningDPMSDE (SDXL Lightning)
+   → LoraLoader          giblylast.safetensors  0.8 / 0.8
+   → IPAdapterFaceID     weight 0.65, linear, concat, embeds_scaling "V only"
+   → KSampler            steps 25, cfg 6, dpmpp_2m_sde / karras, denoise 0.6   ← img2img
+   → VAEDecode
+   → FaceDetailer        face_yolov8m + SAM(vit_b), guide 768, denoise 0.3     ← 얼굴 복원
+   → UltimateSDUpscale   4x-UltraSharp, ×1.2, denoise 0.15, tile 768           ← 디테일 보정
+   → SaveImage (node 42)</code></pre>
+
+    <h3>파라미터를 그렇게 정한 이유</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:230px">결정</th><th>근거</th></tr>
+        <tr><td>txt2img 대신 <strong>img2img (denoise 0.6)</strong></td>
+            <td>txt2img는 원본의 구도·포즈·상반신 구성이 사라져 <strong>"내 사진"이라는 느낌이 없어집니다.</strong>
+                구도는 유지하고 화풍만 바꾸기 위해 부분 디노이즈를 선택했습니다</td></tr>
+        <tr><td>베이스를 <strong>Juggernaut-XL v9 → DreamShaper XL Lightning</strong></td>
+            <td>Juggernaut는 정체성 유지에 유리했으나 생성 시간이 길었습니다.
+                사용자 대기 시간을 줄이기 위해 저스텝 계열로 교체했습니다</td></tr>
+        <tr><td><strong>IPAdapter weight와 LoRA weight를 분리 튜닝</strong></td>
+            <td>정체성(IPAdapter)과 스타일(LoRA)이 같은 샘플링에서 <strong>서로 상쇄</strong>됩니다.
+                스타일마다 균형점이 달라 개별 조정했습니다</td></tr>
+        <tr><td>IPAdapter provider를 <strong>CPU → CUDA</strong></td>
+            <td>초기 CPU 설정에서 InsightFace 임베딩 추출이 병목이었습니다</td></tr>
+        <tr><td><strong>FaceDetailer</strong> 추가 (denoise 0.3)</td>
+            <td>전신·상반신 사진은 얼굴에 할당되는 latent 해상도가 부족해 눈·입이 뭉개집니다 →
+                얼굴만 crop해 고해상도로 재생성한 뒤 SAM 마스크로 합성.
+                재생성 denoise를 0.3으로 억제해 <strong>인물이 바뀌는 것을 방지</strong></td></tr>
+        <tr><td>업스케일러를 <strong>×1.2 / denoise 0.15</strong> 로 제한</td>
+            <td>업스케일의 디노이즈는 사실상 재생성이라 얼굴 인상이 변합니다.
+                역할을 "디테일 보정"으로 한정하고 타일 경계는 <code>mask_blur 8</code> · <code>tile_padding 32</code> 로 처리</td></tr>
+        <tr><td>네거티브에 <code>photorealistic, 3d, CGI</code></td>
+            <td>실사로 회귀하는 현상을 억제했습니다.
+                <code>old, beard, mustache, closed eyes</code> 로 프로필에 부적합한 변형을 차단</td></tr>
+      </table>
+    </div>
+
+    <h3>모델 선정 — 전부 비교를 거쳤습니다</h3>
+    <ul>
+      <li><strong>체크포인트 13종</strong> 비교(약 59GB) → 운영 <code>dreamshaperXL_lightningDPMSDE</code></li>
+      <li><strong>지브리 LoRA 4종</strong> A/B 비교 → <code>giblylast</code> 채택
+        <ul>
+          <li><code>Ghibli_xl_v2</code> — 스타일 강도는 높으나 얼굴 왜곡 발생</li>
+          <li><code>ghibli_style_offset</code> — 변환 강도 부족</li>
+        </ul>
+      </li>
+      <li>정체성 유지 — <code>IP-Adapter FaceID Plus V2 (SDXL)</code> + <code>InsightFace buffalo_l</code></li>
+      <li>얼굴 검출·세그멘테이션 — <code>face_yolov8m.pt</code> + <code>sam_vit_b</code> / 업스케일 — <code>4x-UltraSharp</code></li>
+    </ul>
+
+    <h3>2 스테이지 모델 체이닝 — 검증 완료, 미배포</h3>
+    <pre><code>[Stage 1]  SDXL   dreamshaperXL_lightning + IPAdapterFaceID(0.7)
+           steps 30, cfg 5, denoise 0.35 → FaceDetailer → Upscale ×1.2
+           → 얼굴 정체성 확립
+                    │  VAEDecode (픽셀 공간 경유)
+                    ▼
+[Stage 2]  SD1.5  meinamix_v12Final + LoRA thickline_fp16(0.6)
+           VAEEncode → steps 25, cfg 7, denoise 0.45
+           → 화풍 확립</code></pre>
+    <p>
+      SDXL은 IPAdapter FaceID 지원으로 얼굴 정체성 보존이 강하지만,
+      2D 애니 화풍 LoRA 생태계는 SD1.5가 훨씬 풍부합니다.
+      하나의 그래프로 두 요구를 동시에 만족시킬 수 없어 역할을 분리했고,
+      아키텍처가 달라 latent를 직접 넘길 수 없으므로
+      <strong><code>VAEDecode</code> → <code>VAEEncode</code> 로 픽셀 공간을 경유해 연결</strong>했습니다.
+    </p>
+    <div class="note">
+      품질은 더 좋았지만 <strong>생성 시간이 약 2배로 늘어 사용자 대기를 감당할 수 없다고 판단해 운영에 반영하지 않았습니다.</strong>
+      구현·검증은 완료해 <code>workflows/experimental/</code> 에 보존했습니다.
+    </div>
+
+    <h3>워커 구현에서 부딪힌 문제들</h3>
+    <h4>서로 다른 사용자에게 같은 이미지가 나갔습니다</h4>
+    <p>
+      ComfyUI는 동일한 prompt 그래프를 <strong>history 캐시</strong>로 판단해 이전 결과를 그대로 반환합니다.
+      워크플로우 JSON에 저장된 seed를 그대로 쓰면 모든 사용자가 같은 이미지를 받습니다.
+    </p>
+    <pre><code>for node in workflow.values():
+    if "seed" in node.get("inputs", {}):
+        node["inputs"]["seed"] = random.randint(1, 2**32 - 1)</code></pre>
+    <p>
+      특정 노드가 아니라 <strong>그래프 전체를 순회해 모든 seed 노드를 랜덤화</strong>했습니다.
+      그래프에는 KSampler · FaceDetailer · UltimateSDUpscale 세 곳에 seed가 있어, 하나만 바꾸면 캐시가 계속 걸립니다.
+    </p>
+
+    <h4>기본값이 만든 조용한 버그</h4>
+    <p>
+      성별에 따라 프롬프트에 <code>1girl</code> / <code>1boy</code> 를 덧붙이는 로직에서,
+      초기 구현은 gender 기본값을 <code>'M'</code> 으로 뒀습니다.
+      백엔드가 gender를 내려주지 않으면 <strong>모든 사용자에게 <code>1boy</code> 가 붙는</strong> 문제가 있었습니다.
+    </p>
+    <pre><code>if node_id not in workflow or gender not in ("M", "F"):
+    return</code></pre>
+    <div class="quote"><strong>"모르면 기본값을 넣는다"가 아니라 "모르면 아무것도 하지 않는다"</strong> 로 바꾼 것입니다.</div>
+
+    <h4>무한 대기를 막았습니다</h4>
+    <ul>
+      <li><code>GENERATE_TIMEOUT</code>(기본 600초) 초과 시 <code>TimeoutError</code></li>
+      <li>ComfyUI가 <code>status_str == "error"</code> 를 반환하면 즉시 예외로 전환</li>
+      <li>어떤 예외가 나든 <code>except Exception</code> 으로 받아 실패를 통보 → <strong>job이 <code>processing</code> 에 방치되지 않음</strong></li>
+      <li>폴링 자체가 실패하면 <code>ERROR_BACKOFF</code>(5초) 후 재시도해 루프가 죽지 않게 처리</li>
+    </ul>
+  </div>
+</section>
+
+<section id="backend">
+  <div class="wrap narrow">
+    <h2>백엔드 주요 구현</h2>
+
+    <h3>가중 유사도 매칭 알고리즘</h3>
+    <p>단순 일치율이 아니라 <strong>질문의 성격에 따라 점수 부호를 뒤집어</strong> 궁합을 계산합니다.</p>
+    <pre><code>same = (a_answers[qid] == b_answers[qid])
+base_sim = 1.0 if same else 0.0
+if q.match_type == 'complement':
+    sim = 1.0 - base_sim          # 다를수록 좋은 질문은 점수를 반전
+else:
+    sim = base_sim
+
+weight = q.weight
+if both_complement and q.match_type == 'complement':
+    weight *= 1.5                 # 양쪽 모두 '다른 사람' 선호 → 보완 질문 증폭
+
+return round(match_score / total_weight * 100, 1)   # 0~100 정규화</code></pre>
+    <ul>
+      <li><strong>같아야 좋은 질문과 달라야 좋은 질문을 구분</strong>했습니다.
+        <code>아침형 vs 저녁형</code> 은 생활 패턴이라 <code>similar, 1.2</code>,
+        <code>전화 vs 카톡</code>·<code>게임 vs 운동</code> 은 보완되는 편이 낫다고 판단해 <code>complement</code></li>
+      <li><strong>재미 요소는 가중치를 낮췄습니다</strong> — <code>부먹 vs 찍먹</code> 0.5, <code>붕어빵 머리 vs 꼬리</code> 0.3.
+        매칭 정확도를 해치지 않으면서 설문 이탈률을 낮추는 장치입니다</li>
+      <li><strong>공통 응답 문항만으로 정규화</strong>해, 설문을 다 풀지 않은 사용자도 비교할 수 있습니다</li>
+    </ul>
+
+    <h3>WebSocket 실시간 채팅 — JWT 인증 미들웨어 직접 구현</h3>
+    <p>
+      브라우저 WebSocket API는 커스텀 헤더를 지정할 수 없어 REST와 같은 <code>Authorization: Bearer</code> 방식을 쓸 수 없었습니다.
+      Channels <code>BaseMiddleware</code> 를 상속해
+      <strong>쿼리스트링의 JWT를 검증하고 <code>scope['user']</code> 에 주입</strong>하는 미들웨어를 구현했습니다.
+    </p>
+    <pre><code>if self.user.is_anonymous:          await self.close()   # ① 익명 차단
+if not await self.is_participant(): await self.close()   # ② 채팅방 당사자 + ③ 결제 완료</code></pre>
+    <p>
+      <code>is_participant()</code> 는 당사자 여부와 함께 <strong><code>match.is_chat_open</code>(양측 결제 완료)까지 검증</strong>합니다.
+      결제하지 않은 사용자가 REST를 우회해 소켓으로 접속하는 경로를 막았습니다.
+      동기 ORM 호출은 <code>database_sync_to_async</code> 로 래핑했습니다.
+    </p>
+
+    <h3>결제 서버 검증 · 쿼리 최적화</h3>
+    <p>
+      결제는 PortOne을 통해 <strong>카카오페이</strong>로 받습니다.
+      클라이언트의 "결제 성공" 신호를 신뢰하지 않고, 서버가 토큰을 발급받아
+      <code>api.iamport.kr/payments/{imp_uid}</code> 로 실제 상태를 재조회합니다.
+      <code>imp_uid</code> 에 <code>unique</code> 제약 + <code>get_or_create</code> 로 중복 반영을 막았습니다.
+    </p>
+    <p>
+      <strong>양측이 모두 결제해야 <code>is_chat_open=True</code></strong> 가 됩니다.
+      한쪽만 관심 있는 매칭을 걸러내 "진정성 있는 만남"을 만들려는 제품 의도이자, 동시에 인가 조건이기도 합니다.
+    </p>
+    <pre><code># 추천 목록의 N+1 제거 — 후보 ID를 모아 한 번에 조회
+ai_jobs = AIJob.objects.filter(user_id__in=candidate_ids, status='done').order_by('-created_at')
+question_cache = {q.id: q for q in Question.objects.all()}   # 유사도 루프 내내 재사용</code></pre>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>알려진 한계와 개선 계획</h2>
+    <p>설계 당시의 판단과 <strong>그 대가를 함께</strong> 기록했습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:250px">한계</th><th style="width:140px">원인</th><th>개선 방향</th></tr>
+        <tr><td>작업 선점이 비원자적 → 워커 2대 이상이면 중복 처리 가능</td><td>단일 워커 전제</td>
+            <td><code>select_for_update(skip_locked=True)</code>, 또는 Celery + Redis 브로커</td></tr>
+        <tr><td>Django 워커 엔드포인트가 <code>AllowAny</code></td><td>5주 일정상 후순위</td>
+            <td>워커는 이미 <code>X-Worker-Token</code> 전송 중 — <strong>백엔드 측 검증 추가만 남음</strong></td></tr>
+        <tr><td>백엔드가 <code>gender</code> 를 내려주지 않아 성별 프롬프트 보강이 비활성</td><td>워커 계약이 나중에 확장됨</td>
+            <td><code>NextJobAPIView</code> 응답에 <code>user.gender</code> 추가</td></tr>
+        <tr><td><code>pixar</code>·<code>zepeto</code> 는 선택지만 있고 전용 워크플로우 미구현</td><td>시간 부족</td>
+            <td>워크플로우 추가 (현재는 기본 스타일로 대체되며 로그로 남김)</td></tr>
+        <tr><td>유저·워커 양쪽 폴링으로 불필요한 요청 발생</td><td>구현 단순성 우선</td>
+            <td><strong>이미 Channels/Redis가 있으므로</strong> WebSocket 푸시 또는 SSE로 전환</td></tr>
+        <tr><td>워커가 처리 중 죽으면 job이 <code>processing</code> 에 잔류</td><td>워커 측 타임아웃만 구현</td>
+            <td>백엔드에 <code>updated_at</code> 기반 stale job 재큐잉</td></tr>
+        <tr><td>결제 검증에 시연용 폴백이 남아 있음, 금액도 하드코딩</td>
+            <td>발표 중 결제 API 실패로 플로우가 끊기는 것을 막기 위한 임시 조치</td>
+            <td>폴백 제거, PortOne 응답 <code>amount</code> 를 서버 기준가와 대조</td></tr>
+        <tr><td><strong>결과 이미지를 presigned가 아닌 공개 URL로 내려줌</strong></td><td>설계 누락</td>
+            <td>자격증명 보관 지점은 하나로 줄였는데 <strong>결과물 접근 제어는 버킷 설정에만 의존</strong>했습니다.
+                지금이라면 만료 시간을 둔 presigned URL을 쓰겠습니다</td></tr>
+        <tr><td>SQLite 단일 인스턴스, 개발 설정(<code>ALLOWED_HOSTS=["*"]</code>)</td><td>개발·시연 단계</td>
+            <td>PostgreSQL 전환, 배포 설정 분리</td></tr>
+        <tr><td>생성 이미지의 톤이 입력 사진마다 제각각</td><td>색상 팔레트를 고정하지 않음</td>
+            <td>서비스 팔레트를 정해 프롬프트·LoRA에 반영 — 프로필이 나란히 놓였을 때 컨셉이 일관됩니다</td></tr>
+      </table>
+    </div>
+
+    <h3>회고</h3>
+    <h4>인프라 제약이 아키텍처를 결정한다</h4>
+    <p>
+      GPU 예산이 없어 사설망 머신을 써야 했고, 그 제약 때문에 호출 방향을 뒤집었습니다.
+      결과적으로 얻은 장애 내성과 수평 확장성은 처음부터 의도한 것이 아니라 <strong>제약을 정면으로 받아들인 데서</strong> 나왔습니다.
+      "이상적인 구조"가 아니라 <strong>"지금 조건에서 성립하는 구조"</strong> 를 먼저 찾는 편이 낫다는 것을 배웠습니다.
+    </p>
+    <h4>생성 모델은 파라미터가 곧 제품 결정이다</h4>
+    <p>
+      denoise를 0.6으로 두느냐 1.0으로 두느냐는 하이퍼파라미터 조정이 아니라
+      <strong>"이게 내 사진인가"를 결정하는 문제</strong>였습니다.
+      업스케일의 denoise를 0.15로 억제한 것, FaceDetailer를 0.3으로 묶은 것 모두
+      "얼굴이 바뀌면 안 된다"는 제품 요구에서 역산한 값입니다.
+    </p>
+
+    <div class="prevnext">
+      <a class="btn" href="pixg.html">← 이전: PixG</a>
+      <a class="btn" href="../index.html">전체 프로젝트</a>
+      <a class="btn" href="dream-shaper.html">다음: Dream Shaper →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Blind Dating · 2026.05 ~ 06</span>
+    <nav>
+      <a href="../index.html">Portfolio</a>
+      <a href="https://github.com/chlgks2/blind_dating" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

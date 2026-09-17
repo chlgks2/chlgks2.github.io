@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>H런처 — StarCraft 안티치트 · 블랙리스트 런처</title>
+<meta name="description" content="단종된 StarCraft 안티치트 런처를 리버스 엔지니어링해 Go로 재구현한 Windows 데스크톱 프로그램. 외부 메모리 읽기로 대기방 배틀태그를 조회합니다.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../index.html">← Portfolio</a>
+    <nav>
+      <a href="#what">무엇을</a><a href="#vibe">바이브 코딩</a><a href="#tech">기술 선택</a>
+      <a href="#lag">무한디스 대응</a><a href="#limits">한계</a>
+      <a href="https://github.com/chlgks2/hLauncher" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">08 · 2026.09 ~ 진행 중 · 개인 프로젝트</div>
+    <h1>H런처<br><span style="font-size:.6em;color:var(--ink-2)">StarCraft 안티치트 · 블랙리스트 런처</span></h1>
+    <p class="lead">
+      단종된 런처를 리버스 엔지니어링해 <strong>Go로 다시 만들고 있는</strong> Windows 데스크톱 프로그램입니다.
+      대체재가 없어진 자리를 직접 메워 보려고 시작했고,
+      <strong>새 언어(Go)와 처음 다루는 Win32 영역을 AI와 함께 코드를 쓰며(바이브 코딩) 빠르게 파고들었습니다.</strong>
+      지금도 계속 만들고 있습니다.
+    </p>
+    <div class="links">
+      <a class="btn" href="https://github.com/chlgks2/hLauncher" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>Go</b><span>8,559 LOC<br>46 파일 · 10 커맨드</span></div>
+      <div class="kpi"><b>Win32 API</b><span>프로세스 감시<br>메모리 읽기 · 서명 검증</span></div>
+      <div class="kpi"><b>10개</b><span>독립 실행 커맨드<br><code>cmd/</code> 진단 도구 포함</span></div>
+      <div class="kpi"><b>리버스 엔지니어링</b><span>단종된 제품의<br>동작을 분석해 재구현</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="what">
+  <div class="wrap narrow">
+    <h2>무엇을 만들었나</h2>
+    <p>
+      StarCraft 온라인 플레이에는 두 가지 불편이 있습니다.
+      하나는 <strong>핵 사용자</strong>, 다른 하나는 <strong>고의로 게임을 멈추게 만드는 유저</strong>입니다.
+      기존에 쓰이던 런처가 단종되면서 대응 수단이 사라졌고, 그래서 직접 만들었습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">기능</th><th>내용</th></tr>
+        <tr><td><strong>핵 탐지 런처</strong></td>
+            <td>Battle.net / StarCraft 프로세스를 감시하다가 게임이 실행되면 탐지 엔진을 붙입니다.
+                설치 경로는 레지스트리에서 자동으로 찾습니다</td></tr>
+        <tr><td><strong>대기방 참가자 조회</strong></td>
+            <td>같은 방에 누가 있는지 <strong>배틀태그 단위</strong>로 보여줍니다 —
+                화면에 표시되지 않는 정보입니다</td></tr>
+        <tr><td><strong>블랙리스트 · 화이트리스트</strong></td>
+            <td>다시 만나고 싶지 않은 유저를 표시해 두면 방에 들어왔을 때 알려줍니다.
+                자주 하는 사람은 즐겨찾기로 구분합니다</td></tr>
+        <tr><td><strong>최근 플레이 기록</strong></td>
+            <td>같이 했던 사람을 자동으로 쌓아 둡니다</td></tr>
+        <tr><td><strong>무한디스 대응</strong></td>
+            <td>고의로 게임을 멈추게 만드는 상황을 감지합니다. <a href="#lag">아래 상세 →</a></td></tr>
+      </table>
+    </div>
+
+    <h3>구조</h3>
+    <pre><code>hlauncher.exe (Go)
+  ├─ ui        WebView2 웹 인터페이스 (HTML/CSS/JS ↔ Go 바인딩)
+  ├─ app       오케스트레이션 — 상태 관리 · 이벤트 중계
+  ├─ monitor   프로세스/모듈 감시 (Toolhelp32)
+  ├─ memscan   외부 프로세스 메모리 읽기
+  ├─ lagwatch  게임 클럭 감시 · 멈춤 판정
+  ├─ registry  설치 경로 자동 탐지 (HKLM Uninstall)
+  ├─ loader    WinVerifyTrust 코드 서명 검증
+  └─ config    %APPDATA% 설정 영속화
+
+cmd/  hlauncher · hldiag · hlscan · hlmem · hllag · hllagsim · … (10개)</code></pre>
+    <p class="note">
+      <strong>진단 도구를 따로 뒀습니다.</strong> GUI 없이 콘솔에서 게임 감지·경로 탐지·메모리 스캔을
+      각각 확인할 수 있습니다. <code>hllagsim</code> 은 <strong>실제 게임 없이</strong> 게임 클럭과 대기 타이머만 흉내 내
+      감시 로직을 검증하는 시뮬레이터입니다 — 매번 게임을 켜서 테스트할 수 없어 만들었습니다.
+    </p>
+  </div>
+</section>
+
+<section id="vibe">
+  <div class="wrap narrow">
+    <h2>처음 다루는 언어·영역을 어떻게 감당했나</h2>
+    <p>
+      Go도, Windows 데스크톱도, Win32 API도 이 프로젝트에서 처음 다뤘습니다.
+      <strong>AI와 대화하며 코드를 쓰는 방식(바이브 코딩)으로 진입 속도를 끌어올리고,
+      판단이 필요한 지점은 직접 파고드는 방식</strong>으로 진행했습니다.
+    </p>
+    <div class="quote">
+      <strong>"AI가 짜줬으니 내 실력이 아니다"라고 생각하지 않습니다.</strong>
+      무엇을 만들지 정하고, 돌아가지 않는 이유를 찾고, 두 방식 중 무엇을 택할지 판단하는 일은 그대로 남습니다.
+      <strong>오히려 모르는 영역에 손을 댈 수 있는 범위가 넓어졌습니다.</strong>
+    </div>
+
+    <h3>그래도 직접 판단해야 했던 것들</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:230px">문제</th><th>판단</th></tr>
+        <tr><td><strong>32비트로 빌드하고 있었습니다</strong></td>
+            <td>빌드 스크립트가 <code>GOARCH=386</code> 이었습니다. 원본이 32비트 자산을 다루기 때문인데,
+                <strong>정작 StarCraft: Remastered 는 x86_64</strong> 라 32비트 바이너리로는 게임 메모리를 읽을 수 없습니다.
+                깨진 바이너리가 나오고 있었고, <code>amd64</code> 로 바꿔 해결했습니다</td></tr>
+        <tr><td><strong>스캔이 닿지 않는 영역이 있었습니다</strong></td>
+            <td>기존 스캔은 <code>MEM_PRIVATE</code>(힙)만 봤는데, 필요한 엔진 전역 변수는
+                <strong><code>StarCraft.exe</code> 이미지의 <code>MEM_MAPPED</code> 쓰기 영역</strong>에 있었습니다.
+                영역 필터를 고쳐 닿게 했습니다</td></tr>
+        <tr><td><strong>실험판이 본체를 망가뜨렸습니다</strong></td>
+            <td>복사해 만든 실험 빌드가 <strong>같은 뮤텍스·설정 폴더·파이프 이름</strong>을 써서
+                본체와 동시에 실행할 수 없었고 데이터도 섞였습니다.
+                <code>version.InstanceID()</code> 하나가 세 이름을 전부 결정하도록 바꿔
+                <strong>설정·블랙리스트·기록이 완전히 분리</strong>되게 했습니다</td></tr>
+      </table>
+    </div>
+    <p>
+      <strong>이 셋 다 "코드를 짜는 문제"가 아니라 "무엇이 잘못됐는지 찾는 문제"였습니다.</strong>
+      AI에게 물어서 나오는 답이 아니라, 증상을 재현하고 범위를 좁혀야 나오는 답이었습니다.
+    </p>
+  </div>
+</section>
+
+<section id="tech">
+  <div class="wrap narrow">
+    <h2>기술 선택 — 세 가지 중에 골랐습니다</h2>
+    <p>대기방 참가자와 배틀태그를 가져오는 방법은 세 가지가 있었습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">방식</th><th>내용</th><th style="width:90px">채택</th></tr>
+        <tr><td>스크린샷 + OCR</td>
+            <td>화면을 찍어 글자를 인식. <strong>화면에 안 보이는 값은 못 읽고</strong> 정확도도 떨어집니다</td>
+            <td>✗</td></tr>
+        <tr><td>DLL 인젝션</td>
+            <td>게임 <strong>안에</strong> 코드를 넣어 내부에서 읽음. 정확하지만
+                <strong>안티치트가 핵으로 오인할 수 있고</strong> 크래시 위험도 있습니다</td>
+            <td>✗</td></tr>
+        <tr><td><strong>외부 메모리 읽기</strong></td>
+            <td>게임이 RAM에 올려둔 데이터를 <strong>밖에서 복사해</strong> 읽음.
+                게임 프로세스를 건드리지 않습니다</td>
+            <td><strong>✓</strong></td></tr>
+      </table>
+    </div>
+    <div class="quote">
+      <strong>가장 정확한 방법이 아니라, 가장 덜 위험한 방법을 골랐습니다.</strong>
+      인젝션이 더 쉽고 정확했지만 계정 정지·크래시 위험이 있습니다.
+      외부 읽기는 <strong>게임을 수정하지 않고 읽기만 하므로</strong> 그 위험이 훨씬 낮습니다.
+    </div>
+
+    <h4>읽기 파이프라인 — Windows API 4개</h4>
+    <pre><code>OpenProcess(PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, pid)
+        │  게임 프로세스를 "읽기 권한"으로 연다
+        ▼
+VirtualQueryEx(주소)  ── 반복 ──▶  메모리 영역 목록
+        │  필터: MEM_COMMIT + 읽기가능 + 비가드 + ≤96MB
+        ▼
+ReadProcessMemory(base, size)
+        │  선택한 영역을 1MB 청크로 우리 프로세스에 복사
+        ▼
+바이트 패턴 검색 · 구조체 파싱</code></pre>
+    <p>
+      게임은 서버에서 받은 데이터를 <strong>자기가 쓰려고 RAM에 복호화해 풀어놓습니다.</strong>
+      그 이미 복호화된 데이터를 옆에서 읽는 것이라, 네트워크 패킷을 직접 해독할 필요가 없습니다.
+    </p>
+  </div>
+</section>
+
+<section id="lag">
+  <div class="wrap narrow">
+    <h2>무한디스 대응 — 대기 시간만 줄입니다</h2>
+    <p>
+      StarCraft 멀티플레이는 <strong>락스텝(lockstep)</strong> 입니다.
+      모든 플레이어의 그 턴 입력이 도착해야 다음 턴을 계산합니다.
+      그래서 한 명이 패킷을 끊으면 <strong>그 사람만 멈추는 게 아니라 전원이 멈춥니다.</strong>
+      대역폭을 일부러 조여 게임 전체를 랙 걸리게 만드는 행위가 성립하는 이유입니다.
+    </p>
+    <p>
+      스타크래프트는 응답 없는 상대를 곧바로 버리지 않습니다.
+      일시적인 랙일 수 있으니 <strong>약 45초를 기다린 뒤</strong> 드랍합니다.
+      이 45초가 반복해서 악용됩니다.
+    </p>
+    <div class="quote">
+      <strong>H런처가 하는 일은 그 대기 시간을 줄이는 것뿐입니다.</strong>
+      드랍 자체는 여전히 스타크래프트가 자기 로직으로 수행합니다 —
+      <strong>"언제 판단할지"만 앞당깁니다.</strong> 게임에 코드를 주입하지 않습니다.
+    </div>
+    <p>
+      감지는 엔진 전역 변수 두 개를 <strong>외부에서 읽기만</strong> 해서 이뤄집니다.
+      게임 클럭이 멈췄는지, 대기 타이머가 돌고 있는지를 보고 판단합니다.
+      폴링 주기와 클럭 보정값은 환경마다 달라 <strong>보정값을 측정해 저장</strong>하도록 했습니다.
+    </p>
+    <p class="note">
+      실제 게임 없이 검증하려고 <strong>시뮬레이터(<code>cmd/hllagsim</code>)</strong> 를 따로 만들었습니다.
+      게임 클럭과 대기 타이머만 흉내 내면 감시 로직은 그대로 시험할 수 있습니다.
+      매번 사람을 모아 게임을 켤 수 없어서 내린 선택입니다.
+    </p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>한계와 기록</h2>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:200px">항목</th><th>내용</th></tr>
+        <tr><td><strong>개인용입니다</strong></td>
+            <td>배포를 목적으로 만들지 않았습니다. 본인 PC에서 쓰려고 만든 도구입니다</td></tr>
+        <tr><td><strong>원본 자산을 배포하지 않습니다</strong></td>
+            <td>탐지 엔진과 인젝터는 <strong>원본 제품의 서명된 바이너리</strong>입니다.
+                빌드에는 쓰지만 <strong>저장소에서 제외</strong>했습니다
+                (<code>.gitignore</code> 에 명시). 제가 다시 쓴 것은 <strong>런처 셸(오케스트레이션 계층)</strong> 입니다</td></tr>
+        <tr><td>메모리 주소 의존</td>
+            <td>게임이 업데이트되면 전역 변수 위치가 바뀌어 스캔이 깨질 수 있습니다.
+                패턴 검색으로 완화했지만 근본적 한계입니다</td></tr>
+        <tr><td>환경 의존</td>
+            <td>폴링 주기·클럭 보정값이 PC마다 달라 보정 과정이 필요합니다</td></tr>
+        <tr><td>진행 중</td>
+            <td>완성된 제품이 아니라 <strong>계속 만들고 있는 프로젝트</strong>입니다</td></tr>
+      </table>
+    </div>
+
+    <h3>이 프로젝트에서 남은 것</h3>
+    <h4>모르는 언어로도 시작할 수 있습니다</h4>
+    <p>
+      Go를 몰랐고 Win32 API도 처음이었지만, <strong>무엇을 만들지가 분명하면 시작할 수 있었습니다.</strong>
+      AI는 문법과 API 호출을 메워줬고, <strong>무엇이 잘못됐는지 찾는 일은 그대로 제 몫</strong>이었습니다.
+    </p>
+    <h4>테스트할 수 없는 것을 테스트 가능하게 만드는 일</h4>
+    <p>
+      실제 게임에서만 재현되는 상황을 매번 확인할 수 없어 시뮬레이터를 만들었습니다.
+      <strong>검증 환경을 먼저 만드는 습관</strong>은 <a href="emour.html">Emour</a>에서
+      평가 체계를 먼저 설계한 것과 같은 판단입니다.
+    </p>
+    <h4>안전한 쪽을 고르는 것도 설계입니다</h4>
+    <p>
+      인젝션이 더 쉽고 정확했지만 외부 읽기를 골랐습니다.
+      <a href="blind-dating.html">Blind Dating</a>에서 GPU 서버에 자격증명을 두지 않으려고
+      일부러 느린 경로를 택한 것과 같은 종류의 결정입니다.
+    </p>
+
+    <div class="prevnext">
+      <a class="btn" href="lol-winrate.html">← 이전: LoL 승률 예측</a>
+      <a class="btn" href="../index.html">전체 프로젝트</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>H런처 · 2026.09 ~ 진행 중 · 개인 프로젝트</span>
+    <nav>
+      <a href="../index.html">Portfolio</a>
+      <a href="https://github.com/chlgks2/hLauncher" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

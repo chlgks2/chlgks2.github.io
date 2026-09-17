@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>엄마 이게뭐야 — YOLOv8 실시간 객체 탐지 앱</title>
+<meta name="description" content="94클래스 5,576장 직접 라벨링. 클래스 불균형을 발견하고 데이터 레벨에서 해결. 손가락 제스처 인식으로 조작.">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../index.html">← Portfolio</a>
+    <nav>
+      <a href="#what">무엇을</a><a href="#imbalance">클래스 불균형</a>
+      <a href="#gesture">제스처 인식</a><a href="#limits">한계</a>
+      <a href="https://github.com/chlgks2/YOLO_v8-mediapipe_" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">05 · 2023.08 ~ 09 · 1개월 · 5인</div>
+    <h1>엄마 이게뭐야<br><span style="font-size:.62em;color:var(--ink-2)">YOLOv8 실시간 객체 탐지 앱</span></h1>
+    <p class="lead">
+      아이가 카메라로 물건을 비추면 AI가 <strong>5살 아이가 이해할 수 있는 말로 설명하고 음성으로 읽어줍니다.</strong>
+      관심사를 기록해 부모에게 리포트로 보내고, 손가락 제스처로 조작하는 단어 게임을 함께 제공합니다.
+    </p>
+    <div class="links">
+      <a class="btn" href="https://github.com/chlgks2/YOLO_v8-mediapipe_" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>94 클래스</b><span>직접 정의</span></div>
+      <div class="kpi"><b>5,576장</b><span>직접 수집·라벨링</span></div>
+      <div class="kpi"><b>약 3배</b><span>증강 후 확보량<br>Rotation · Cutout</span></div>
+      <div class="kpi"><b>yolov8n</b><span>실시간 추론 목표<br>가장 가벼운 모델</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="what">
+  <div class="wrap narrow">
+    <h2>무엇을 만들었나</h2>
+    <p>아이가 "엄마 이게 뭐야?"라고 묻는 상황을 앱이 대신 받아주는 것이 출발점입니다.</p>
+    <figure>
+      <img class="bare" src="../assets/img/yolo-flow.png" alt="서비스 흐름">
+      <figcaption>탐지에서 끝내지 않고 <strong>설명 → 음성 → 기록 → 리포트</strong>까지 이어붙인 것이 이 프로젝트의 범위입니다</figcaption>
+    </figure>
+    <p>
+      기획 의도는 <strong>"아이의 호기심을 해결해 주면서, 부모가 자녀의 관심사를 손쉽게 알 수 있는 서비스"</strong> 였고,
+      세 가지 기능으로 나눴습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">기능</th><th>내용</th></tr>
+        <tr><td><strong>① 뭐든 물어봐</strong></td><td>물건을 비추면 탐지 → GPT 설명 생성 → gTTS 음성으로 읽어줌</td></tr>
+        <tr><td><strong>② 아이의 관심사 알림</strong></td><td>탐지 기록을 쌓아 날짜별 차트 + 부모 이메일 리포트</td></tr>
+        <tr><td><strong>③ 단어 학습</strong></td><td>손가락 제스처로 조작하는 단어 맞추기 게임</td></tr>
+      </table>
+    </div>
+
+    <h3>담당 범위</h3>
+    <p>
+      AI 개발자 5명 팀에서 <strong>데이터 수집 · 이미지 라벨링 · YOLOv8 커스텀 학습 ·
+      손가락 제스처 인식 · 음성 출력 · Flask 백엔드</strong>를 담당했습니다. 발주처는 한국전파진흥협회입니다.
+    </p>
+
+    <h3>Flask 연동 — 학습에서 끝내지 않기</h3>
+    <pre><code>@bp.route('/detect', methods=['POST'])
+def detect():
+    image = cv2.imdecode(np.frombuffer(base64.b64decode(data['image']), np.uint8), cv2.IMREAD_COLOR)
+    results = model.predict(source=image, save=True, conf=0.25)
+
+    # person 을 제외하고 확신도가 가장 높은 객체 1개만 고른다
+    # → 아이에게는 "여러 개"가 아니라 "지금 보고 있는 그것" 하나를 말해줘야 한다
+    ...
+    explanation = f"이것은 '{label}'야. " + get_gpt_response(label)
+    save_to_db(label, now)
+    return jsonify({"explanation": explanation, "image": image_base64,
+                    "audio_path": generate_audio_from_text(explanation)})</code></pre>
+    <p>
+      탐지 기록은 SQLite에 <code>(label, time_information)</code> 으로 쌓이고,
+      <code>/chart_data/&lt;date&gt;</code> 가 날짜별 빈도를 집계해 차트로 보여줍니다.
+      <code>/result</code> 는 누적 상위 5개를 뽑아 <strong>부모 이메일로 발송</strong>합니다.
+    </p>
+    <div class="quote">
+      <strong>모델 학습에서 끝내지 않고 서비스에 연결해봐야 실제 문제가 보인다</strong>는 것을 처음 체감한 프로젝트입니다.
+      노트북에서 잘 돌던 추론이 실시간 요청에서는 다르게 동작하고,
+      <strong>학습 시 전처리와 서빙 시 전처리를 일치시켜야 한다</strong>는 것도 이때 알았습니다.
+      이 감각은 이후 Emour에서 <strong>AI 서버와의 계약(스키마·라벨)을 고정</strong>하는 설계로 이어졌습니다.
+    </div>
+  </div>
+</section>
+
+<section id="imbalance">
+  <div class="wrap narrow">
+    <h2>핵심 문제 — 클래스 불균형</h2>
+
+    <h3>데이터를 직접 만들었습니다</h3>
+    <p>
+      집 안 물건 중심으로 <strong>94개 클래스, 5,576장</strong>을 직접 수집하고 라벨링했습니다.
+      의자·마우스·이어폰 같은 일반 사물부터 프라이팬·가스레인지·고무장갑·샤워타올처럼
+      공개 데이터셋에 잘 없는 생활용품까지 포함했고, 아이 대상 서비스라 <strong>동물 인형</strong> 클래스도 따로 넣었습니다.
+    </p>
+    <p>94개 중 4개는 인물 클래스이고, 나머지 90개가 사물입니다.</p>
+
+    <h3>학습 설정</h3>
+    <p>체크포인트에 남아 있는 실제 학습 인자입니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">항목</th><th>값</th></tr>
+        <tr><td>Base</td><td><strong><code>yolov8n.pt</code></strong> (nano) — 실시간 추론이 목표라 가장 가벼운 모델</td></tr>
+        <tr><td><code>imgsz</code> / <code>batch</code></td><td>640 / 64</td></tr>
+        <tr><td><code>epochs</code> / <code>patience</code></td><td>1000 / <strong>50</strong> — 사실상 조기 종료에 맡긴 설정</td></tr>
+        <tr><td><code>optimizer</code> / <code>lr0</code></td><td>auto / 0.01</td></tr>
+      </table>
+    </div>
+
+    <h3>문제 발견</h3>
+    <p>
+      사전학습된 YOLOv8이 이미 아는 객체 외에 <strong>서비스에 필요한 물건을 커스텀 클래스로 추가</strong>해야 했습니다.
+      학습 결과를 확인하다가 <strong>커스텀 클래스의 탐지율이 유독 낮다</strong>는 것을 발견했습니다.
+      원인을 따라가 보니 학습 데이터의 구성 자체가 기울어져 있었습니다.
+    </p>
+    <ul>
+      <li><strong>기존 사전학습 클래스</strong> — 대규모 공개 데이터셋으로 이미 충분한 샘플</li>
+      <li><strong>새로 추가한 커스텀 클래스</strong> — 직접 수집·라벨링한 소량의 이미지</li>
+    </ul>
+    <div class="quote">
+      클래스 간 샘플 수 격차가 크면 모델은 <strong>다수 클래스로 예측을 몰아버리는 것이 손실을 줄이는 데 유리</strong>하다고 학습합니다.
+      손실 함수 입장에서는 소수 클래스를 포기하는 것이 합리적 선택입니다.<br>
+      <strong>커스텀 클래스를 아예 예측하지 않는 방향으로 수렴하는 것</strong>이 이 문제의 본질이었습니다.
+      모델을 더 크게 바꾸거나 오래 돌려도 해결되지 않습니다 — 학습 신호 자체가 그 방향을 가리키기 때문입니다.
+    </div>
+
+    <h3>해결 — 세 가지 모두 데이터 레벨의 개입</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:40px">#</th><th style="width:190px">조치</th><th>내용</th></tr>
+        <tr><td>1</td><td><strong>데이터 증강</strong></td><td>Rotation · Cutout 등으로 소수 클래스를 <strong>약 3배</strong> 확보</td></tr>
+        <tr><td>2</td><td><strong>클래스별 샘플 수 조정</strong></td><td>데이터셋 구성 단계에서 클래스 간 비율 격차를 줄임</td></tr>
+        <tr><td>3</td><td><strong>오라벨 수정</strong></td><td>학습 데이터를 다시 훑어 <strong>잘못 라벨링된 것을 찾아 고침</strong></td></tr>
+      </table>
+    </div>
+    <p>
+      <strong>3번이 의외로 효과가 컸습니다.</strong>
+      5,576장을 사람이 나눠 라벨링하다 보니 기준이 흔들린 구간이 있었고,
+      모델이 못 맞히는 클래스를 따라가 보면 데이터 쪽에 원인이 있는 경우가 많았습니다.
+    </p>
+    <div class="quote"><strong>"모델이 틀렸다"보다 "라벨이 틀렸다"를 먼저 의심하게 된 계기</strong>입니다.</div>
+  </div>
+</section>
+
+<section id="gesture">
+  <div class="wrap narrow">
+    <h2>손가락 제스처 인식 — 좋은 특징이 모델을 단순하게 만든다</h2>
+    <p>
+      글을 모르는 아이가 화면을 만지지 않고 조작할 수 있어야 했습니다.
+      MediaPipe의 손 랜드마크를 그대로 쓰지 않고, <strong>각도 특징을 뽑아 KNN으로 분류</strong>했습니다.
+    </p>
+    <figure>
+      <img class="bare" src="../assets/img/yolo-gesture.png" alt="제스처 인식 파이프라인">
+      <figcaption>좌표가 아니라 각도를 쓰면 손의 크기·위치·거리와 무관한 특징이 됩니다</figcaption>
+    </figure>
+    <div class="quote">
+      <strong>왜 좌표가 아니라 각도인가</strong> — 랜드마크 좌표를 그대로 쓰면 손이 카메라에 가까울 때와 멀 때,
+      화면 어디에 있느냐에 따라 값이 전부 달라집니다.
+      <strong>뼈대 벡터를 정규화하고 그 사이 각도만 남기면 손의 크기·위치·거리와 무관한 특징</strong>이 됩니다.
+      이 표현 위에서는 KNN 하나로 충분했습니다.
+    </div>
+
+    <h3>게임 규칙</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:120px">동작</th><th style="width:190px">제스처</th><th>처리</th></tr>
+        <tr><td>게임 시작</td><td>✌️ <code>v</code> 를 <strong>3초 유지</strong></td><td>카운트다운 후 시작</td></tr>
+        <tr><td>정답 선택</td><td>☝️ <code>point</code> 로 단어를 가리킴</td><td>검지 끝 좌표가 단어 박스 안에 들어오면 판정</td></tr>
+        <tr><td>정답 / 오답</td><td></td><td>⭕ / ❌ 표시 + 효과음 + 점수 반영</td></tr>
+        <tr><td>종료</td><td>20초 경과</td><td>종료음 + 점수 초기화</td></tr>
+      </table>
+    </div>
+    <p>
+      화면에는 아이용 단어 30개 중 5개를 무작위로 배치하고, 정답 단어의 <strong>그림</strong>을 우측 상단에 보여줍니다.
+      한글은 OpenCV가 그리지 못해 <strong>PIL로 렌더링한 뒤 배열로 되돌리는 방식</strong>으로 처리했고,
+      캐릭터 오버레이는 알파 채널을 직접 블렌딩했습니다.
+    </p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>한계와 배운 점</h2>
+
+    <div class="note">
+      <strong>이 프로젝트의 가장 아쉬운 점은 지표를 남기지 않은 것입니다.</strong>
+      개선 여부를 육안 확인과 탐지 성공 여부로만 판단했고,
+      클래스별 precision/recall과 mAP를 <strong>before/after로 기록해두지 않았습니다.</strong>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:200px">한계</th><th>내용</th></tr>
+        <tr><td><strong>성능 지표 부재</strong></td><td>개선을 수치로 증명할 수 없습니다. 저장소에 <code>runs/</code> 로그도 남아 있지 않습니다</td></tr>
+        <tr><td>탐지 결과 이미지 경로가 절대경로</td>
+            <td><code>predict(save=True)</code> 가 만든 폴더를 파일시스템에서 직접 찾아 읽습니다.
+                예측 결과를 메모리에서 바로 인코딩하는 편이 맞습니다</td></tr>
+        <tr><td>게임 상태가 지역 변수</td><td>동시 접속 시 세션 분리가 되지 않습니다</td></tr>
+        <tr><td>웹캠을 서버가 직접 연다</td><td><code>cv2.VideoCapture(0)</code> 이 서버 측 카메라를 잡으므로 로컬 실행 전용입니다</td></tr>
+        <tr><td><code>text-davinci-003</code> 단종</td><td>현재는 사용할 수 없어 최신 모델로 교체가 필요합니다</td></tr>
+      </table>
+    </div>
+
+    <h3>발표 당시 정리한 상용화 과제</h3>
+    <ol>
+      <li><strong>데이터 불균형</strong> — 기존 YOLOv8 클래스와 새로 추가한 커스텀 클래스 사이의 격차</li>
+      <li><strong>TTS 개선</strong> — 기계음 대신 아이가 좋아하는 캐릭터 목소리, 다국어 지원</li>
+      <li><strong>앱 출시</strong> — 언어 선택(한국어/English/日本語/中文/Français) · 음성 선택</li>
+    </ol>
+
+    <h3>배운 점</h3>
+    <ul>
+      <li><strong>데이터 문제는 모델을 바꿔서 해결되지 않습니다.</strong>
+          탐지율이 낮은 원인이 모델이 아니라 데이터 구성에 있다는 것을 확인한 첫 경험이었습니다.
+          증강·비율 조정·오라벨 수정 셋 다 데이터 쪽 조치였습니다</li>
+      <li><strong>개선을 주장하려면 지표가 먼저 있어야 합니다.</strong>
+          이 프로젝트에 지표가 없었던 것이 이후
+          <a href="emour.html">Emour</a>에서 <strong>평가 기준을 먼저 정하고 데이터 누수까지 차단하는</strong> 방식으로 이어졌습니다</li>
+      <li><strong>좋은 특징 설계는 모델을 단순하게 만듭니다.</strong>
+          손 제스처는 좌표를 각도로 바꾼 것만으로 KNN 하나면 충분했습니다</li>
+    </ul>
+
+    <div class="prevnext">
+      <a class="btn" href="dream-shaper.html">← 이전: Dream Shaper</a>
+      <a class="btn" href="../index.html">전체 프로젝트</a>
+      <a class="btn" href="nestjs-sns.html">다음: SNS Clone →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>엄마 이게뭐야 · 2023.08 ~ 09</span>
+    <nav>
+      <a href="../index.html">Portfolio</a>
+      <a href="https://github.com/chlgks2/YOLO_v8-mediapipe_" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
