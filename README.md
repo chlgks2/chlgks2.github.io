@@ -7,7 +7,7 @@
 ## 구성
 
 ```
-index.html              랜딩 — 프로젝트 카드 · 일하는 방식 · 기술 스택 · 공개 모델
+index.html              랜딩 — 프로젝트 카드 · 개발자로서의 원칙 · 학습 이력 · 기술 스택 · 공개 모델
 p/emour.html            01 Emour — 커플 대화 감정 분석 메신저
 p/pixg.html             02 PixG — AI 픽셀 스프라이트 시트 생성기 (최우수상)
 p/blind-dating.html     03 Blind Dating — 성향 기반 블라인드 소개팅
