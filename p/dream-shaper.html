@@ -52,9 +52,9 @@
                                 → 결과 화면 (음원 + 커버)</code></pre>
 
     <h3>백엔드 전담이 아니라 AI 서버를 만들었습니다</h3>
-    <figure class="figwide">
-      <a href="../assets/img/ds-arch.png" target="_blank" rel="noopener"><img src="../assets/img/ds-arch.png" alt="서비스 아키텍처"></a>
-      <figcaption>React 프론트엔드가 <strong>서로 다른 두 백엔드</strong>를 호출하는 구조였습니다 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
+    <figure>
+      <img src="../assets/img/ds-arch.png" alt="서비스 아키텍처">
+      <figcaption>React 프론트엔드가 <strong>서로 다른 두 백엔드</strong>를 호출하는 구조였습니다</figcaption>
     </figure>
     <div class="tablewrap">
       <table>
@@ -85,9 +85,9 @@
 <section id="data">
   <div class="wrap narrow">
     <h2>데이터가 결과를 갈랐습니다</h2>
-    <figure class="figwide">
-      <a href="../assets/img/ds-pipeline.png" target="_blank" rel="noopener"><img src="../assets/img/ds-pipeline.png" alt="데이터 파이프라인"></a>
-      <figcaption>음원 확보 → 반주·잡음 분리 → 정규화 → <strong>전량 청취 검수</strong> → 슬라이스 → 학습 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
+    <figure>
+      <img src="../assets/img/ds-pipeline.png" alt="데이터 파이프라인">
+      <figcaption>음원 확보 → 반주·잡음 분리 → 정규화 → <strong>전량 청취 검수</strong> → 슬라이스 → 학습</figcaption>
     </figure>
     <div class="quote">
       <strong>자동화하지 않은 유일한 구간이 「전량 청취 검수」입니다.</strong>
@@ -139,9 +139,9 @@
     </p>
 
     <h3>학습 곡선에서 확인한 것</h3>
-    <figure class="figwide">
-      <a href="../assets/img/ds-curve.png" target="_blank" rel="noopener"><img src="../assets/img/ds-curve.png" alt="학습 곡선"></a>
-      <figcaption>로그가 온전한 3개 모델의 <code>tr/mel</code> 을 구간별로 평균한 값 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
+    <figure>
+      <img src="../assets/img/ds-curve.png" alt="학습 곡선">
+      <figcaption>로그가 온전한 3개 모델의 <code>tr/mel</code> 을 구간별로 평균한 값</figcaption>
     </figure>
     <div class="tablewrap">
       <table>
@@ -179,9 +179,9 @@
 <section id="verify">
   <div class="wrap narrow">
     <h2>무엇이 바뀌고 무엇이 유지됐나</h2>
-    <figure class="figwide">
-      <a href="../assets/img/ds-voice.png" target="_blank" rel="noopener"><img src="../assets/img/ds-voice.png" alt="음색 변환 전후 비교"></a>
-      <figcaption>원본 보컬과 변환 결과를 같은 구간에서 비교. 음정은 유지되고 <strong>배음 구조만 바뀌는 것</strong>이 확인됩니다 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
+    <figure>
+      <img src="../assets/img/ds-voice.png" alt="음색 변환 전후 비교">
+      <figcaption>원본 보컬과 변환 결과를 같은 구간에서 비교. 음정은 유지되고 <strong>배음 구조만 바뀌는 것</strong>이 확인됩니다</figcaption>
     </figure>
     <div class="tablewrap">
       <table>
@@ -205,9 +205,9 @@
 <section id="transfer">
   <div class="wrap narrow">
     <h2>파일 전송 구조를 바꿨습니다</h2>
-    <figure class="figwide">
-      <a href="../assets/img/ds-transfer.png" target="_blank" rel="noopener"><img src="../assets/img/ds-transfer.png" alt="파일 전송 구조 전후"></a>
-      <figcaption>서버 경유 → 클라이언트가 S3에 직접 업로드, 서버는 경로(key)만 받습니다 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
+    <figure>
+      <img src="../assets/img/ds-transfer.png" alt="파일 전송 구조 전후">
+      <figcaption>서버 경유 → 클라이언트가 S3에 직접 업로드, 서버는 경로(key)만 받습니다</figcaption>
     </figure>
     <p>
       음원 한 곡이 수십 MB인데 Flask 서버가 전 구간을 받아 들고 있어야 했습니다.

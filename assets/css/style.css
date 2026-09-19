@@ -209,12 +209,6 @@ figcaption{ font-size:13.5px; color:var(--sub); margin-top:11px; line-height:1.6
   .tl-when{ display:block; margin-left:0; margin-top:3px; }
 }
 
-/* ── 넓은 그림 — 빽빽한 다이어그램은 본문 폭을 넘겨 크게 봅니다 ── */
-.figwide{ width:min(1120px, calc(100vw - 44px)); margin-left:50%;
-  transform:translateX(-50%); }
-.figwide img{ cursor:zoom-in; }
-.figwide figcaption .zoom{ color:var(--blue-2); }
-
 /* ── 푸터 ─────────────────────────────────── */
 footer{ border-top:1px solid var(--line); padding:42px 0 70px; color:var(--sub); font-size:14px;
   background:var(--bg-2); }
