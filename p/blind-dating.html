@@ -13,7 +13,7 @@
   <div class="wrap">
     <a class="home" href="../index.html">← Portfolio</a>
     <nav>
-      <a href="#what">무엇을</a><a href="#arch">아키텍처</a><a href="#ux">대기 시간</a>
+      <a href="#what">개요</a><a href="#arch">아키텍처</a><a href="#ux">대기 시간</a>
       <a href="#pipeline">파이프라인</a><a href="#backend">백엔드</a><a href="#limits">한계</a>
       <a href="https://github.com/chlgks2/blind_dating" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -43,7 +43,7 @@
 
 <section id="what">
   <div class="wrap narrow">
-    <h2>무엇을 만들었나</h2>
+    <h2>성향 기반 블라인드 소개팅 서비스 개발</h2>
     <p>
       외모나 스펙이 아니라 <strong>성향</strong>으로 사람을 연결하는 소개팅 서비스입니다.
       사용자는 <code>넷플릭스 vs 유튜브</code>, <code>아침형 vs 저녁형</code> 같은 A/B 질문 21개에 답하고,
@@ -84,7 +84,7 @@
 
 <section id="arch">
   <div class="wrap narrow">
-    <h2>핵심 설계 ① — 호출 방향을 뒤집었습니다</h2>
+    <h2>① 호출 방향을 뒤집었습니다</h2>
     <p>
       이미지 1장 생성에 수십 초가 걸리므로 Django 요청–응답 안에서 처리할 수 없고,
       웹 서버에 CUDA와 모델 수십 GB를 올릴 수도 없었습니다.
@@ -137,7 +137,7 @@
 
 <section id="ux">
   <div class="wrap narrow">
-    <h2>핵심 설계 ② — 수십 초의 대기를 UX로 흡수</h2>
+    <h2>② 수십 초의 대기를 UX로 흡수했습니다</h2>
     <p>
       비동기로 바꿔도 사용자는 결국 기다립니다.
       그래서 <strong>대기 구간에, 어차피 반드시 거쳐야 하는 절차를 겹쳐 배치</strong>했습니다.
@@ -216,7 +216,7 @@ CheckpointLoaderSimple   dreamshaperXL_lightningDPMSDE (SDXL Lightning)
       </table>
     </div>
 
-    <h3>모델 선정 — 전부 비교를 거쳤습니다</h3>
+    <h3>모델은 전부 비교해보고 골랐습니다</h3>
     <ul>
       <li><strong>체크포인트 13종</strong> 비교(약 59GB) → 운영 <code>dreamshaperXL_lightningDPMSDE</code></li>
       <li><strong>지브리 LoRA 4종</strong> A/B 비교 → <code>giblylast</code> 채택
@@ -229,7 +229,7 @@ CheckpointLoaderSimple   dreamshaperXL_lightningDPMSDE (SDXL Lightning)
       <li>얼굴 검출·세그멘테이션 — <code>face_yolov8m.pt</code> + <code>sam_vit_b</code> / 업스케일 — <code>4x-UltraSharp</code></li>
     </ul>
 
-    <h3>2 스테이지 모델 체이닝 — 검증 완료, 미배포</h3>
+    <h3>2 스테이지 체이닝은 검증까지 하고 배포하지 않았습니다</h3>
     <pre><code>[Stage 1]  SDXL   dreamshaperXL_lightning + IPAdapterFaceID(0.7)
            steps 30, cfg 5, denoise 0.35 → FaceDetailer → Upscale ×1.2
            → 얼굴 정체성 확립
@@ -311,7 +311,7 @@ return round(match_score / total_weight * 100, 1)   # 0~100 정규화</code></pr
       <li><strong>공통 응답 문항만으로 정규화</strong>해, 설문을 다 풀지 않은 사용자도 비교할 수 있습니다</li>
     </ul>
 
-    <h3>WebSocket 실시간 채팅 — JWT 인증 미들웨어 직접 구현</h3>
+    <h3>WebSocket 채팅에 JWT 인증 미들웨어를 직접 만들었습니다</h3>
     <p>
       브라우저 WebSocket API는 커스텀 헤더를 지정할 수 없어 REST와 같은 <code>Authorization: Bearer</code> 방식을 쓸 수 없었습니다.
       Channels <code>BaseMiddleware</code> 를 상속해

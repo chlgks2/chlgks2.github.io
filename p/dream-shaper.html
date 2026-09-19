@@ -13,7 +13,7 @@
   <div class="wrap">
     <a class="home" href="../index.html">← Portfolio</a>
     <nav>
-      <a href="#what">무엇을</a><a href="#data">데이터</a><a href="#train">학습</a>
+      <a href="#what">개요</a><a href="#data">데이터</a><a href="#train">학습</a>
       <a href="#verify">검증</a><a href="#transfer">파일 전송</a><a href="#limits">한계</a>
       <a href="https://github.com/chlgks2/DreamShaper" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -42,7 +42,7 @@
 
 <section id="what">
   <div class="wrap narrow">
-    <h2>무엇을 만들었나</h2>
+    <h2>AI 음성 커버 생성 서비스 개발</h2>
     <p>
       사용자가 곡을 올리고 아티스트를 고르면, 그 목소리로 변환된 커버를 돌려줍니다.
       여기에 간단한 스케치를 그리면 <strong>DALL·E 2가 앨범 커버</strong>를 만들어 주는 기능을 붙였습니다.
@@ -51,7 +51,7 @@
                                 → 커버 스케치 → /draw     (앨범 커버)
                                 → 결과 화면 (음원 + 커버)</code></pre>
 
-    <h3>담당 범위 — "백엔드 전담"이 아니라 "AI 서버 구축"입니다</h3>
+    <h3>백엔드 전담이 아니라 AI 서버를 만들었습니다</h3>
     <figure class="figwide">
       <a href="../assets/img/ds-arch.png" target="_blank" rel="noopener"><img src="../assets/img/ds-arch.png" alt="서비스 아키텍처"></a>
       <figcaption>React 프론트엔드가 <strong>서로 다른 두 백엔드</strong>를 호출하는 구조였습니다 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
@@ -178,7 +178,7 @@
 
 <section id="verify">
   <div class="wrap narrow">
-    <h2>결과 검증 — 무엇이 바뀌고 무엇이 유지됐는가</h2>
+    <h2>무엇이 바뀌고 무엇이 유지됐나</h2>
     <figure class="figwide">
       <a href="../assets/img/ds-voice.png" target="_blank" rel="noopener"><img src="../assets/img/ds-voice.png" alt="음색 변환 전후 비교"></a>
       <figcaption>원본 보컬과 변환 결과를 같은 구간에서 비교. 음정은 유지되고 <strong>배음 구조만 바뀌는 것</strong>이 확인됩니다 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
@@ -194,7 +194,7 @@
       </table>
     </div>
 
-    <h3>앨범 커버 — DALL·E 2</h3>
+    <h3>DALL·E 2로 앨범 커버를 만들었습니다</h3>
     <figure>
       <img src="../assets/img/ds-cover.png" alt="앨범 커버 생성">
       <figcaption>사용자 스케치를 받아 DALL·E 2로 앨범 커버를 생성하고 S3에 저장</figcaption>
@@ -204,7 +204,7 @@
 
 <section id="transfer">
   <div class="wrap narrow">
-    <h2>파일 전송 — 구조를 바꾼 지점</h2>
+    <h2>파일 전송 구조를 바꿨습니다</h2>
     <figure class="figwide">
       <a href="../assets/img/ds-transfer.png" target="_blank" rel="noopener"><img src="../assets/img/ds-transfer.png" alt="파일 전송 구조 전후"></a>
       <figcaption>서버 경유 → 클라이언트가 S3에 직접 업로드, 서버는 경로(key)만 받습니다 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
