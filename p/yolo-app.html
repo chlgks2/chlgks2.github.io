@@ -44,9 +44,9 @@
   <div class="wrap narrow">
     <h2>무엇을 만들었나</h2>
     <p>아이가 "엄마 이게 뭐야?"라고 묻는 상황을 앱이 대신 받아주는 것이 출발점입니다.</p>
-    <figure>
-      <img class="bare" src="../assets/img/yolo-flow.png" alt="서비스 흐름">
-      <figcaption>탐지에서 끝내지 않고 <strong>설명 → 음성 → 기록 → 리포트</strong>까지 이어붙인 것이 이 프로젝트의 범위입니다</figcaption>
+    <figure class="figwide">
+      <a href="../assets/img/yolo-flow.png" target="_blank" rel="noopener"><img class="bare" src="../assets/img/yolo-flow.png" alt="서비스 흐름"></a>
+      <figcaption>탐지에서 끝내지 않고 <strong>설명 → 음성 → 기록 → 리포트</strong>까지 이어붙인 것이 이 프로젝트의 범위입니다 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
     </figure>
     <p>
       기획 의도는 <strong>"아이의 호기심을 해결해 주면서, 부모가 자녀의 관심사를 손쉽게 알 수 있는 서비스"</strong> 였고,
@@ -160,9 +160,9 @@ def detect():
       글을 모르는 아이가 화면을 만지지 않고 조작할 수 있어야 했습니다.
       MediaPipe의 손 랜드마크를 그대로 쓰지 않고, <strong>각도 특징을 뽑아 KNN으로 분류</strong>했습니다.
     </p>
-    <figure>
-      <img class="bare" src="../assets/img/yolo-gesture.png" alt="제스처 인식 파이프라인">
-      <figcaption>좌표가 아니라 각도를 쓰면 손의 크기·위치·거리와 무관한 특징이 됩니다</figcaption>
+    <figure class="figwide">
+      <a href="../assets/img/yolo-gesture.png" target="_blank" rel="noopener"><img class="bare" src="../assets/img/yolo-gesture.png" alt="제스처 인식 파이프라인"></a>
+      <figcaption>좌표가 아니라 각도를 쓰면 손의 크기·위치·거리와 무관한 특징이 됩니다 <span class="zoom">· 클릭하면 원본 크기로 열립니다</span></figcaption>
     </figure>
     <div class="quote">
       <strong>왜 좌표가 아니라 각도인가</strong> — 랜드마크 좌표를 그대로 쓰면 손이 카메라에 가까울 때와 멀 때,
