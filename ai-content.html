@@ -166,33 +166,38 @@
     <div class="tablewrap">
       <table>
         <tr><th style="width:96px">시각</th><th style="width:150px">무엇을 바꿨나</th><th>왜</th></tr>
-        <tr><td><strong>6/14</strong> 18:52</td><td>Efficient KSampler 계열</td>
+        <tr><td><a href="assets/workflows/ipadapter_efficient.json" target="_blank" rel="noopener"><strong>6/14</strong> 18:52</a></td><td>Efficient KSampler 계열</td>
             <td>노드 수를 줄여 반복 속도를 높여보려는 시도. <strong>채택하지 않음</strong></td></tr>
-        <tr><td><strong>6/14</strong> 19:27</td><td>출발점</td>
+        <tr><td><a href="assets/workflows/26_06_14_1927.json" target="_blank" rel="noopener"><strong>6/14</strong> 19:27</a></td><td>출발점</td>
             <td>Juggernaut-XL v9 · <code>ghibli_style_offset</code> 1.0 · euler/simple · steps 20 · cfg 8 · <strong>denoise 1</strong></td></tr>
-        <tr><td><strong>6/14</strong> 19:39</td><td><strong>denoise 1 → 0.4</strong></td>
+        <tr><td><a href="assets/workflows/19_39.json" target="_blank" rel="noopener"><strong>6/14</strong> 19:39</a></td><td><strong>denoise 1 → 0.4</strong></td>
             <td>txt2img로는 원본 구도가 사라졌습니다. <strong>img2img로 전환</strong>한 지점</td></tr>
-        <tr><td><strong>6/16</strong> 10:44</td><td>LoRA 3개 적층</td>
+        <tr><td><a href="assets/workflows/0616_1044.json" target="_blank" rel="noopener"><strong>6/16</strong> 10:44</a></td><td>LoRA 3개 적층</td>
             <td>같은 LoRA를 겹쳐 스타일 강도를 올려봄</td></tr>
-        <tr><td><strong>6/16</strong> 11:01</td><td><strong>LoRA 교체 · 샘플러 교체</strong></td>
+        <tr><td><a href="assets/workflows/0616_1101.json" target="_blank" rel="noopener"><strong>6/16</strong> 11:01</a></td><td><strong>LoRA 교체 · 샘플러 교체</strong></td>
             <td><code>ghibli_style_offset</code> → <code>giblylast</code><br>
                 euler/simple → <strong>dpmpp_2m_sde/karras</strong> · steps 30 · cfg 6.3 · IPAdapter 1.0 → 0.4</td></tr>
-        <tr><td><strong>6/16</strong> 11:11</td><td>동일 설정 재실행</td>
+        <tr><td><a href="assets/workflows/0616_1111.json" target="_blank" rel="noopener"><strong>6/16</strong> 11:11</a></td><td>동일 설정 재실행</td>
             <td>시드를 바꿔 <strong>재현성 확인</strong></td></tr>
-        <tr><td><strong>6/17</strong> 07:38</td><td>steps 35 · cfg 5.5 · denoise 0.7</td>
+        <tr><td><a href="assets/workflows/0617_0738.json" target="_blank" rel="noopener"><strong>6/17</strong> 07:38</a></td><td>steps 35 · cfg 5.5 · denoise 0.7</td>
             <td>스타일을 더 밀어봄 → <strong>인물이 바뀌기 시작</strong></td></tr>
-        <tr><td><strong>6/17</strong> 07:40</td><td>⭐ <strong>FaceDetailer 도입</strong></td>
+        <tr><td><a href="assets/workflows/06_17_0740.json" target="_blank" rel="noopener"><strong>6/17</strong> 07:40</a></td><td>⭐ <strong>FaceDetailer 도입</strong></td>
             <td>얼굴만 잘라 재생성. LoRA 1.0 → 0.9 · IPAdapter 0.4 → <strong>0.75</strong> · denoise <strong>0.6</strong></td></tr>
-        <tr><td><strong>6/17</strong> 08:56</td><td>IPAdapter 2단 분리</td>
+        <tr><td><a href="assets/workflows/06_17_0856.json" target="_blank" rel="noopener"><strong>6/17</strong> 08:56</a></td><td>IPAdapter 2단 분리</td>
             <td>정체성용 0.75 · 보조 0.6 — <strong>가중치를 하나로 묶지 않고 나눔</strong></td></tr>
-        <tr><td><strong>6/17</strong> 09:30</td><td>업스케일 단계 추가</td>
+        <tr><td><a href="assets/workflows/06_17_0930.json" target="_blank" rel="noopener"><strong>6/17</strong> 09:30</a></td><td>업스케일 단계 추가</td>
             <td><code>4x-UltraSharp</code> 를 파이프라인 끝에 연결</td></tr>
-        <tr><td><strong>6/17</strong> 10:53</td><td><strong>FaceDetailer guide 512 → 768</strong></td>
+        <tr><td><a href="assets/workflows/06_17_1053.json" target="_blank" rel="noopener"><strong>6/17</strong> 10:53</a></td><td><strong>FaceDetailer guide 512 → 768</strong></td>
             <td>512에서는 눈·입이 여전히 뭉갰습니다. <strong>최종 운영값</strong></td></tr>
-        <tr><td><strong>6/17</strong> 10:59</td><td>애니 스타일 분기</td>
+        <tr><td><a href="assets/workflows/Anime.json" target="_blank" rel="noopener"><strong>6/17</strong> 10:59</a></td><td>애니 스타일 분기</td>
             <td><code>animagine-xl-4.0</code> + <code>cute-anime</code> 0.7 — <strong>같은 구조에 스타일만 교체</strong>되는지 검증</td></tr>
       </table>
     </div>
+
+    <p class="note">
+      📂 <strong>왼쪽 시각을 누르면 그 시점의 ComfyUI 워크플로우 원본(JSON)이 열립니다.</strong>
+      12개 전부 올려두었습니다 — 내려받아 ComfyUI에 넣으면 그대로 실행됩니다.
+    </p>
 
     <div class="quote">
       <strong>파라미터 하나를 바꿀 때마다 파일을 새로 저장했습니다.</strong>
