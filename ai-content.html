@@ -15,7 +15,9 @@
     <nav>
       <a href="#compare">① 모델 비교</a>
       <a href="#pipeline">② 파이프라인</a>
+      <a href="#iterate">반복 실험</a>
       <a href="#auto">③ 자동화</a>
+      <a href="#lora">LoRA 학습</a>
       <a href="#result">결과물</a>
       <a href="#limits">안 해본 것</a>
     </nav>
@@ -38,8 +40,8 @@
     </div>
     <div class="kpis">
       <div class="kpi"><b>17종</b><span>비교 실험한 모델<br>체크포인트 13 · LoRA 4</span></div>
-      <div class="kpi"><b>2건</b><span>설계한 생성 파이프라인<br>ComfyUI · SD 1.5</span></div>
-      <div class="kpi"><b>최우수상</b><span>PixG<br>메타버스 아카데미 2기</span></div>
+      <div class="kpi"><b>12개</b><span>저장한 워크플로우<br>나흘간 반복 실험</span></div>
+      <div class="kpi"><b>3회</b><span>LoRA 직접 학습<br>클라이언트 과제</span></div>
       <div class="kpi"><b>실사용 검증</b><span>ZEP 아바타 적용<br>Blind Dating 실서비스</span></div>
     </div>
   </div>
@@ -153,6 +155,59 @@
   </div>
 </section>
 
+<section id="iterate">
+  <div class="wrap narrow">
+    <h2>같은 화면을 12번 다시 만들었습니다</h2>
+    <p class="sec-sub">
+      Blind Dating 아바타 품질을 잡으려고 <strong>나흘 동안 워크플로우 12개</strong>를 저장해가며 돌렸습니다.
+      아래는 그 원본 파일에서 뽑은 실제 변경 이력입니다.
+    </p>
+
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:96px">시각</th><th style="width:150px">무엇을 바꿨나</th><th>왜</th></tr>
+        <tr><td><strong>6/14</strong> 18:52</td><td>Efficient KSampler 계열</td>
+            <td>노드 수를 줄여 반복 속도를 높여보려는 시도. <strong>채택하지 않음</strong></td></tr>
+        <tr><td><strong>6/14</strong> 19:27</td><td>출발점</td>
+            <td>Juggernaut-XL v9 · <code>ghibli_style_offset</code> 1.0 · euler/simple · steps 20 · cfg 8 · <strong>denoise 1</strong></td></tr>
+        <tr><td><strong>6/14</strong> 19:39</td><td><strong>denoise 1 → 0.4</strong></td>
+            <td>txt2img로는 원본 구도가 사라졌습니다. <strong>img2img로 전환</strong>한 지점</td></tr>
+        <tr><td><strong>6/16</strong> 10:44</td><td>LoRA 3개 적층</td>
+            <td>같은 LoRA를 겹쳐 스타일 강도를 올려봄</td></tr>
+        <tr><td><strong>6/16</strong> 11:01</td><td><strong>LoRA 교체 · 샘플러 교체</strong></td>
+            <td><code>ghibli_style_offset</code> → <code>giblylast</code><br>
+                euler/simple → <strong>dpmpp_2m_sde/karras</strong> · steps 30 · cfg 6.3 · IPAdapter 1.0 → 0.4</td></tr>
+        <tr><td><strong>6/16</strong> 11:11</td><td>동일 설정 재실행</td>
+            <td>시드를 바꿔 <strong>재현성 확인</strong></td></tr>
+        <tr><td><strong>6/17</strong> 07:38</td><td>steps 35 · cfg 5.5 · denoise 0.7</td>
+            <td>스타일을 더 밀어봄 → <strong>인물이 바뀌기 시작</strong></td></tr>
+        <tr><td><strong>6/17</strong> 07:40</td><td>⭐ <strong>FaceDetailer 도입</strong></td>
+            <td>얼굴만 잘라 재생성. LoRA 1.0 → 0.9 · IPAdapter 0.4 → <strong>0.75</strong> · denoise <strong>0.6</strong></td></tr>
+        <tr><td><strong>6/17</strong> 08:56</td><td>IPAdapter 2단 분리</td>
+            <td>정체성용 0.75 · 보조 0.6 — <strong>가중치를 하나로 묶지 않고 나눔</strong></td></tr>
+        <tr><td><strong>6/17</strong> 09:30</td><td>업스케일 단계 추가</td>
+            <td><code>4x-UltraSharp</code> 를 파이프라인 끝에 연결</td></tr>
+        <tr><td><strong>6/17</strong> 10:53</td><td><strong>FaceDetailer guide 512 → 768</strong></td>
+            <td>512에서는 눈·입이 여전히 뭉갰습니다. <strong>최종 운영값</strong></td></tr>
+        <tr><td><strong>6/17</strong> 10:59</td><td>애니 스타일 분기</td>
+            <td><code>animagine-xl-4.0</code> + <code>cute-anime</code> 0.7 — <strong>같은 구조에 스타일만 교체</strong>되는지 검증</td></tr>
+      </table>
+    </div>
+
+    <div class="quote">
+      <strong>파라미터 하나를 바꿀 때마다 파일을 새로 저장했습니다.</strong>
+      되돌릴 수 있어야 「이게 좋아졌다」를 말할 수 있고,
+      <strong>무엇을 바꿔서 좋아졌는지</strong>도 그때만 알 수 있습니다.
+    </div>
+
+    <p class="note">
+      운영 배포본은 여기서 체크포인트를 한 번 더 바꾼 것입니다 —
+      <strong>Juggernaut-XL v9 → DreamShaper XL Lightning.</strong>
+      품질은 Juggernaut가 좋았지만 <strong>사용자 대기 시간</strong>을 줄이는 쪽을 골랐습니다.
+    </p>
+  </div>
+</section>
+
 <section id="auto">
   <div class="wrap narrow">
     <h2>③ 생성 워크플로우를 자동화했습니다</h2>
@@ -196,6 +251,119 @@
       <img src="assets/img/pixg-consist.png" alt="일관성 검증">
       <figcaption>동일 프롬프트·시드 조건에서의 프레임 간 캐릭터 일관성 — 요구조건 ①의 검증</figcaption>
     </figure>
+  </div>
+</section>
+
+<section id="lora">
+  <div class="wrap narrow">
+    <h2>LoRA를 직접 학습했습니다</h2>
+    <p class="sec-sub">
+      2024년 12월, 한 회사의 채용 과제로 받은 작업입니다.
+      <strong>클라이언트가 자사 캐릭터를 주고 「비슷한 캐릭터를 AI로 만들어 달라」</strong>고 요청했습니다.
+      나흘간 진행하고 <strong>26쪽짜리 작업 기록</strong>을 함께 제출했습니다.
+    </p>
+
+    <div class="kpis">
+      <div class="kpi"><b>4가지</b><span>접근을 먼저 비교<br>LoRA · DreamBooth · 프롬프트 · 얼굴복제</span></div>
+      <div class="kpi"><b>3회</b><span>LoRA 재학습<br>태그·증강·파라미터 조정</span></div>
+      <div class="kpi"><b>14장</b><span>학습 데이터<br>증강으로 보강</span></div>
+      <div class="kpi"><b>26쪽</b><span>작업 기록 제출<br>실패 과정 포함</span></div>
+    </div>
+
+    <h3>방법부터 비교했습니다</h3>
+    <p>바로 만들지 않고 <strong>가능한 접근 4가지를 먼저 정리</strong>한 뒤 골랐습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:180px">접근</th><th>판단</th></tr>
+        <tr><td><strong>LoRA 학습</strong></td>
+            <td>학습 데이터가 20장 이하 → <strong>증강으로 보완해 진행</strong> ✅</td></tr>
+        <tr><td>DreamBooth 파인튜닝</td>
+            <td>적은 이미지로 특정 캐릭터를 학습하는 방법. 자원·시간 대비 LoRA를 우선</td></tr>
+        <tr><td>프롬프트만</td>
+            <td>먼저 돌려 <strong>도달 가능한 품질의 기준선</strong>을 확인하는 용도로 사용</td></tr>
+        <tr><td><strong>IP-Adapter · ReActor · InstantID</strong></td>
+            <td>얼굴 복제 계열 3종. <strong>「원본과 충분히 유사한가」라는 1번 목표</strong>를 위해 적용 ✅</td></tr>
+      </table>
+    </div>
+
+    <h3>데이터를 만드는 데서 시작했습니다</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:170px">단계</th><th>판단</th></tr>
+        <tr><td>포맷</td><td>JPG 대신 <strong>PNG</strong> — 손실 압축을 피하고 <strong>배경 투명화</strong>가 가능해서</td></tr>
+        <tr><td>해상도</td><td><strong>1024×1024</strong> — SD 1.5는 512, SDXL은 1024로 학습된 경우가 많아 <strong>XL 기준</strong>으로 맞춤</td></tr>
+        <tr><td>배경 제거</td><td>rembg·GrabCut을 쓰지 않고 <strong>직접 처리</strong> — 장수가 적고 <strong>품질이 결과를 좌우</strong>한다고 판단</td></tr>
+        <tr><td><strong>태그</strong></td>
+            <td>WD14 Tagger <strong>2종을 비교</strong>했으나 둘 다 불만족 →
+                <strong>자동 태그와 직접 정리한 태그를 합산</strong>해 사용</td></tr>
+        <tr><td>증강</td>
+            <td>14장뿐이라 증강. 다만 <strong>회전·반전 수준으로 제한</strong> —
+                과하면 <strong>원본 특징을 잃어 오히려 해가 된다</strong>고 판단</td></tr>
+      </table>
+    </div>
+
+    <h3>학습 환경을 만드는 데 3일이 걸렸습니다</h3>
+    <p>
+      ComfyUI 내장 학습 노드는 <strong>CUDA 버전이 맞지 않아</strong> 실패했고,
+      <code>kohya_ss</code> 로 전환한 뒤에도 문제가 이어졌습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:230px">증상</th><th>처리</th></tr>
+        <tr><td>torch · cuDNN 버전 충돌</td>
+            <td>Python 3.12 제거 → <strong>3.10 재설치</strong>, CUDA·cuDNN 버전 교체</td></tr>
+        <tr><td>가상환경이 겹침</td>
+            <td><code>kohya_ss</code> 가 자체 <code>venv</code> 를 만들어 conda 환경과 충돌하는 것을 확인</td></tr>
+        <tr><td>파라미터 개수 에러</td>
+            <td>같은 증상의 <strong>GitHub 이슈를 찾아 확인</strong> 후 <strong>v24.1.4로 롤백</strong></td></tr>
+        <tr><td><code>num_samples=0</code></td>
+            <td>데이터셋을 못 찾는 에러. 해상도를 512로 낮춰도 동일 →
+                <strong>폴더 구조와 로그·모델 경로를 분리</strong>해 해결</td></tr>
+      </table>
+    </div>
+    <div class="quote">
+      <strong>3일은 모델을 만든 시간이 아니라 「돌아가게 만든」 시간이었습니다.</strong>
+      환경 문제를 남이 대신 풀어주지 않는다는 걸 여기서 배웠습니다.
+    </div>
+
+    <h3>학습 → 확인 → 다시 학습</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:80px">회차</th><th>바꾼 것과 결과</th></tr>
+        <tr><td><strong>1차</strong></td>
+            <td>기본 설정으로 학습 → SDXL base와 <code>revAnimated</code> 로 생성 비교.
+                <strong>원본 특징은 잃었지만 방향은 맞음</strong></td></tr>
+        <tr><td><strong>2차</strong></td><td><strong>태그 수정 + 파라미터 조정</strong> → 원본과 가까워짐</td></tr>
+        <tr><td><strong>3차</strong></td><td><strong>데이터 증강</strong> 후 태그 재생성·재학습</td></tr>
+      </table>
+    </div>
+
+    <h3>학습한 LoRA 위에 다시 쌓았습니다</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">추가</th><th>효과</th></tr>
+        <tr><td><strong>IP-Adapter</strong> (SD 1.5)</td>
+            <td>미적용본과 나란히 비교 — <strong>원본을 확연히 더 따라감</strong></td></tr>
+        <tr><td>Comfyroll 커스텀 노드</td>
+            <td>스위치로 <strong>LoRA를 켜고 끄며</strong> 기여도를 분리해 확인</td></tr>
+        <tr><td>네거티브 프롬프트 가중치</td>
+            <td><code>(word:strength)</code> 형식으로 억제 강도를 개별 조정</td></tr>
+        <tr><td><strong>ControlNet (canny)</strong></td>
+            <td><strong>원본과 매우 가까워진 지점.</strong> 자세를 고정해 정면·측면을 따로 생성</td></tr>
+        <tr><td>체크포인트 교체</td>
+            <td><code>AnythingElse V4</code> 로 바꿔 캐릭터 화풍에 더 맞춤</td></tr>
+      </table>
+    </div>
+
+    <div class="note">
+      <strong>결과는 탈락이었습니다.</strong> 그래도 이 과제에서 남은 것은 분명합니다 —
+      <strong>클라이언트가 준 캐릭터를 기준으로 삼고, 방법을 비교하고, 데이터를 만들고,
+      환경을 뚫고, 세 번 다시 학습한 전 과정</strong>입니다.
+      제출한 26쪽 문서에는 <strong>실패한 시도와 그 이유</strong>도 그대로 적어 냈습니다.
+      <br><br>
+      🔒 <strong>클라이언트 캐릭터와 생성 결과물은 공개하지 않습니다.</strong>
+      과제로 받은 타사 자산이므로 과정과 수치만 적었습니다.
+    </div>
   </div>
 </section>
 
@@ -256,12 +424,15 @@
             <td><strong>경험 없습니다.</strong> 워크플로우 자동화(작업 큐 · 폴링 워커 · 상태 머신)까지이며,
                 LLM이 도구를 선택해 실행하는 구조는 만들어보지 않았습니다</td></tr>
         <tr><td><strong>크리에이터 협업 콘텐츠 제작</strong></td>
-            <td>실무 협업 경험은 없습니다. 팀 프로젝트에서
-                <strong>기획·디자인 담당과 요구조건을 맞춰 생성 결과를 조정</strong>한 경험까지입니다</td></tr>
-        <tr><td><strong>이미지 생성 모델 파인튜닝</strong></td>
-            <td>이미지 생성 모델은 <strong>전부 공개 사전학습 모델</strong>이며 파인튜닝하지 않았습니다.
-                다만 <strong>텍스트 분류 모델은 직접 학습</strong>했습니다
-                (<a href="p/emour.html">Emour</a> — KcELECTRA 파인튜닝)</td></tr>
+            <td>정규 실무 경험은 없습니다. 다만
+                <strong>클라이언트가 준 캐릭터를 기준으로 유사 캐릭터를 만드는 과제</strong>를 수행했고
+                (<a href="#lora">위 과제</a>), 팀 프로젝트에서 기획·디자인 담당과 요구조건을 맞춰
+                생성 결과를 조정한 경험이 있습니다</td></tr>
+        <tr><td><strong>대규모 파인튜닝 · DreamBooth</strong></td>
+            <td><strong>LoRA는 직접 학습했습니다</strong> (<a href="#lora">위 과제</a> — 3회 재학습).
+                다만 체크포인트 자체를 파인튜닝하거나 DreamBooth를 돌려본 적은 없습니다.
+                <strong>텍스트 분류 모델은 직접 파인튜닝</strong>했습니다
+                (<a href="p/emour.html">Emour</a> — KcELECTRA)</td></tr>
         <tr><td><strong>영어</strong></td>
             <td>OPIc <strong>IM1</strong>. 기술 문서 독해는 가능하나 회화는 부족합니다</td></tr>
       </table>
