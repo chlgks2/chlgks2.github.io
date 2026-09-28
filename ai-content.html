@@ -27,6 +27,18 @@
       border:1px solid #1e2b45;border-radius:6px;padding:3px 8px;white-space:nowrap}
 .rl a:hover{border-color:var(--blue);text-decoration:none}
 @media (max-width:760px){ .roster{grid-template-columns:1fr} }
+
+/* 직무 요건 배지 */
+.req{ font-size:11.5px; font-weight:800; letter-spacing:-.01em; vertical-align:middle;
+      margin-left:9px; padding:3px 9px; border-radius:20px;
+      background:var(--blue-bg); color:var(--blue-2); border:1px solid #1e2b45; }
+.req.rs{ background:var(--accent-bg); color:#f7b477; border-color:#6b4a22; }
+/* 요건 대조표 */
+.reqmap{ width:100%; border-collapse:collapse; }
+.reqmap td{ padding:11px 14px; border-top:1px solid var(--line); vertical-align:top; font-size:14px; }
+.reqmap tr:first-child td{ border-top:0; }
+.reqmap td:first-child{ width:240px; color:var(--ink); font-weight:700; }
+.reqmap a{ display:inline-block; margin-right:10px; }
 </style>
 </head>
 <body>
@@ -36,12 +48,9 @@
     <a class="home" href="index.html">← 전체 포트폴리오</a>
     <nav>
       <a href="#works">작업 3건</a>
-      <a href="#compare">① 모델 비교</a>
-      <a href="#pipeline">② 파이프라인</a>
-      <a href="#iterate">반복 실험</a>
-      <a href="#auto">③ 자동화</a>
-      <a href="#lora">LoRA 학습</a>
-      <a href="#result">결과물</a>
+      <a href="#pixg">PixG</a>
+      <a href="#blind">Blind Dating</a>
+      <a href="#bigglez">Bigglez</a>
     </nav>
   </div>
 </header>
@@ -54,9 +63,10 @@
       <strong>생성 AI 직무에 해당하는 작업만 모은 페이지입니다.</strong>
       전체 포트폴리오에는 백엔드·NLP 프로젝트도 있지만, 여기서는
       <strong>모델·툴 비교 실험 · 생성 파이프라인 설계 · 워크플로우 자동화</strong> 세 가지만 다룹니다.
+      <strong>프로젝트 단위로 묶었고</strong>, 각 항목이 직무 요건 ①②③ 중 무엇에 해당하는지 표시했습니다.
     </p>
     <div class="links">
-      <a class="btn primary" href="#compare">작업 보기</a>
+      <a class="btn primary" href="#works">작업 보기</a>
       <a class="btn" href="index.html">전체 포트폴리오</a>
       <a class="btn" href="https://github.com/chlgks2" target="_blank" rel="noopener">GitHub</a>
     </div>
@@ -81,7 +91,7 @@
         <p class="rd"><strong>프롬프트 한 줄로 게임에 바로 넣는 픽셀 스프라이트 시트를 만드는 서비스.</strong>
           생성형 AI가 「픽셀 느낌의 이미지」에서 멈추는 지점 뒤를 자동화했습니다.</p>
         <div class="rr">내가 한 일 — Stable Diffusion 생성 파이프라인 · 배경 제거와 화질 복원 후처리 · 후처리 자동화 스크립트</div>
-        <div class="rl"><a href="#compare">① 기준 수립</a><a href="#pipeline">② 파이프라인</a><a href="#auto">③ 후처리 자동화</a><a href="#result">결과물</a></div>
+        <div class="rl"><a href="#pixg-req">① 기준 수립</a><a href="#pixg-pipe">② 파이프라인</a><a href="#pixg-auto">③ 후처리 자동화</a><a href="#pixg-result">결과물</a></div>
       </div>
 
       <div class="rc">
@@ -90,7 +100,7 @@
         <p class="rd"><strong>AI 아바타로 얼굴을 가리고 성향으로 사람을 연결하는 소개팅 서비스.</strong>
           사용자가 올린 사진을 지브리 화풍 아바타로 바꾸는 부분을 맡았습니다.</p>
         <div class="rr">내가 한 일 — 모델 17종 비교 · ComfyUI 추론 파이프라인 5단계 설계 · GPU 추론 서버와 작업 큐 구축</div>
-        <div class="rl"><a href="#compare">① 모델 17종 비교</a><a href="#pipeline">② 5단계 파이프라인</a><a href="#iterate">워크플로우 12개</a><a href="#auto">③ 작업 큐·워커</a></div>
+        <div class="rl"><a href="#bd-models">① 모델 17종</a><a href="#bd-pipe">② 5단계</a><a href="#iterate">워크플로우 12개</a><a href="#bd-auto">③ 작업 큐</a><a href="#bd-result">결과물</a></div>
       </div>
 
       <div class="rc">
@@ -99,7 +109,7 @@
         <p class="rd"><strong>클라이언트가 자사 캐릭터를 주고 「비슷한 캐릭터를 AI로 만들어 달라」고 한 과제.</strong>
           이 포트폴리오에서 <strong>이미지 생성 모델을 직접 학습한 유일한 사례</strong>입니다.</p>
         <div class="rr">내가 한 일 — 접근 4가지 비교 · 학습 데이터 제작 · LoRA 3회 학습 · 26쪽 작업 기록 제출</div>
-        <div class="rl"><a href="#lora">LoRA 학습</a></div>
+        <div class="rl"><a href="#bigglez">LoRA 학습</a></div>
       </div>
     </div>
 
@@ -108,17 +118,30 @@
       <strong>모델을 직접 학습해 본 경험은 이것뿐</strong>입니다. 있었던 일을 있는 대로 적는 편이
       직무 요건과 대조하기에도 정확하다고 판단했습니다.
     </p>
+
+    <h3 style="margin-top:38px">직무 요건은 여기서 볼 수 있습니다</h3>
+    <div class="tablewrap">
+      <table class="reqmap">
+        <tr><td>① 모델·툴 실험·비교·활용</td>
+            <td><a href="#pixg-req">PixG 기준 정의</a><a href="#bd-models">Blind Dating 17종</a><a href="#bigglez">Bigglez 접근 4가지</a></td></tr>
+        <tr><td>② 생성 파이프라인 설계</td>
+            <td><a href="#pixg-pipe">PixG 후처리 4단계</a><a href="#bd-pipe">Blind Dating ComfyUI 5단계</a></td></tr>
+        <tr><td>③ 워크플로우 자동화</td>
+            <td><a href="#pixg-auto">PixG 후처리 스크립트</a><a href="#bd-auto">Blind Dating 작업 큐·워커</a></td></tr>
+      </table>
+    </div>
+
   </div>
 </section>
 
-<section id="compare">
+<section id="pixg">
   <div class="wrap narrow">
-    <h2>① 모델과 툴을 비교해서 골랐습니다</h2>
-    <p class="sec-sub">쓸 수 있는 것을 쓴 게 아니라, 기준을 세우고 비교한 뒤 고른 기록입니다.</p>
+    <h2>PixG — 프롬프트 한 줄로 게임 에셋을 만듭니다</h2>
+    <p class="sec-sub">메타버스 아카데미 2기 최종 프로젝트 · 2023.09.18 ~ 11.27 · 5인 · <strong>최우수상</strong><br>생성형 AI가 「픽셀 느낌의 이미지」에서 멈추는 지점 뒤를 자동화했습니다. <strong>기준을 정하고 → 파이프라인을 만들고 → 자동화하고 → 실제 게임에 넣어 확인</strong>한 순서로 적었습니다.</p>
 
-    <h3>기준부터 만들었습니다</h3>
+    <h3 id="pixg-req">기준부터 만들었습니다 <span class="req">① 모델·툴 비교</span></h3>
     <p>
-      <strong>PixG</strong>에서 「픽셀 느낌의 이미지」를 목표로 두면 언제 끝났다고 할지 알 수 없었습니다.
+      「픽셀 느낌의 이미지」를 목표로 두면 <strong>언제 끝났다고 할지 알 수 없었습니다.</strong>
       그래서 <strong>게임 엔진이 실제로 읽을 수 있는가</strong>를 기준으로 조건 4개를 먼저 못박았습니다.
     </p>
     <div class="grid2">
@@ -136,7 +159,79 @@
       조건을 못박은 뒤에야 어떤 기술이 필요한지, 경쟁 서비스와 무엇이 다른지가 보였습니다.
     </div>
 
-    <h3>Blind Dating에서는 17종을 돌려보고 골랐습니다</h3>
+    <h3 id="pixg-pipe">생성부터 게임 에셋까지 <span class="req">② 파이프라인 설계</span></h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:130px">구간</th><th>설정</th></tr>
+        <tr><td>베이스</td><td>Stable Diffusion 1.5 + 픽셀아트 LoRA · CLIP skip <strong>-2</strong></td></tr>
+        <tr><td>동작 생성</td><td><strong>AnimateDiff</strong> <code>animatediffMotion_v15V2</code> ·
+            context_length 16 · steps 20 / cfg 8</td></tr>
+        <tr><td>자세 제어</td><td><strong>ControlNet 2종</strong> — OpenPose <strong>1.0</strong> + Depth <strong>0.2</strong></td></tr>
+        <tr><td>환경</td><td>개인 RTX 3060 6GB / 아카데미 RTX 4090 24GB</td></tr>
+      </table>
+    </div>
+    <p>
+      OpenPose를 1.0으로 강하게 걸어 <strong>동작을 확정</strong>하고,
+      Depth는 0.2로 약하게만 얹어 <strong>입체감만 보조</strong>하도록 역할을 나눴습니다.
+      Depth를 올리면 픽셀아트 특유의 납작한 화풍이 무너집니다.
+    </p>
+    <figure>
+      <img src="assets/img/pixg-pipeline.png" alt="후처리 파이프라인">
+      <figcaption>생성 프레임 → 배경 제거(InSPyReNet) → 화질 복원(ESRGAN 1x) → 64×64 규격 통일 → 8열 격자</figcaption>
+    </figure>
+    <div class="quote">
+      <strong>「픽셀 느낌의 이미지」와 「게임에 넣을 수 있는 에셋」 사이에 이 구간이 있습니다.</strong>
+      경쟁 서비스가 요구조건 2개에서 멈춘 이유도 여기였습니다.
+    </div>
+
+    <h3 id="pixg-auto">후처리 전 구간을 스크립트로 묶었습니다 <span class="req">③ 워크플로우 자동화</span></h3>
+    <p>
+      생성된 프레임을 사람이 손대지 않고 <strong>게임 엔진이 바로 읽는 에셋</strong>으로 바꾸는 구간입니다.
+      배경 제거 · 화질 복원 · 규격 통일 · 격자 배치가 한 번에 돕니다.
+    </p>
+    <figure>
+      <img src="assets/img/pixg-consist.png" alt="일관성 검증">
+      <figcaption>동일 프롬프트·시드 조건에서의 프레임 간 캐릭터 일관성 — 요구조건 ①의 검증</figcaption>
+    </figure>
+
+    <h3 id="pixg-result">프롬프트 한 줄에서 스프라이트 시트까지 <span class="req rs">결과물</span></h3>
+    <div class="video" style="aspect-ratio:1280/624">
+      <video src="assets/video/pixg-flow.mp4" poster="assets/img/pixg-flow-poster.jpg"
+             autoplay muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <p class="video-cap">
+      <b>프롬프트 입력 → 생성 → 다운로드</b>까지의 실제 화면.
+      <code>yellow hair, blue shirts, blue pants</code> 한 줄을 넣으면
+      <strong>달리기 사이클 스프라이트 시트</strong>가 배경까지 처리된 상태로 나옵니다.
+    </p>
+
+    <div class="video" style="aspect-ratio:1280/624;margin-top:26px">
+      <video src="assets/video/pixg-gallery.mp4" poster="assets/img/pixg-gallery-poster.jpg"
+             autoplay muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <p class="video-cap">
+      <b>생성 결과 갤러리</b> — 프롬프트와 결과물이 함께 보관됩니다.
+    </p>
+
+    <h3>실제로 쓰이는지 확인했습니다</h3>
+    <figure>
+      <img src="assets/img/pixg-zep-demo.gif" alt="ZEP 시연">
+      <figcaption>생성한 스프라이트 시트를 <strong>메타버스 플랫폼 ZEP 아바타로 올려 직접 움직여 본 시연</strong> —
+        방향 전환과 걷기 애니메이션이 그대로 동작합니다</figcaption>
+    </figure>
+    <div class="quote">
+      <strong>「이미지가 잘 나왔다」는 자체 평가로 끝내지 않고 실제 사용처에 넣어봤습니다.</strong>
+      요구조건 4개를 정의한 이유도 여기에 있습니다 — 하나라도 빠지면 ZEP에 올라가지 않습니다.
+    </div>
+  </div>
+</section>
+
+<section id="blind">
+  <div class="wrap narrow">
+    <h2>Blind Dating — 얼굴을 가리고 성향으로 연결합니다</h2>
+    <p class="sec-sub">삼성 청년 SW AI 아카데미 15기 1학기 관통 프로젝트 · 2026.05 ~ 06 · 5주 · 2인 · <strong>24커밋 중 21커밋</strong><br>사용자가 올린 사진을 지브리 화풍 아바타로 바꾸는 부분을 맡았습니다. <strong>모델을 고르고 → 파이프라인을 짜고 → 나흘간 다시 돌리고 → GPU 서버를 붙인</strong> 순서입니다.</p>
+
+    <h3 id="bd-models">17종을 돌려보고 골랐습니다 <span class="req">① 모델·툴 비교</span></h3>
     <div class="tablewrap">
       <table>
         <tr><th style="width:190px">항목</th><th>비교와 결정</th></tr>
@@ -156,15 +251,8 @@
       가중치 총합 <strong>약 69GB</strong>는 저장소에 넣지 않고
       <code>models/manifest.json</code> + 다운로드 스크립트로 <strong>환경을 재구성</strong>할 수 있게 했습니다.
     </p>
-  </div>
-</section>
 
-<section id="pipeline">
-  <div class="wrap narrow">
-    <h2>② 생성 파이프라인을 설계했습니다</h2>
-    <p class="sec-sub">모델 하나를 호출한 게 아니라, 여러 단계를 이어 붙여 하나의 결과물이 나오게 만든 작업입니다.</p>
-
-    <h3>Blind Dating — ComfyUI 5단계</h3>
+    <h3 id="bd-pipe">ComfyUI 5단계 <span class="req">② 파이프라인 설계</span></h3>
     <div class="dia">
       <div class="dstep"><div class="rail"></div><div class="n">1</div><div class="bx">
         <div class="t">얼굴 정체성 추출<em>내 얼굴이라는 정보</em></div>
@@ -208,38 +296,9 @@
       (<a href="#iterate">아래 실험 이력</a>).
     </p>
 
-    <h3>PixG — 생성부터 게임 에셋까지</h3>
-    <div class="tablewrap">
-      <table>
-        <tr><th style="width:130px">구간</th><th>설정</th></tr>
-        <tr><td>베이스</td><td>Stable Diffusion 1.5 + 픽셀아트 LoRA · CLIP skip <strong>-2</strong></td></tr>
-        <tr><td>동작 생성</td><td><strong>AnimateDiff</strong> <code>animatediffMotion_v15V2</code> ·
-            context_length 16 · steps 20 / cfg 8</td></tr>
-        <tr><td>자세 제어</td><td><strong>ControlNet 2종</strong> — OpenPose <strong>1.0</strong> + Depth <strong>0.2</strong></td></tr>
-        <tr><td>환경</td><td>개인 RTX 3060 6GB / 아카데미 RTX 4090 24GB</td></tr>
-      </table>
-    </div>
+    <h3 id="iterate">같은 화면을 12번 다시 만들었습니다</h3>
     <p>
-      OpenPose를 1.0으로 강하게 걸어 <strong>동작을 확정</strong>하고,
-      Depth는 0.2로 약하게만 얹어 <strong>입체감만 보조</strong>하도록 역할을 나눴습니다.
-      Depth를 올리면 픽셀아트 특유의 납작한 화풍이 무너집니다.
-    </p>
-    <figure>
-      <img src="assets/img/pixg-pipeline.png" alt="후처리 파이프라인">
-      <figcaption>생성 프레임 → 배경 제거(InSPyReNet) → 화질 복원(ESRGAN 1x) → 64×64 규격 통일 → 8열 격자</figcaption>
-    </figure>
-    <div class="quote">
-      <strong>「픽셀 느낌의 이미지」와 「게임에 넣을 수 있는 에셋」 사이에 이 구간이 있습니다.</strong>
-      경쟁 서비스가 요구조건 2개에서 멈춘 이유도 여기였습니다.
-    </div>
-  </div>
-</section>
-
-<section id="iterate">
-  <div class="wrap narrow">
-    <h2>같은 화면을 12번 다시 만들었습니다</h2>
-    <p class="sec-sub">
-      Blind Dating 아바타 품질을 잡으려고 <strong>나흘 동안 워크플로우 12개</strong>를 저장해가며 돌렸습니다.
+      위 5단계를 이 값으로 굳히기까지, 아바타 품질을 잡으려고 <strong>나흘 동안 워크플로우 12개</strong>를 저장해가며 돌렸습니다.
       아래는 그 원본 파일에서 뽑은 실제 변경 이력입니다.
     </p>
 
@@ -290,14 +349,8 @@
       <strong>Juggernaut-XL v9 → DreamShaper XL Lightning.</strong>
       품질은 Juggernaut가 좋았지만 <strong>사용자 대기 시간</strong>을 줄이는 쪽을 골랐습니다.
     </p>
-  </div>
-</section>
 
-<section id="auto">
-  <div class="wrap narrow">
-    <h2>③ 생성 워크플로우를 자동화했습니다</h2>
-
-    <h3>GPU 서버가 작업을 가져가는 구조로 뒤집었습니다</h3>
+    <h3 id="bd-auto">GPU 서버가 작업을 가져가는 구조로 뒤집었습니다 <span class="req">③ 워크플로우 자동화</span></h3>
     <p>
       GPU 예산이 없어 <strong>사설망 개인 머신</strong>을 써야 했습니다.
       인바운드 포트를 열 수 없어, 서버가 GPU를 호출하는 대신
@@ -363,21 +416,18 @@
       대가(원자적 선점 부재)와 개선 방향도 함께 문서로 남겼습니다.
     </p>
 
-    <h3>PixG는 후처리 전 구간을 스크립트로 묶었습니다</h3>
-    <p>
-      생성된 프레임을 사람이 손대지 않고 <strong>게임 엔진이 바로 읽는 에셋</strong>으로 바꾸는 구간입니다.
-      배경 제거 · 화질 복원 · 규격 통일 · 격자 배치가 한 번에 돕니다.
-    </p>
+    <h3 id="bd-result">실사용 서비스에 들어갔습니다 <span class="req rs">결과물</span></h3>
     <figure>
-      <img src="assets/img/pixg-consist.png" alt="일관성 검증">
-      <figcaption>동일 프롬프트·시드 조건에서의 프레임 간 캐릭터 일관성 — 요구조건 ①의 검증</figcaption>
+      <img src="assets/img/bd-before-after.jpg" alt="변환 전후">
+      <figcaption>구도·포즈·의상 색은 그대로 두고 화풍만 바꿉니다 (<code>denoise 0.6</code>)<br>
+        <em>본인과 팀원의 사진이며 팀원 동의를 받았습니다.</em></figcaption>
     </figure>
   </div>
 </section>
 
-<section id="lora">
+<section id="bigglez">
   <div class="wrap narrow">
-    <h2>LoRA를 직접 학습했습니다</h2>
+    <h2>Bigglez 채용 과제 — LoRA를 직접 학습했습니다</h2>
     <p class="sec-sub">
       2024년 12월, 한 회사의 채용 과제로 받은 작업입니다.
       <strong>클라이언트가 자사 캐릭터를 주고 「비슷한 캐릭터를 AI로 만들어 달라」</strong>고 요청했습니다.
@@ -488,46 +538,8 @@
   </div>
 </section>
 
-<section id="result">
+<section id="close">
   <div class="wrap narrow">
-    <h2>결과물</h2>
-
-    <h3>프롬프트 한 줄에서 스프라이트 시트까지</h3>
-    <div class="video" style="aspect-ratio:1280/624">
-      <video src="assets/video/pixg-flow.mp4" poster="assets/img/pixg-flow-poster.jpg"
-             autoplay muted loop playsinline controls preload="metadata"></video>
-    </div>
-    <p class="video-cap">
-      <b>프롬프트 입력 → 생성 → 다운로드</b>까지의 실제 화면.
-      <code>yellow hair, blue shirts, blue pants</code> 한 줄을 넣으면
-      <strong>달리기 사이클 스프라이트 시트</strong>가 배경까지 처리된 상태로 나옵니다.
-    </p>
-
-    <div class="video" style="aspect-ratio:1280/624;margin-top:26px">
-      <video src="assets/video/pixg-gallery.mp4" poster="assets/img/pixg-gallery-poster.jpg"
-             autoplay muted loop playsinline controls preload="metadata"></video>
-    </div>
-    <p class="video-cap">
-      <b>생성 결과 갤러리</b> — 프롬프트와 결과물이 함께 보관됩니다.
-    </p>
-
-    <h3>실제로 쓰이는지 확인했습니다</h3>
-    <figure>
-      <img src="assets/img/pixg-zep-demo.gif" alt="ZEP 시연">
-      <figcaption>생성한 스프라이트 시트를 <strong>메타버스 플랫폼 ZEP 아바타로 올려 직접 움직여 본 시연</strong> —
-        방향 전환과 걷기 애니메이션이 그대로 동작합니다</figcaption>
-    </figure>
-    <div class="quote">
-      <strong>「이미지가 잘 나왔다」는 자체 평가로 끝내지 않고 실제 사용처에 넣어봤습니다.</strong>
-      요구조건 4개를 정의한 이유도 여기에 있습니다 — 하나라도 빠지면 ZEP에 올라가지 않습니다.
-    </div>
-
-    <h3>Blind Dating은 실사용 서비스에 들어갔습니다</h3>
-    <figure>
-      <img src="assets/img/bd-before-after.jpg" alt="변환 전후">
-      <figcaption>구도·포즈·의상 색은 그대로 두고 화풍만 바꿉니다 (<code>denoise 0.6</code>)<br>
-        <em>본인과 팀원의 사진이며 팀원 동의를 받았습니다.</em></figcaption>
-    </figure>
     <div class="note">
       <strong>이 페이지의 수치는 전부 실측값입니다.</strong>
       13종 · 12개 · 3회 · 69GB 같은 숫자는 코드와 체크포인트, 저장해 둔 워크플로우 파일에서
