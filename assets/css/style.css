@@ -226,3 +226,76 @@ footer nav{ margin-left:auto; display:flex; gap:18px; flex-wrap:wrap; }
   .topbar nav a{ font-size:13px; }
   .cards{ grid-template-columns:1fr; }
 }
+
+/* ── 도식 (이미지 대신 HTML로 그립니다) ──────────
+   2026-09-29 — bd-pipeline.png · bd-arch.png 를 대체했습니다.
+   이미지로 구우면 본문 폭에 맞춰 축소되며 글자가 뭉개집니다. */
+.dia{ margin:26px 0; }
+.dia-cap{ font-size:13.5px; color:var(--sub); margin-top:12px; line-height:1.68; }
+
+/* 단계 흐름 (세로 스테퍼) */
+.dstep{ display:grid; grid-template-columns:32px 1fr; gap:13px; position:relative; padding-bottom:10px; }
+.dstep:last-child{ padding-bottom:0; }
+.dstep .rail{ position:absolute; left:15px; top:32px; bottom:0; width:2px; background:var(--line); }
+.dstep:last-child .rail{ display:none; }
+.dstep .n{ width:32px; height:32px; border-radius:10px; background:var(--card-2);
+  border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800; color:var(--sub); position:relative; z-index:2; }
+.dstep .bx{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 15px 13px; }
+.dstep .t{ font-size:15.5px; font-weight:800; letter-spacing:-.03em; }
+.dstep .t em{ font-style:normal; color:var(--sub); font-weight:600; font-size:13px; margin-left:8px; }
+.dstep .w{ margin-top:8px; font-size:13.5px; color:var(--sub); line-height:1.62; }
+.dstep .w strong{ color:var(--ink-2); }
+.dstep.key .n{ background:var(--blue-bg); border-color:#3c5a9e; color:var(--blue-2); }
+.dstep.key .bx{ border-color:#3c5a9e; background:#141d30; }
+
+/* 칩 (모델명·파라미터) */
+.chips{ margin-top:7px; display:flex; flex-wrap:wrap; gap:6px; }
+.chips span{ font-family:"Cascadia Mono",Consolas,ui-monospace,monospace; font-size:12px;
+  letter-spacing:0; background:var(--bg-2); border:1px solid var(--line); color:var(--ink-2);
+  padding:2px 8px; border-radius:6px; }
+.chips span.on{ border-color:#3c5a9e; background:var(--blue-bg); color:var(--blue-2); font-weight:700; }
+
+/* 가로 구성도 */
+.dflow{ display:grid; grid-template-columns:1fr 38px 1fr 68px 1fr; align-items:stretch; margin-top:4px; }
+.dnode{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px 13px; }
+.dnode.mid{ border-color:#3c5a9e; background:#141d30; }
+.dnode.far{ border-color:#6b4a22; background:#1c1710; }
+.dnode .h{ font-size:15px; font-weight:800; letter-spacing:-.03em;
+  display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+.dnode .h i{ font-style:normal; font-weight:600; color:var(--sub); font-size:12.5px; }
+.dnode .pill{ font-size:11px; font-weight:800; padding:2px 8px; border-radius:20px;
+  background:var(--accent-bg); color:#f7b477; border:1px solid #6b4a22; }
+.dnode .s{ font-family:"Cascadia Mono",Consolas,ui-monospace,monospace; font-size:11.5px;
+  letter-spacing:0; color:var(--sub); margin-top:5px; }
+.dnode .b{ margin-top:9px; font-size:13.5px; color:var(--ink-2); line-height:1.6; }
+.dnode .b b{ color:var(--ink); }
+.dnode .b .bl{ color:var(--blue-2); font-weight:700; }
+.dnode .b .og{ color:#f7b477; font-weight:700; }
+.dnode code{ display:inline-block; margin-top:8px; }
+.darrow{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  font-size:11px; color:var(--sub); line-height:1.35; text-align:center; }
+.darrow .g{ font-size:19px; color:#4a556b; line-height:1; }
+.darrow .g.og{ color:#8a6234; }
+.darrow i{ font-style:normal; white-space:nowrap; }
+
+/* 상태 흐름 */
+.dstates{ margin-top:16px; background:var(--card); border:1px solid var(--line);
+  border-radius:12px; padding:12px 15px 14px; }
+.dstates .h{ font-size:13.5px; font-weight:800; color:var(--sub); letter-spacing:-.02em; }
+.dstates .r{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.dstates .st{ font-family:"Cascadia Mono",Consolas,ui-monospace,monospace; font-size:12.5px;
+  letter-spacing:0; font-weight:700; padding:3px 10px; border-radius:7px;
+  border:1px solid var(--line); background:var(--bg-2); color:var(--ink-2); }
+.dstates .st.b{ border-color:#3c5a9e; background:var(--blue-bg); color:var(--blue-2); }
+.dstates .st.g{ border-color:#2d5c3e; background:#132318; color:#6fd694; }
+.dstates .st.r2{ border-color:#6b3535; background:#241414; color:var(--red); }
+.dstates .sp{ font-size:12px; color:#4a556b; }
+
+@media (max-width:700px){
+  .dflow{ grid-template-columns:1fr; gap:10px; }
+  .darrow{ flex-direction:row; gap:9px; padding:2px 0; }
+  .darrow .g{ transform:rotate(90deg); }
+  .darrow .g.og{ transform:rotate(90deg); }   /* 워커→백엔드: 모바일에선 위를 가리켜야 합니다 */
+}
+.dstates .fail{ display:inline-flex; align-items:center; gap:8px; }

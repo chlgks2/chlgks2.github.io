@@ -42,7 +42,6 @@
       <a href="#auto">③ 자동화</a>
       <a href="#lora">LoRA 학습</a>
       <a href="#result">결과물</a>
-      <a href="#limits">안 해본 것</a>
     </nav>
   </div>
 </header>
@@ -100,7 +99,7 @@
         <p class="rd"><strong>클라이언트가 자사 캐릭터를 주고 「비슷한 캐릭터를 AI로 만들어 달라」고 한 과제.</strong>
           이 포트폴리오에서 <strong>이미지 생성 모델을 직접 학습한 유일한 사례</strong>입니다.</p>
         <div class="rr">내가 한 일 — 접근 4가지 비교 · 학습 데이터 제작 · LoRA 3회 학습 · 26쪽 작업 기록 제출</div>
-        <div class="rl"><a href="#lora">LoRA 학습</a><a href="#limits">해보지 않은 것</a></div>
+        <div class="rl"><a href="#lora">LoRA 학습</a></div>
       </div>
     </div>
 
@@ -166,12 +165,41 @@
     <p class="sec-sub">모델 하나를 호출한 게 아니라, 여러 단계를 이어 붙여 하나의 결과물이 나오게 만든 작업입니다.</p>
 
     <h3>Blind Dating — ComfyUI 5단계</h3>
-    <figure>
-      <img src="assets/img/bd-pipeline.png" alt="ComfyUI 추론 파이프라인">
-      <figcaption>단계마다 쓴 모델·파라미터와 <strong>그렇게 정한 이유</strong></figcaption>
-    </figure>
+    <div class="dia">
+      <div class="dstep"><div class="rail"></div><div class="n">1</div><div class="bx">
+        <div class="t">얼굴 정체성 추출<em>내 얼굴이라는 정보</em></div>
+        <div class="chips"><span>IPAdapter FaceID Plus V2</span><span class="on">weight 0.65</span><span>InsightFace buffalo_l</span></div>
+        <div class="w">임베딩 추출이 병목이라 provider를 <strong>CPU → CUDA</strong>로 바꿨습니다</div>
+      </div></div>
 
-    <h4>그림에 담지 못한 결정 하나</h4>
+      <div class="dstep key"><div class="rail"></div><div class="n">2</div><div class="bx">
+        <div class="t">화풍 변환<em>구도·포즈는 유지</em></div>
+        <div class="chips"><span>DreamShaper XL Lightning</span><span>Ghibli LoRA 0.8</span><span>KSampler 25 / cfg 6</span><span class="on">denoise 0.6 — img2img</span></div>
+        <div class="w"><strong>denoise를 1.0으로 두면 txt2img</strong>가 되어 원본 구도가 사라집니다. 「내 사진」이라는 느낌이 없어지는 지점입니다</div>
+      </div></div>
+
+      <div class="dstep"><div class="rail"></div><div class="n">3</div><div class="bx">
+        <div class="t">얼굴 복원<em>인물이 바뀌지 않게 억제</em></div>
+        <div class="chips"><span>FaceDetailer</span><span>YOLOv8-face + SAM</span><span class="on">guide 768</span><span>denoise 0.3</span></div>
+        <div class="w">전신 사진은 얼굴에 배정되는 해상도가 부족해 눈·입이 뭉개집니다. <strong>얼굴만 잘라 재생성</strong>한 뒤 합성합니다</div>
+      </div></div>
+
+      <div class="dstep"><div class="rail"></div><div class="n">4</div><div class="bx">
+        <div class="t">디테일 보정<em>재생성이 되지 않게 제한</em></div>
+        <div class="chips"><span>UltimateSDUpscale</span><span>4x-UltraSharp ×1.2</span><span class="on">denoise 0.15</span><span>tile 768</span></div>
+        <div class="w">업스케일의 디노이즈는 사실상 재생성이라 <strong>얼굴 인상이 변합니다.</strong> 역할을 보정으로만 한정했습니다</div>
+      </div></div>
+
+      <div class="dstep"><div class="rail"></div><div class="n">5</div><div class="bx">
+        <div class="t">저장<em>워커는 자격증명을 갖지 않는다</em></div>
+        <div class="chips"><span>SaveImage</span><span>워커 → 백엔드 → AWS S3</span></div>
+        <div class="w">GPU 서버에 AWS 자격증명을 두지 않기 위해 <strong>업로드 지점을 백엔드 한 곳으로</strong> 모았습니다</div>
+      </div></div>
+
+      <p class="dia-cap">단계마다 쓴 모델·파라미터와 <strong>그렇게 정한 이유</strong></p>
+    </div>
+
+    <h4>도식에 담지 못한 결정 하나</h4>
     <p>
       <strong>IPAdapter와 LoRA의 weight를 따로 조정했습니다.</strong>
       정체성을 잡는 IPAdapter와 화풍을 입히는 LoRA가 <strong>같은 샘플링 안에서 서로를 상쇄</strong>하기 때문입니다.
@@ -275,10 +303,46 @@
       인바운드 포트를 열 수 없어, 서버가 GPU를 호출하는 대신
       <strong>GPU 워커가 백엔드를 폴링해 작업을 선점하는 방향</strong>으로 바꿨습니다.
     </p>
-    <figure>
-      <img src="assets/img/bd-arch.png" alt="pull 아키텍처">
-      <figcaption>호출 방향을 뒤집어(pull) 인바운드 포트 없이 동작하는 생성 서버</figcaption>
-    </figure>
+    <div class="dia">
+      <div class="dflow">
+        <div class="dnode">
+          <div class="h">Vue 3 SPA</div>
+          <div class="s">Vite · Pinia · Axios</div>
+          <div class="b">3초 간격 <b>상태 폴링</b><br>대기 중엔 설문 21문항</div>
+        </div>
+
+        <div class="darrow"><div class="g">⇄</div><div><i>REST</i><br><i>WS</i></div></div>
+
+        <div class="dnode mid">
+          <div class="h">Django 6 <i>ASGI</i></div>
+          <div class="s">DRF · Channels · Redis · SQLite</div>
+          <div class="b"><span class="bl">AIJob 테이블 = 작업 큐</span><br>브로커 없이 FIFO · 상태 머신
+            <code>ordering = ['created_at']</code></div>
+        </div>
+
+        <div class="darrow"><div class="g og">←</div><div><i>① 작업 선점</i><br><i>② 결과 전송</i></div></div>
+
+        <div class="dnode far">
+          <div class="h">GPU Server <span class="pill">사설망</span></div>
+          <div class="s">Linux · CUDA · FastAPI</div>
+          <div class="b"><span class="og">worker.py 가 Django 를 폴링</span><br><b>outbound only</b><br>인바운드&nbsp;포트&nbsp;개방&nbsp;불필요
+            <code>/health · /config</code></div>
+        </div>
+      </div>
+
+      <div class="dstates">
+        <div class="h">작업 상태 흐름</div>
+        <div class="r">
+          <span class="st">업로드</span><span class="sp">→</span>
+          <span class="st b">pending</span><span class="sp">→ 워커 선점 →</span>
+          <span class="st b">processing</span><span class="sp">→ 완료 통보 →</span>
+          <span class="st g">done</span>
+          <span class="fail"><span class="sp">│ 예외·타임아웃 →</span><span class="st r2">failed + error_message</span></span>
+        </div>
+      </div>
+
+      <p class="dia-cap">호출 방향을 뒤집어(pull) <strong>인바운드 포트 없이 동작하는 생성 서버</strong></p>
+    </div>
     <div class="tablewrap">
       <table>
         <tr><th style="width:170px">구성</th><th>내용</th></tr>
@@ -464,39 +528,10 @@
       <figcaption>구도·포즈·의상 색은 그대로 두고 화풍만 바꿉니다 (<code>denoise 0.6</code>)<br>
         <em>본인과 팀원의 사진이며 팀원 동의를 받았습니다.</em></figcaption>
     </figure>
-  </div>
-</section>
-
-<section id="limits">
-  <div class="wrap narrow">
-    <h2>해보지 않은 것</h2>
-    <p class="sec-sub">직무 요건과 대조해 솔직하게 적었습니다.</p>
-    <div class="tablewrap">
-      <table>
-        <tr><th style="width:230px">항목</th><th>현재 상태</th></tr>
-        <tr><td><strong>Veo · Kling 등 상용 영상 생성 모델</strong></td>
-            <td><strong>써본 적 없습니다.</strong> 영상 생성은 <strong>AnimateDiff로 프레임 시퀀스를 만드는 방식</strong>까지
-                경험했습니다. 다만 모델을 <strong>비교·검증해 고르는 방식</strong>은 위 13종·4종 비교와 같습니다</td></tr>
-        <tr><td><strong>에이전트화</strong></td>
-            <td><strong>경험 없습니다.</strong> 워크플로우 자동화(작업 큐 · 폴링 워커 · 상태 머신)까지이며,
-                LLM이 도구를 선택해 실행하는 구조는 만들어보지 않았습니다</td></tr>
-        <tr><td><strong>크리에이터 협업 콘텐츠 제작</strong></td>
-            <td>정규 실무 경험은 없습니다. 다만
-                <strong>클라이언트가 준 캐릭터를 기준으로 유사 캐릭터를 만드는 과제</strong>를 수행했고
-                (<a href="#lora">위 과제</a>), 팀 프로젝트에서 기획·디자인 담당과 요구조건을 맞춰
-                생성 결과를 조정한 경험이 있습니다</td></tr>
-        <tr><td><strong>대규모 파인튜닝 · DreamBooth</strong></td>
-            <td><strong>LoRA는 직접 학습했습니다</strong> (<a href="#lora">위 과제</a> — 3회 재학습).
-                다만 체크포인트 자체를 파인튜닝하거나 DreamBooth를 돌려본 적은 없습니다.
-                <strong>텍스트 분류 모델은 직접 파인튜닝</strong>했습니다
-                (<a href="p/emour.html">Emour</a> — KcELECTRA)</td></tr>
-        <tr><td><strong>영어</strong></td>
-            <td>OPIc <strong>IM1</strong>. 기술 문서 독해는 가능하나 회화는 부족합니다</td></tr>
-      </table>
-    </div>
     <div class="note">
-      <strong>해보지 않은 것을 적는 이유</strong> — 이 포트폴리오의 모든 수치는 코드·로그·체크포인트에서
-      직접 확인한 실측값입니다. 확인되지 않는 것은 적지 않았고, 해보지 않은 것은 해보지 않았다고 적었습니다.
+      <strong>이 페이지의 수치는 전부 실측값입니다.</strong>
+      13종 · 12개 · 3회 · 69GB 같은 숫자는 코드와 체크포인트, 저장해 둔 워크플로우 파일에서
+      직접 세어 확인한 것입니다. 확인되지 않는 것은 적지 않았습니다.
     </div>
 
     <div class="prevnext">
