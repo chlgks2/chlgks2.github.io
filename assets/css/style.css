@@ -299,3 +299,10 @@ footer nav{ margin-left:auto; display:flex; gap:18px; flex-wrap:wrap; }
   .darrow .g.og{ transform:rotate(90deg); }   /* 워커→백엔드: 모바일에선 위를 가리켜야 합니다 */
 }
 .dstates .fail{ display:inline-flex; align-items:center; gap:8px; }
+
+/* 변환 전후 비교 — 라벨을 이미지에 굽지 않고 HTML로 답니다 (2026-09-29) */
+.ba{ display:grid; grid-template-columns:1fr 1fr; gap:13px; margin:26px 0 0; }
+.ba-h{ font-size:14.5px; font-weight:800; letter-spacing:-.03em; color:var(--sub);
+  padding-bottom:9px; border-bottom:1px solid var(--line); }
+.ba-h.ai{ color:var(--blue-2); }
+.ba img{ width:100%; border-radius:10px; border:1px solid var(--line); background:var(--card); }
