@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>영상·이미지 생성 AI — 작업 모음</title>
+<meta name="description" content="생성 AI 모델·툴 비교 실험, 콘텐츠 생성 파이프라인 설계, 워크플로우 자동화.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="index.html">← 전체 포트폴리오</a>
+    <nav>
+      <a href="#compare">① 모델 비교</a>
+      <a href="#pipeline">② 파이프라인</a>
+      <a href="#auto">③ 자동화</a>
+      <a href="#result">결과물</a>
+      <a href="#limits">안 해본 것</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">BACKEND · AI DEVELOPER</div>
+    <h1>영상·이미지 생성 AI<br><span class="hl">작업 모음</span></h1>
+    <p class="lead">
+      <strong>생성 AI 직무에 해당하는 작업만 모은 페이지입니다.</strong>
+      전체 포트폴리오에는 백엔드·NLP 프로젝트도 있지만, 여기서는
+      <strong>모델·툴 비교 실험 · 생성 파이프라인 설계 · 워크플로우 자동화</strong> 세 가지만 다룹니다.
+    </p>
+    <div class="links">
+      <a class="btn primary" href="#compare">작업 보기</a>
+      <a class="btn" href="index.html">전체 포트폴리오</a>
+      <a class="btn" href="https://github.com/chlgks2" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>17종</b><span>비교 실험한 모델<br>체크포인트 13 · LoRA 4</span></div>
+      <div class="kpi"><b>2건</b><span>설계한 생성 파이프라인<br>ComfyUI · SD 1.5</span></div>
+      <div class="kpi"><b>최우수상</b><span>PixG<br>메타버스 아카데미 2기</span></div>
+      <div class="kpi"><b>실사용 검증</b><span>ZEP 아바타 적용<br>Blind Dating 실서비스</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="compare">
+  <div class="wrap narrow">
+    <h2>① 모델과 툴을 비교해서 골랐습니다</h2>
+    <p class="sec-sub">쓸 수 있는 것을 쓴 게 아니라, 기준을 세우고 비교한 뒤 고른 기록입니다.</p>
+
+    <h3>기준부터 만들었습니다</h3>
+    <p>
+      <strong>PixG</strong>에서 「픽셀 느낌의 이미지」를 목표로 두면 언제 끝났다고 할지 알 수 없었습니다.
+      그래서 <strong>게임 엔진이 실제로 읽을 수 있는가</strong>를 기준으로 조건 4개를 먼저 못박았습니다.
+    </p>
+    <div class="grid2">
+      <figure>
+        <img src="assets/img/pixg-req.png" alt="요구조건 4개">
+        <figcaption>캐릭터 특징 유지 · 미세하게 다른 동작 · 배경 제거 · 균일한 이미지 간격</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/img/pixg-compare.png" alt="경쟁 서비스 비교">
+        <figcaption>같은 기준으로 비교 — <strong>DALL·E 3 · Pixelvibe는 2개 충족, PixG는 4개 전부</strong></figcaption>
+      </figure>
+    </div>
+    <div class="quote">
+      <strong>기준이 있어야 비교가 성립합니다.</strong>
+      조건을 못박은 뒤에야 어떤 기술이 필요한지, 경쟁 서비스와 무엇이 다른지가 보였습니다.
+    </div>
+
+    <h3>Blind Dating에서는 17종을 돌려보고 골랐습니다</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">항목</th><th>비교와 결정</th></tr>
+        <tr><td><strong>체크포인트</strong></td>
+            <td><strong>13종 (약 59GB)</strong> 비교 → 운영 <code>dreamshaperXL_lightningDPMSDE</code><br>
+                Juggernaut-XL v9가 정체성 유지에 유리했지만 <strong>생성 시간이 길어</strong> 저스텝 계열로 교체했습니다</td></tr>
+        <tr><td><strong>스타일 LoRA</strong></td>
+            <td><strong>지브리 4종</strong> A/B 비교 → <code>giblylast</code> 채택<br>
+                <code>Ghibli_xl_v2</code>는 스타일이 강하나 <strong>얼굴 왜곡</strong>, <code>ghibli_style_offset</code>은 변환 강도 부족</td></tr>
+        <tr><td><strong>정체성 유지</strong></td>
+            <td>IP-Adapter <strong>FaceID Plus V2</strong> (SDXL) + InsightFace <code>buffalo_l</code></td></tr>
+        <tr><td><strong>얼굴 복원</strong></td>
+            <td><code>face_yolov8m</code> + <strong>SAM</strong> <code>vit_b</code> · 업스케일 <code>4x-UltraSharp</code></td></tr>
+      </table>
+    </div>
+    <p class="note">
+      가중치 총합 <strong>약 69GB</strong>는 저장소에 넣지 않고
+      <code>models/manifest.json</code> + 다운로드 스크립트로 <strong>환경을 재구성</strong>할 수 있게 했습니다.
+    </p>
+  </div>
+</section>
+
+<section id="pipeline">
+  <div class="wrap narrow">
+    <h2>② 생성 파이프라인을 설계했습니다</h2>
+    <p class="sec-sub">모델 하나를 호출한 게 아니라, 여러 단계를 이어 붙여 하나의 결과물이 나오게 만든 작업입니다.</p>
+
+    <h3>Blind Dating — ComfyUI 5단계</h3>
+    <figure>
+      <img src="assets/img/bd-pipeline.png" alt="ComfyUI 추론 파이프라인">
+      <figcaption>5단계 파이프라인과 각 파라미터의 근거</figcaption>
+    </figure>
+
+    <h4>파라미터마다 이유가 있습니다</h4>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:210px">결정</th><th>근거</th></tr>
+        <tr><td><strong>txt2img 대신 img2img</strong><br><code>denoise 0.6</code></td>
+            <td>txt2img는 원본의 구도·포즈가 사라져 <strong>「내 사진」이라는 느낌이 없어집니다.</strong>
+                구도는 유지하고 화풍만 바꾸려고 부분 디노이즈를 선택했습니다</td></tr>
+        <tr><td><strong>IPAdapter와 LoRA weight를 분리 튜닝</strong></td>
+            <td>정체성(IPAdapter)과 스타일(LoRA)이 <strong>같은 샘플링에서 서로 상쇄</strong>됩니다.
+                스타일마다 균형점이 달라 개별 조정했습니다</td></tr>
+        <tr><td><strong>FaceDetailer 추가</strong><br><code>denoise 0.3</code></td>
+            <td>전신 사진은 얼굴에 할당되는 latent 해상도가 부족해 눈·입이 뭉개집니다.
+                얼굴만 잘라 재생성한 뒤 SAM 마스크로 합성하고,
+                <strong>인물이 바뀌지 않도록 denoise를 억제</strong>했습니다</td></tr>
+        <tr><td><strong>업스케일을 ×1.2 / denoise 0.15로 제한</strong></td>
+            <td>업스케일의 디노이즈는 사실상 재생성이라 <strong>얼굴 인상이 변합니다.</strong>
+                역할을 「디테일 보정」으로 한정했습니다</td></tr>
+        <tr><td><strong>IPAdapter provider CPU → CUDA</strong></td>
+            <td>InsightFace 임베딩 추출이 <strong>병목</strong>이었습니다</td></tr>
+      </table>
+    </div>
+
+    <h3>PixG — 생성부터 게임 에셋까지</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:130px">구간</th><th>설정</th></tr>
+        <tr><td>베이스</td><td>Stable Diffusion 1.5 + 픽셀아트 LoRA · CLIP skip <strong>-2</strong></td></tr>
+        <tr><td>동작 생성</td><td><strong>AnimateDiff</strong> <code>animatediffMotion_v15V2</code> ·
+            context_length 16 · steps 20 / cfg 8</td></tr>
+        <tr><td>자세 제어</td><td><strong>ControlNet 2종</strong> — OpenPose <strong>1.0</strong> + Depth <strong>0.2</strong></td></tr>
+        <tr><td>환경</td><td>개인 RTX 3060 6GB / 아카데미 RTX 4090 24GB</td></tr>
+      </table>
+    </div>
+    <p>
+      OpenPose를 1.0으로 강하게 걸어 <strong>동작을 확정</strong>하고,
+      Depth는 0.2로 약하게만 얹어 <strong>입체감만 보조</strong>하도록 역할을 나눴습니다.
+      Depth를 올리면 픽셀아트 특유의 납작한 화풍이 무너집니다.
+    </p>
+    <figure>
+      <img src="assets/img/pixg-pipeline.png" alt="후처리 파이프라인">
+      <figcaption>생성 프레임 → 배경 제거(InSPyReNet) → 화질 복원(ESRGAN 1x) → 64×64 규격 통일 → 8열 격자</figcaption>
+    </figure>
+    <div class="quote">
+      <strong>「픽셀 느낌의 이미지」와 「게임에 넣을 수 있는 에셋」 사이에 이 구간이 있습니다.</strong>
+      경쟁 서비스가 요구조건 2개에서 멈춘 이유도 여기였습니다.
+    </div>
+  </div>
+</section>
+
+<section id="auto">
+  <div class="wrap narrow">
+    <h2>③ 생성 워크플로우를 자동화했습니다</h2>
+
+    <h3>GPU 서버가 작업을 가져가는 구조로 뒤집었습니다</h3>
+    <p>
+      GPU 예산이 없어 <strong>사설망 개인 머신</strong>을 써야 했습니다.
+      인바운드 포트를 열 수 없어, 서버가 GPU를 호출하는 대신
+      <strong>GPU 워커가 백엔드를 폴링해 작업을 선점하는 방향</strong>으로 바꿨습니다.
+    </p>
+    <figure>
+      <img src="assets/img/bd-arch.png" alt="pull 아키텍처">
+      <figcaption>호출 방향을 뒤집어(pull) 인바운드 포트 없이 동작하는 생성 서버</figcaption>
+    </figure>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:170px">구성</th><th>내용</th></tr>
+        <tr><td><strong>작업 큐</strong></td>
+            <td><code>AIJob</code> 테이블을 큐로 설계 — FIFO · 상태 머신 · 실패 사유 전달</td></tr>
+        <tr><td><strong>워커</strong></td>
+            <td>백엔드 폴링 → 작업 선점 → ComfyUI HTTP 호출 → 결과 전송 · 타임아웃과 예외 처리</td></tr>
+        <tr><td><strong>헬스체크</strong></td>
+            <td>FastAPI <code>/health</code> — 워커 스레드와 ComfyUI 연결을 <strong>동시에</strong> 확인</td></tr>
+        <tr><td><strong>대기 흡수</strong></td>
+            <td>생성 시간을 줄일 수 없다고 판단하고, 설문 21문항을 대기 구간에 겹쳐 배치해
+                <strong>체감 대기를 사실상 0으로</strong> 만들었습니다</td></tr>
+      </table>
+    </div>
+    <p class="note">
+      <strong>Celery를 일부러 쓰지 않았습니다.</strong> DB 테이블 하나로 FIFO·상태 머신·실패 사유 전달이 충족되는지
+      확인한 뒤, 5주 일정에서는 브로커 운영 비용이 더 크다고 판단했습니다.
+      대가(원자적 선점 부재)와 개선 방향도 함께 문서로 남겼습니다.
+    </p>
+
+    <h3>PixG는 후처리 전 구간을 스크립트로 묶었습니다</h3>
+    <p>
+      생성된 프레임을 사람이 손대지 않고 <strong>게임 엔진이 바로 읽는 에셋</strong>으로 바꾸는 구간입니다.
+      배경 제거 · 화질 복원 · 규격 통일 · 격자 배치가 한 번에 돕니다.
+    </p>
+    <figure>
+      <img src="assets/img/pixg-consist.png" alt="일관성 검증">
+      <figcaption>동일 프롬프트·시드 조건에서의 프레임 간 캐릭터 일관성 — 요구조건 ①의 검증</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="result">
+  <div class="wrap narrow">
+    <h2>결과물</h2>
+
+    <h3>프롬프트 한 줄에서 스프라이트 시트까지</h3>
+    <div class="video" style="aspect-ratio:1280/624">
+      <video src="assets/video/pixg-flow.mp4" poster="assets/img/pixg-flow-poster.jpg"
+             autoplay muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <p class="video-cap">
+      <b>프롬프트 입력 → 생성 → 다운로드</b>까지의 실제 화면.
+      <code>yellow hair, blue shirts, blue pants</code> 한 줄을 넣으면
+      <strong>달리기 사이클 스프라이트 시트</strong>가 배경까지 처리된 상태로 나옵니다.
+    </p>
+
+    <div class="video" style="aspect-ratio:1280/624;margin-top:26px">
+      <video src="assets/video/pixg-gallery.mp4" poster="assets/img/pixg-gallery-poster.jpg"
+             autoplay muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <p class="video-cap">
+      <b>생성 결과 갤러리</b> — 프롬프트와 결과물이 함께 보관됩니다.
+    </p>
+
+    <h3>실제로 쓰이는지 확인했습니다</h3>
+    <figure>
+      <img src="assets/img/pixg-zep-demo.gif" alt="ZEP 시연">
+      <figcaption>생성한 스프라이트 시트를 <strong>메타버스 플랫폼 ZEP 아바타로 올려 직접 움직여 본 시연</strong> —
+        방향 전환과 걷기 애니메이션이 그대로 동작합니다</figcaption>
+    </figure>
+    <div class="quote">
+      <strong>「이미지가 잘 나왔다」는 자체 평가로 끝내지 않고 실제 사용처에 넣어봤습니다.</strong>
+      요구조건 4개를 정의한 이유도 여기에 있습니다 — 하나라도 빠지면 ZEP에 올라가지 않습니다.
+    </div>
+
+    <h3>Blind Dating은 실사용 서비스에 들어갔습니다</h3>
+    <figure>
+      <img src="assets/img/bd-before-after.jpg" alt="변환 전후">
+      <figcaption>구도·포즈·의상 색은 그대로 두고 화풍만 바꿉니다 (<code>denoise 0.6</code>)<br>
+        <em>본인과 팀원의 사진이며 팀원 동의를 받았습니다.</em></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>해보지 않은 것</h2>
+    <p class="sec-sub">직무 요건과 대조해 솔직하게 적었습니다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:230px">항목</th><th>현재 상태</th></tr>
+        <tr><td><strong>Veo · Kling 등 상용 영상 생성 모델</strong></td>
+            <td><strong>써본 적 없습니다.</strong> 영상 생성은 <strong>AnimateDiff로 프레임 시퀀스를 만드는 방식</strong>까지
+                경험했습니다. 다만 모델을 <strong>비교·검증해 고르는 방식</strong>은 위 13종·4종 비교와 같습니다</td></tr>
+        <tr><td><strong>에이전트화</strong></td>
+            <td><strong>경험 없습니다.</strong> 워크플로우 자동화(작업 큐 · 폴링 워커 · 상태 머신)까지이며,
+                LLM이 도구를 선택해 실행하는 구조는 만들어보지 않았습니다</td></tr>
+        <tr><td><strong>크리에이터 협업 콘텐츠 제작</strong></td>
+            <td>실무 협업 경험은 없습니다. 팀 프로젝트에서
+                <strong>기획·디자인 담당과 요구조건을 맞춰 생성 결과를 조정</strong>한 경험까지입니다</td></tr>
+        <tr><td><strong>이미지 생성 모델 파인튜닝</strong></td>
+            <td>이미지 생성 모델은 <strong>전부 공개 사전학습 모델</strong>이며 파인튜닝하지 않았습니다.
+                다만 <strong>텍스트 분류 모델은 직접 학습</strong>했습니다
+                (<a href="p/emour.html">Emour</a> — KcELECTRA 파인튜닝)</td></tr>
+        <tr><td><strong>영어</strong></td>
+            <td>OPIc <strong>IM1</strong>. 기술 문서 독해는 가능하나 회화는 부족합니다</td></tr>
+      </table>
+    </div>
+    <div class="note">
+      <strong>해보지 않은 것을 적는 이유</strong> — 이 포트폴리오의 모든 수치는 코드·로그·체크포인트에서
+      직접 확인한 실측값입니다. 확인되지 않는 것은 적지 않았고, 해보지 않은 것은 해보지 않았다고 적었습니다.
+    </div>
+
+    <div class="prevnext">
+      <a class="btn primary" href="p/pixg.html">PixG 상세 →</a>
+      <a class="btn" href="p/blind-dating.html">Blind Dating 상세 →</a>
+      <a class="btn" href="index.html">전체 포트폴리오</a>
+      <a class="btn" href="https://github.com/chlgks2" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>영상·이미지 생성 AI — 작업 모음</span>
+    <nav>
+      <a href="index.html">전체 포트폴리오</a>
+      <a href="mailto:duddngud3@gmail.com">duddngud3@gmail.com</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
