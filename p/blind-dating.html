@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Blind Dating — 성향 기반 블라인드 소개팅</title>
 <meta name="description" content="GPU 예산 제약 아래 호출 방향을 뒤집어 인바운드 포트 없이 동작하는 추론 서버를 구축. 아키텍처 결정을 직접 한 첫 프로젝트.">
-<link rel="stylesheet" href="../assets/css/style.css?v=20260929">
+<link rel="stylesheet" href="../assets/css/style.css?v=20261014">
 </head>
 <body>
 
@@ -13,7 +13,7 @@
   <div class="wrap">
     <a class="home" href="../index.html">← Portfolio</a>
     <nav>
-      <a href="#what">개요</a><a href="#arch">아키텍처</a><a href="#ux">대기 시간</a>
+      <a href="#problem">문제</a><a href="#what">개요</a><a href="#screens">화면</a><a href="#arch">아키텍처</a><a href="#ux">대기 시간</a>
       <a href="#pipeline">파이프라인</a><a href="#backend">백엔드</a><a href="#limits">한계</a>
       <a href="https://github.com/chlgks2/blind_dating" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -40,6 +40,60 @@
     </div>
   </div>
 </div>
+
+<section id="problem">
+  <div class="wrap narrow">
+    <h2>어떤 문제에서 시작했나요</h2>
+
+    <div class="grid2">
+      <div class="quote" style="margin:0">
+        <strong>사진과 외모만으로 첫인상을 판단하면</strong>
+        소개팅의 목적이 외모 중심으로 치우칠 수 있습니다.
+      </div>
+      <div class="quote" style="margin:0">
+        <strong>외모가 이상형에 부합하더라도</strong>
+        취향이 맞지 않으면 관계가 오래 이어지기 어렵습니다.
+      </div>
+    </div>
+
+    <h3>얼굴을 가리되, 사람은 남긴다</h3>
+    <p>
+      <strong>한동안 유행했던 「지브리 스타일로 바꿔줘」에서 아이디어를 얻었습니다.</strong>
+      얼굴 사진을 그대로 드러내지 않으면서도 <strong>「내 사진」이라는 느낌은 남기는 것</strong>이 목표였습니다.
+      업로드한 사진으로 아바타를 만들어 프로필로 쓰고,
+      <strong>네 가지 화풍 중에서 고르는 화면</strong>을 두었습니다.
+    </p>
+    <p>
+      그래서 생성 방식을 <strong>원본과 전혀 다른 사람이 되지 않는 쪽</strong>으로 맞췄습니다.
+      본인의 인상과 사진의 <strong>구도·포즈를 유지하면서 화풍만 바꾸는 것</strong>이 기준이었고,
+      그 기준이 <a href="#pipeline"><code>denoise 0.6</code> 이라는 값</a>으로 굳었습니다.
+    </p>
+
+    <h3>같은 답이 많다고 잘 맞는 것은 아닙니다</h3>
+    <p>
+      일치율만 세면 <strong>부먹·찍먹이 생활 패턴과 같은 무게</strong>를 갖습니다.
+      질문마다 <strong>비슷한 편이 좋은지, 다른 점이 서로를 보완하는지</strong>를 구분하고
+      중요도를 다르게 두었습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:190px">질문 성격</th><th>어떻게 보는가</th></tr>
+        <tr><td><strong>생활 패턴</strong><br><code>아침형 vs 저녁형</code></td>
+            <td><strong>비슷해야 좋습니다.</strong> 생활 리듬이 어긋나면 만날 시간부터 맞지 않습니다</td></tr>
+        <tr><td><strong>선호</strong><br><code>전화 vs 카톡</code> · <code>게임 vs 운동</code></td>
+            <td><strong>달라도 보완이 됩니다.</strong> 두 사람 모두 「다른 성향의 상대」를 원하면
+                이 차이를 <strong>더 중요하게</strong> 봅니다</td></tr>
+        <tr><td><strong>가벼운 취향</strong><br><code>부먹 vs 찍먹</code></td>
+            <td>답하는 재미는 더하되 <strong>추천에 미치는 영향은 낮췄습니다</strong></td></tr>
+      </table>
+    </div>
+    <p class="note">
+      <strong>모든 질문에 답하지 않아도 됩니다.</strong>
+      두 사람이 <strong>공통으로 답한 질문만</strong> 비교하고 그 안에서 정규화하므로,
+      중간에 그만둔 사용자도 궁합을 확인할 수 있습니다.
+    </p>
+  </div>
+</section>
 
 <section id="what">
   <div class="wrap narrow">
@@ -82,6 +136,115 @@
         <tr><td>AI / GPU 서버 (<code>ai/</code>)</td><td><strong>본인 전량</strong></td></tr>
         <tr><td>프론트–백엔드 연동</td><td><strong>본인</strong></td></tr>
         <tr><td>Frontend UI</td><td>팀원 1명</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="wrap narrow">
+    <h2>주요 기능과 화면</h2>
+    <p class="sec-sub">
+      모바일 화면 기준으로 만든 웹 서비스입니다.
+      <strong>가입 → 사진 업로드 → 스타일 선택 → 질문 → 아바타 확인 → 매칭 → 대화</strong> 순서로 이어집니다.
+    </p>
+
+    <div class="feat">
+      <div class="ft">
+        <h4>내 사진과 원하는 스타일 고르기</h4>
+        <p>아바타로 만들 사진을 올리고, 원하는 화풍을 고릅니다.
+          <strong>스타일별 예시 이미지를 함께 보여주어</strong> 어떤 분위기가 나올지 짐작하고 고를 수 있게 했습니다.</p>
+        <p><strong>고르는 순간 GPU에서 생성이 시작됩니다.</strong>
+          사용자는 결과를 기다리지 않고 다음 화면으로 넘어갑니다.</p>
+      </div>
+      <div class="ph">
+        <figure><img src="../assets/img/bd-s3-upload.jpg" alt="사진 업로드"><figcaption>사진 업로드</figcaption></figure>
+        <figure><img src="../assets/img/bd-s4-style.jpg" alt="스타일 선택"><figcaption>스타일 선택</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="feat rev">
+      <div class="ft">
+        <h4>스와이프로 부담 없이 답하기</h4>
+        <p>긴 질문지는 그 자체로 부담입니다.
+          <strong>아바타가 만들어지는 동안</strong> 취향 질문에 답하도록 해서,
+          단순히 기다리는 대신 <strong>추천에 필요한 답변을 채우며</strong> 다음 단계로 이어지게 했습니다.</p>
+        <p>질문은 <strong>두 선택지 중 하나</strong>를 고르는 방식이고,
+          스와이프로 넘깁니다. 고민하는 시간과 조작을 함께 줄였습니다.</p>
+      </div>
+      <div class="ph">
+        <figure><img src="../assets/img/bd-s5-q.jpg" alt="취향 질문"><figcaption>스와이프 질문</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="ft">
+        <h4>생성된 아바타로 나를 표현하기</h4>
+        <p>질문에 답하고 나면 아바타가 준비돼 있습니다.
+          확인한 뒤 <strong>프로필 이미지로 사용</strong>합니다.</p>
+        <p>얼굴을 그대로 드러내지 않으면서도
+          <strong>구도와 포즈가 남아 있어 「내 사진」이라는 느낌</strong>이 유지됩니다.</p>
+      </div>
+      <div class="ph">
+        <figure><img src="../assets/img/bd-s6-profile.jpg" alt="생성된 아바타"><figcaption>내 아바타</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="feat rev">
+      <div class="ft">
+        <h4>취향을 바탕으로 새로운 상대 만나기</h4>
+        <p>질문 응답을 바탕으로 상대를 추천하고,
+          상세 화면에서 <strong>상대의 프로필과 매칭 정보</strong>를 확인합니다.</p>
+        <p>이때 보이는 궁합 점수가 <a href="#backend">가중 유사도로 계산한 값</a>입니다.</p>
+      </div>
+      <div class="ph">
+        <figure><img src="../assets/img/bd-s7-match.jpg" alt="추천 매칭 목록"><figcaption>추천 목록</figcaption></figure>
+        <figure><img src="../assets/img/bd-s8-detail.jpg" alt="상대 프로필"><figcaption>상대 프로필</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="ft">
+        <h4>매칭에서 대화로 이어지기</h4>
+        <p>매칭된 상대와 <strong>실시간 채팅</strong>으로 대화를 이어갑니다.</p>
+        <p>이 채팅은 <a href="#backend">WebSocket 연결</a>이고,
+          <strong>인증 계층을 직접 만들어</strong> 당사자와 결제 완료 여부까지 확인한 뒤에 붙습니다.</p>
+      </div>
+      <div class="ph">
+        <figure><img src="../assets/img/bd-s9-chat.jpg" alt="실시간 채팅"><figcaption>실시간 채팅</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="quote">
+      <strong>스타일 선택과 질문이 같은 시간에 돌아갑니다.</strong>
+      이 겹침이 <a href="#ux">수십 초의 대기를 UX로 흡수한 구간</a>입니다.
+    </div>
+
+    <p class="note">
+      🖼️ <strong>AI 서버가 지금은 내려가 있어</strong> 아바타 생성·매칭·채팅 화면은
+      <strong>시연 영상에서 캡처한 이미지</strong>로 소개합니다.
+      실제 동작과 화면 모션은 아래 영상에서 확인할 수 있습니다.
+    </p>
+
+    <h3>시연 영상</h3>
+    <div class="video" style="aspect-ratio:1280/720">
+      <video src="../assets/video/bd-demo.mp4" poster="../assets/img/bd-demo-poster.jpg"
+             controls playsinline preload="metadata"></video>
+    </div>
+    <p class="video-cap">
+      <b>회원가입부터 실시간 채팅까지 1분 57초.</b>
+      아바타 생성은 실제 GPU 서버에서 돌아간 것이고, 채팅도 실제 WebSocket 연결입니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:92px">시각</th><th>내용</th></tr>
+        <tr><td><strong>0:00</strong></td><td>회원가입 · 로그인</td></tr>
+        <tr><td><strong>0:13</strong></td><td>사진 등록과 스타일 선택 — <strong>여기서 생성이 시작됩니다</strong></td></tr>
+        <tr><td><strong>0:21</strong></td><td>스와이프 질문지 — <strong>생성을 기다리는 동안</strong></td></tr>
+        <tr><td><strong>1:03</strong></td><td>생성된 아바타 확인</td></tr>
+        <tr><td><strong>1:07</strong></td><td>매칭 — 궁합 점수 기반 추천</td></tr>
+        <tr><td><strong>1:34</strong></td><td>실시간 채팅</td></tr>
+        <tr><td><strong>1:54</strong></td><td>내 프로필</td></tr>
       </table>
     </div>
   </div>
@@ -360,6 +523,34 @@ CheckpointLoaderSimple   dreamshaperXL_lightningDPMSDE (SDXL Lightning)
 
     <h3>가중 유사도 매칭 알고리즘</h3>
     <p>단순 일치율이 아니라 <strong>질문의 성격에 따라 점수 부호를 뒤집어</strong> 궁합을 계산합니다.</p>
+
+    <h4>예를 들면 이렇게 계산됩니다</h4>
+    <div class="tablewrap">
+      <table>
+        <tr><th>질문</th><th>나</th><th>상대</th><th>비교 기준</th><th style="text-align:right">반영 점수</th></tr>
+        <tr><td>생활 패턴</td><td>아침형</td><td>아침형</td><td>같으면 잘 맞아요</td>
+            <td style="text-align:right"><strong>1.2</strong> / 1.2</td></tr>
+        <tr><td>연락 방식</td><td>전화</td><td>카톡</td><td>다르면 보완해요</td>
+            <td style="text-align:right"><strong>1.0</strong> / 1.0</td></tr>
+        <tr><td>가벼운 취향</td><td>부먹</td><td>찍먹</td><td>영향은 작게</td>
+            <td style="text-align:right"><strong>0</strong> / 0.5</td></tr>
+      </table>
+    </div>
+    <div class="dstates">
+      <div class="h">궁합 점수</div>
+      <div class="r">
+        <span class="st b">받은 점수 2.2</span><span class="sp">÷</span>
+        <span class="st">가능한 점수 2.7</span><span class="sp">× 100 =</span>
+        <span class="st g">81.5 %</span>
+      </div>
+    </div>
+    <p class="dia-cap">
+      세 번째 줄에서 <strong>부먹·찍먹이 달라 0점</strong>을 받았지만,
+      애초에 <strong>가능한 점수가 0.5뿐</strong>이라 결과를 크게 끌어내리지 않습니다.
+      반대로 생활 패턴이 어긋났다면 <strong>1.2점이 통째로 날아갑니다.</strong>
+    </p>
+
+    <h4>코드로는 이렇습니다</h4>
     <pre><code>same = (a_answers[qid] == b_answers[qid])
 base_sim = 1.0 if same else 0.0
 if q.match_type == 'complement':
@@ -460,9 +651,9 @@ question_cache = {q.id: q for q in Question.objects.all()}   # 유사도 루프 
     </p>
 
     <div class="prevnext">
-      <a class="btn" href="pixg.html">← 이전: PixG</a>
+      <a class="btn" href="pixg.html">← PixG</a>
       <a class="btn" href="../index.html">전체 프로젝트</a>
-      <a class="btn" href="dream-shaper.html">다음: Dream Shaper →</a>
+      <a class="btn" href="gongguhan.html">공구한 →</a>
     </div>
   </div>
 </section>

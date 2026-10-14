@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공구한 — 공동구매 플랫폼의 코인 결제</title>
+<meta name="description" content="Java 21 · Spring Boot 4로 코인 결제·에스크로·환불·정산을 설계. 구매자가 보낸 트랜잭션 해시를 믿지 않고 체인 영수증을 직접 대조합니다.">
+<link rel="stylesheet" href="../assets/css/style.css?v=20261014">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="../index.html">← Portfolio</a>
+    <nav>
+      <a href="#problem">문제</a><a href="#what">담당</a><a href="#flow">서비스 흐름</a><a href="#verify">체인 검증</a><a href="#db">이중 지급</a>
+      <a href="#unknown">결과 불명</a><a href="#entity">상태 전이</a>
+      <a href="#stack">기술</a><a href="#limits">한계</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">04 · 2026.08.18 ~ 09.28 · 6주 · 6인</div>
+    <h1>공구한<br><span style="font-size:.62em;color:var(--ink-2)">공동구매 플랫폼의 코인 결제</span></h1>
+    <p class="lead">
+      카드 · 카카오페이 · <strong>디지털 자산(코인)</strong> 3가지 결제수단을 지원하는 공동구매 플랫폼입니다.
+      백엔드 3인이 <strong>결제수단을 축으로 도메인을 수직 분리</strong>했고,
+      저는 <strong>코인 결제와 그 뒤의 에스크로 · 환불 · 정산</strong>을 맡았습니다.
+    </p>
+    <div class="links">
+      <a class="btn" href="../index.html">전체 프로젝트</a>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>9,053줄</b><span>담당 도메인 6개<br>git blame 기준</span></div>
+      <div class="kpi"><b>5,689줄</b><span>담당 도메인<br>테스트 코드</span></div>
+      <div class="kpi"><b>66 / 603</b><span>본인 커밋 /<br>전체 커밋</span></div>
+      <div class="kpi"><b>Java 21</b><span>Spring Boot 4.1.1<br>JPA · QueryDSL</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="problem">
+  <div class="wrap narrow">
+    <h2>공동구매는 왜 여러 플랫폼을 오가야 할까요</h2>
+    <p class="sec-sub">
+      인플루언서 공동구매는 계속 늘어나는데 <strong>그것을 위한 플랫폼은 따로 없습니다.</strong>
+      상품을 발견하는 곳과 구매하는 곳이 다르면 쇼핑의 흐름도 끊어집니다.
+    </p>
+
+    <div class="roster3">
+      <div class="rc3">
+        <div class="n3">01</div>
+        <div class="t3">분산된 구매 과정</div>
+        <p>SNS로 연결된 별도의 쇼핑 사이트와 외부 링크를 <strong>오가며</strong> 상품을 탐색하고 구매해야 합니다</p>
+      </div>
+      <div class="rc3">
+        <div class="n3">02</div>
+        <div class="t3">낯선 공동구매 경험</div>
+        <p>일반 쇼핑몰처럼 <strong>편하게 둘러보고 구매하는 경험</strong>이 부족합니다</p>
+      </div>
+      <div class="rc3">
+        <div class="n3">03</div>
+        <div class="t3">분리된 사용자 역할</div>
+        <p>판매자 사이트가 <strong>구매자가 보는 화면과 분리</strong>되어 있는 것이 보통입니다</p>
+      </div>
+    </div>
+
+    <h3>익숙하게 둘러보고, 자연스럽게 판매까지</h3>
+    <p>
+      <strong>구매와 판매를 하나의 흐름으로 연결합니다.</strong>
+      쇼핑몰에서 늘 보던 방식으로 공동구매를 둘러보게 하고,
+      구매하던 사람이 <strong>같은 계정 · 같은 도메인 안에서</strong> 판매자로 넘어갈 수 있게 했습니다.
+      판매자센터는 하위 경로 <code>/seller</code> 로 들어갑니다.
+    </p>
+
+    <figure class="figwide-sm">
+      <img src="../assets/img/gg-flow.svg" alt="공구한 서비스 플로차트">
+      <figcaption>
+        홈에서 <strong>상품 탐색 · 찜 · 마이페이지 · 판매자센터</strong>로 갈라집니다.
+        구매는 상세 → 로그인 확인 → 배송지 → <strong>결제</strong> → 주문 완료로 이어지고,
+        판매자 인증을 마치면 상품 등록 → <strong>AI 정보 입력(선택)</strong> → 공동구매 개설로 이어집니다.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="what">
+  <div class="wrap narrow">
+    <h2>돈이 오가는 구간을 맡았습니다</h2>
+    <p class="sec-sub">결제 자체의 난이도가 가장 높은 대신, 주변 도메인을 적게 묶는 쪽을 맡았습니다.</p>
+
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:150px">영역</th><th style="width:92px">작성</th><th>내용</th></tr>
+        <tr><td><strong>코인 결제</strong></td><td><strong>3,312줄</strong></td>
+            <td>시세 Buffer를 가산한 Quote 발급, <strong>체인 영수증 직접 대조</strong>, 컨펌 폴링, 입금 매칭</td></tr>
+        <tr><td><strong>환불</strong></td><td><strong>1,964줄</strong></td>
+            <td>환불 원장, <strong>이중 환불 차단</strong>, 온체인 송금 환불, 부분 환불</td></tr>
+        <tr><td><strong>정산</strong></td><td><strong>1,861줄</strong></td>
+            <td>회차별 집계 배치, 금융망 계좌이체 실행과 재시도</td></tr>
+        <tr><td><strong>에스크로</strong></td><td><strong>1,117줄</strong></td>
+            <td>보관 → 해제 / 환불 전이를 <strong>엔티티가 강제</strong>, 불변식 검증</td></tr>
+        <tr><td>판매자 제재</td><td>673줄</td><td>확정 · 기각 · 취소 판정과 쓰리아웃</td></tr>
+        <tr><td>정책 · 감사 로그</td><td>126줄</td><td>정책값 캐시 무효화, 관리자 조작 감사 로그</td></tr>
+      </table>
+    </div>
+
+    <h3>왜 도메인으로 나눴나</h3>
+    <p>
+      레이어별로 나누면(한 명은 컨트롤러, 한 명은 서비스) <strong>세 사람이 늘 같은 파일 근처에서 작업</strong>하게 되어 충돌이 잦습니다.
+      결제수단을 축으로 수직 분리하니 각자 <strong>컨트롤러부터 엔티티까지 혼자 끝까지 소유</strong>해 겹치는 파일이 거의 없었습니다.
+    </p>
+
+    <div class="note">
+      <strong>이 저장소에서 Java · Spring Boot로 작성한 유일한 백엔드입니다.</strong>
+      다른 프로젝트의 백엔드는 Python/Django(Emour · Blind Dating)와 TypeScript/NestJS(SNS Clone)입니다.
+    </div>
+  </div>
+</section>
+
+<section id="flow">
+  <div class="wrap narrow">
+    <h2>서비스 전체 흐름</h2>
+    <p class="sec-sub">상품을 찾는 것부터 공동구매에 참여하고, 판매자가 되어 상품을 올리기까지입니다.</p>
+
+    <h3>구매</h3>
+    <div class="grid2">
+      <figure>
+        <img src="../assets/img/gg-home.jpg" alt="홈">
+        <figcaption><strong>① 홈</strong> — 배너와 카테고리로 진행 중인 공동구매를 둘러봅니다</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/img/gg-list.jpg" alt="공동구매 목록">
+        <figcaption><strong>② 목록</strong> — 카드마다 <strong>참여 인원을 게이지</strong>로 보여줍니다 (10 / 25명)</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/img/gg-detail.jpg" alt="상품 상세">
+        <figcaption><strong>③ 상세</strong> — 1인 분담금과 모집 조건을 확인하고 참여합니다</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/img/gg-method.jpg" alt="결제수단 선택">
+        <figcaption><strong>④ 결제수단</strong> — 카드 · 카카오페이 · <strong>코인</strong> 중에서 고릅니다</figcaption>
+      </figure>
+    </div>
+    <p class="note">
+      ⑤ <strong>코인을 고르면 견적 발급 → 송금 → 체인 검증 → 컨펌</strong> 순서로 진행됩니다.
+      이 구간은 <a href="#verify">아래에서 화면과 함께 자세히</a> 설명합니다.
+    </p>
+    <figure>
+      <img src="../assets/img/gg-order.jpg" alt="주문 상세">
+      <figcaption><strong>⑥ 주문 상세</strong> — 결제 금액 · 결제 방식 · 모집 마감일 · <strong>모집 완료 전까지 취소 가능</strong></figcaption>
+    </figure>
+
+    <h3>판매</h3>
+    <p>구매자가 그대로 판매자가 될 수 있습니다. <strong>같은 계정으로, 같은 도메인 안에서</strong> 이어집니다.</p>
+    <div class="grid2">
+      <figure>
+        <img src="../assets/img/gg-seller-terms.jpg" alt="판매자 전환 약관">
+        <figcaption><strong>⑦ 판매자 전환</strong> — 약관을 <strong>끝까지 내려야 체크가 열립니다</strong></figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/img/gg-seller-form.jpg" alt="판매자 정보 입력">
+        <figcaption><strong>⑧ 판매자 정보</strong> — 이메일 인증과 기본 배송지를 등록합니다</figcaption>
+      </figure>
+    </div>
+    <figure>
+      <img src="../assets/img/gg-seller-ai.jpg" alt="AI 상품 등록">
+      <figcaption><strong>⑨ 상품 등록</strong> — <strong>AI가 상품 이미지를 분석해 설명 초안</strong>을 만들어 주고,
+        판매자가 그것을 고쳐서 올립니다</figcaption>
+    </figure>
+
+    <h3>시연 영상</h3>
+    <div class="video" style="aspect-ratio:1212/646">
+      <video src="../assets/video/gg-demo.mp4" poster="../assets/img/gg-demo-poster.jpg"
+             controls playsinline preload="metadata"></video>
+    </div>
+    <p class="video-cap">
+      <b>회원가입부터 판매자 상품 등록까지 3분 40초.</b>
+      <code>j15b205.p.ssafy.io</code> 에 배포해 <strong>2026년 9월 27일까지 운영</strong>한 실제 화면입니다.
+      금융망과 체인을 모두 연동한 상태에서 녹화했습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:92px">시각</th><th>내용</th></tr>
+        <tr><td><strong>0:00</strong></td><td>로그인 · 회원가입</td></tr>
+        <tr><td><strong>0:48</strong></td><td>상품 둘러보기</td></tr>
+        <tr><td><strong>0:59</strong></td><td><strong>결제</strong> — 코인 결제 전 과정</td></tr>
+        <tr><td><strong>1:28</strong></td><td>거래 현황 확인</td></tr>
+        <tr><td><strong>1:38</strong></td><td>판매자 첫 인증</td></tr>
+        <tr><td><strong>2:22</strong></td><td>AI 상품 등록</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="verify">
+  <div class="wrap narrow">
+    <h2>① 구매자가 보낸 트랜잭션 해시를 믿지 않습니다</h2>
+    <p class="sec-sub">코인 결제는 구매자가 자기 지갑에서 송금하고, 그 해시를 서버에 알려주는 구조입니다.</p>
+
+    <div class="quote">
+      <strong>그 해시를 그대로 믿으면, 남의 트랜잭션 해시를 복사해 제출하는 것만으로 결제 완료를 받아낼 수 있습니다.</strong>
+    </div>
+
+    <h3>실제 결제 화면</h3>
+    <div class="video" style="aspect-ratio:1212/646">
+      <video src="../assets/video/gg-pay.mp4" poster="../assets/img/gg-pay-poster.jpg"
+             autoplay muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <p class="video-cap">
+      <b>결제수단 선택부터 완료까지 31초.</b>
+      코인을 고르면 <strong>견적이 발급되고 유효시간이 내려가기 시작</strong>합니다.
+      MetaMask로 송금한 뒤 <strong>서버가 체인에서 확인</strong>하고, 컨펌이 차면 완료로 바뀝니다.
+    </p>
+
+    <h4>화면을 하나씩 보면</h4>
+    <figure>
+      <img src="../assets/img/gg-quote.jpg" alt="코인 결제 Quote 화면">
+      <figcaption>
+        <strong>Quote 화면.</strong> 시장 환율 1,360원에 <strong>Buffer 0.30%</strong>를 더한 적용 환율 1,364.08원으로
+        송금 수량 <strong>27.47639435 USDT</strong>를 확정합니다.
+        <strong>필요 컨펌 5회</strong>와 입금 주소를 함께 보여주고, 오른쪽 <strong>10:01 카운트다운</strong>이
+        견적과 슬롯의 유효시간입니다 — 둘 중 <strong>이른 쪽</strong>에 맞춥니다.
+      </figcaption>
+    </figure>
+
+    <div class="grid2">
+      <figure>
+        <img src="../assets/img/gg-metamask.jpg" alt="MetaMask 서명">
+        <figcaption><strong>MetaMask 서명.</strong> 27.48 USDT · Polygon Amoy.
+          서버는 이 결과를 믿지 않고 <strong>체인에서 다시 확인</strong>합니다</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/img/gg-done.jpg" alt="결제 완료">
+        <figcaption><strong>컨펌 도달 후 완료.</strong> 오른쪽 아래 알림이
+          <strong>18컨펌</strong>을 알리고 있습니다 — 서버 스케줄러가 추적한 결과입니다</figcaption>
+      </figure>
+    </div>
+
+    <h3>체인에서 영수증을 직접 가져와 대조합니다</h3>
+    <div class="dia">
+      <div class="dstep"><div class="rail"></div><div class="n">1</div><div class="bx">
+        <div class="t">지갑 소유 증명<em>등록 단계</em></div>
+        <div class="chips"><span>MetaMask 서명</span><span>challenge → sign → verify</span></div>
+        <div class="w">주소만 입력받으면 <strong>남의 지갑 주소를 등록</strong>할 수 있습니다</div>
+      </div></div>
+
+      <div class="dstep key"><div class="rail"></div><div class="n">2</div><div class="bx">
+        <div class="t">Quote 발급<em>송금 수량 확정</em></div>
+        <div class="chips"><span>업비트 시세</span><span class="on">× (1 + Buffer)</span><span>TTL = min(정책, 슬롯 만료)</span></div>
+        <div class="w"><strong>시세 조회가 실패하면 발급하지 않습니다.</strong> 낡은 환율로 처리하면 금액이 틀어집니다</div>
+      </div></div>
+
+      <div class="dstep"><div class="rail"></div><div class="n">3</div><div class="bx">
+        <div class="t">구매자 송금<em>체인 위에서</em></div>
+        <div class="chips"><span>MetaMask</span><span>Polygon Amoy</span><span>ERC-20 USDT</span></div>
+        <div class="w">여기까지는 서버가 관여하지 않습니다</div>
+      </div></div>
+
+      <div class="dstep key"><div class="rail"></div><div class="n">4</div><div class="bx">
+        <div class="t">영수증 대조<em>여기가 핵심입니다</em></div>
+        <div class="chips"><span>수취 주소</span><span>토큰 컨트랙트</span><span>금액</span><span>송신 주소</span><span class="on">revert 여부</span></div>
+        <div class="w"><strong>다섯 가지를 모두 대조한 뒤에만</strong> 결제로 인정합니다. 토큰 컨트랙트를 보지 않으면 <strong>가짜 토큰</strong>이 통과합니다</div>
+      </div></div>
+
+      <div class="dstep"><div class="rail"></div><div class="n">5</div><div class="bx">
+        <div class="t">컨펌 폴링<em>서버가 책임집니다</em></div>
+        <div class="chips"><span>5초 주기 스케줄러</span><span class="on">USDT 5컨펌</span></div>
+        <div class="w">제출 시점엔 컨펌이 0~1개라 아직 완료가 아닙니다. <strong>구매자가 창을 닫아도 결제가 방치되지 않습니다</strong></div>
+      </div></div>
+
+      <p class="dia-cap">체인 호출 <strong>전에</strong> 거를 수 있는 것(소유권 · 슬롯 만료 · 중복 제출 · Quote 유효성)은 먼저 거릅니다 — 공용 테스트넷 노드는 호출 한도가 있습니다</p>
+    </div>
+
+    <h3>체인 호출을 트랜잭션 밖으로 뺐습니다</h3>
+    <p>
+      체인 RPC는 <strong>수 초가 걸릴 수 있습니다.</strong> 그동안 DB 트랜잭션을 붙잡으면 커넥션과 잠금이 묶입니다.
+      검증 서비스에는 <code>@Transactional</code> 을 붙이지 않고
+      <strong>조회 → 체인 호출 → 짧은 쓰기 트랜잭션</strong> 순서로 나눴습니다.
+    </p>
+    <p class="note">
+      그 대가로 중간에 들고 있는 엔티티가 <strong>detached 상태</strong>가 됩니다.
+      변경이 필요한 엔티티는 쓰기 트랜잭션 안에서 다시 읽어야 하며, <strong>이 사실을 주석에 적어두었습니다.</strong>
+    </p>
+  </div>
+</section>
+
+<section id="db">
+  <div class="wrap narrow">
+    <h2>② 이중 지급은 코드가 아니라 DB가 막습니다</h2>
+    <p class="sec-sub">환불 배치가 두 번 돌거나 관리자가 버튼을 두 번 누르면 돈이 두 번 나갑니다.</p>
+
+    <h3>조회 후 INSERT는 막지 못합니다</h3>
+    <div class="dstates" style="margin-top:20px">
+      <div class="h">동시 요청 두 개</div>
+      <div class="r">
+        <span class="st">A: 환불 있나?</span><span class="sp">→ 없음</span>
+        <span class="st">B: 환불 있나?</span><span class="sp">→ 없음</span>
+      </div>
+      <div class="r">
+        <span class="st b">A: INSERT</span><span class="sp">→</span>
+        <span class="st r2">B: INSERT &nbsp;— 이중 환불</span>
+      </div>
+    </div>
+    <p>
+      <strong>두 요청이 동시에 조회를 통과하면</strong> 애플리케이션 체크는 아무것도 막지 못합니다.
+      <strong>DB 제약은 동시에 통과할 수 없습니다.</strong>
+    </p>
+
+    <h3>MySQL에 조건부 UNIQUE가 없어 마커 컬럼을 썼습니다</h3>
+    <p>
+      PostgreSQL이라면 <code>WHERE status = 'ACTIVE'</code> 조건을 붙인 부분 유니크 인덱스를 쓰면 됩니다.
+      <strong>MySQL에는 그 기능이 없습니다.</strong>
+      그래서 <strong>활성 상태에서만 값을 채우는 마커 컬럼</strong>을 두고 복합 유일성을 걸었습니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:230px">제약</th><th>막는 것</th></tr>
+        <tr><td><code>UNIQUE(participation_id, refund_marker)</code></td><td>같은 참여 건에 두 번째 환불</td></tr>
+        <tr><td><code>UNIQUE(deposit_id, refund_marker)</code></td><td>같은 입금에 두 번째 환불</td></tr>
+        <tr><td><code>UNIQUE(payment_id, refund_marker)</code></td><td>같은 결제에 두 번째 환불</td></tr>
+        <tr><td><code>UNIQUE(tx_hash, log_index)</code></td><td>체인 스캔 중복 입금 기록</td></tr>
+        <tr><td><code>UNIQUE(participation_id)</code> <span style="color:var(--sub)">정산</span></td><td>배치 중복 실행 시 중복 포함</td></tr>
+      </table>
+    </div>
+    <p class="note">
+      환불이 취소되면 마커를 비워, <strong>그 참여 건에 다시 환불을 걸 수 있습니다.</strong>
+      「한 번만」이 아니라 <strong>「활성 상태는 한 번에 하나만」</strong> 을 표현한 제약입니다.
+    </p>
+
+    <div class="quote">
+      <strong>테스트에서도 확인됩니다.</strong>
+      테스트는 마이그레이션이 아니라 엔티티에서 스키마를 만들기 때문에, <strong>같은 제약을 엔티티에도 선언</strong>했습니다.
+      그러지 않으면 「이중 환불을 DB가 막는다」를 테스트로 증명할 수 없습니다.
+    </div>
+
+    <h3>판매자 위반 누적도 같은 원칙입니다</h3>
+    <p>
+      <code>penalty_count</code> 에 버전 컬럼이 없어, 읽고 더해서 쓰는 방식은 동시 증가에서 하나를 잃습니다.
+      <strong>원자적 UPDATE</strong>(<code>SET penalty_count = penalty_count + 1</code>)로 바꿨습니다.
+    </p>
+  </div>
+</section>
+
+<section id="unknown">
+  <div class="wrap narrow">
+    <h2>③ 가장 위험한 것은 실패가 아니라 「결과를 모르는 것」입니다</h2>
+
+    <p>
+      정산 이체를 금융망에 요청했는데 <strong>응답을 받지 못했습니다.</strong>
+      이때 이체는 <strong>일어났을 수도, 안 일어났을 수도</strong> 있습니다.
+      실패로 간주해 자동 재시도하면 <strong>이미 나간 돈을 한 번 더 보냅니다.</strong>
+    </p>
+
+    <div class="dia">
+      <div class="dstates">
+        <div class="h">이체 결과를 셋으로 나눴습니다</div>
+        <div class="r">
+          <span class="st g">SUCCESS</span><span class="sp">이체 완료</span>
+        </div>
+        <div class="r">
+          <span class="st b">FAILED</span><span class="sp">금융망이 <strong>명시적으로 거부</strong> → 배치가 자동 재시도</span>
+        </div>
+        <div class="r">
+          <span class="st r2">UNKNOWN</span><span class="sp">요청은 나갔는데 응답 없음 → <strong>자동 재시도에서 제외</strong></span>
+        </div>
+      </div>
+      <p class="dia-cap"><code>UNKNOWN</code> 은 <strong>사람이 금융망 거래내역을 확인한 뒤</strong> 처리합니다. 재처리 API도 이 상태에서는 그대로 재실행하지 못하게 막았습니다</p>
+    </div>
+
+    <h3>정산 배치는 돈을 보내지 않습니다</h3>
+    <p>
+      집계 배치는 <strong>명세만 만들고</strong>, 실제 이체는 관리자가 실행합니다.
+      <strong>잘못 계산된 정산이 사람 확인 없이 나가면 회수가 어렵습니다.</strong>
+    </p>
+  </div>
+</section>
+
+<section id="entity">
+  <div class="wrap narrow">
+    <h2>④ 상태 전이 규칙을 서비스가 아니라 엔티티에 뒀습니다</h2>
+
+    <p>에스크로를 해제하거나 환불하는 <strong>호출 경로가 네 개</strong>였습니다.</p>
+    <div class="dstates" style="margin-top:18px">
+      <div class="h">같은 에스크로를 건드리는 곳</div>
+      <div class="r">
+        <span class="st">정산 배치</span><span class="st">관리자 수동 처리</span>
+        <span class="st">반품 처리</span><span class="st">모집 실패 처리</span>
+      </div>
+    </div>
+    <div class="quote">
+      <strong>규칙이 서비스에 흩어지면 그중 하나가 빠뜨립니다.</strong>
+      엔티티가 막으면 어느 경로로 와도 통과하지 못합니다.
+    </div>
+
+    <h3>불변식</h3>
+    <p class="note" style="text-align:center;font-size:15px">
+      <strong>에스크로 보관 총액 = 미해제 참여 건의 결제금액 합계</strong> &nbsp;(항상)
+    </p>
+
+    <h3>부분 환불에서 금액을 줄이지 않는 이유</h3>
+    <p>
+      54,000원 결제에 단순변심 반품이면 <strong>최초 배송비를 돌려주지 않아 42,000원만 환불</strong>되고,
+      남은 12,000원은 판매자에게 정산되어야 합니다.
+    </p>
+    <p>
+      이때 <strong>보관 시작 금액은 줄이지 않고</strong> 환불 누계를 따로 쌓습니다.
+      불변식 점검이 보관 시작 금액과 참여 건 결제금액을 비교하므로,
+      <strong>줄이면 부분 환불된 건이 전부 오류로 잡힙니다.</strong>
+    </p>
+
+    <div class="note">
+      🔒 <strong>에스크로는 실제 자금 예치가 아니라 내부 원장입니다.</strong>
+      실 자금 보관·정산은 전자금융거래법상 규제 대상이라,
+      <strong>「이 돈을 언제 판매자에게 보낼지」를 상태로만 관리</strong>합니다.
+      이 한계도 코드 주석에 적어두었습니다.
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap narrow">
+    <h2>기술 스택과 선택 근거</h2>
+
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:150px">영역</th><th>기술</th></tr>
+        <tr><td>언어 · 프레임워크</td><td><strong>Java 21 · Spring Boot 4.1.1</strong> (Spring Framework 7) · Gradle 9</td></tr>
+        <tr><td>영속성</td><td>Spring Data JPA (Hibernate) · <strong>QueryDSL 5.1</strong></td></tr>
+        <tr><td>DB · 캐시</td><td>MySQL 8.0 (<strong>Flyway</strong> 마이그레이션) · Redis 7</td></tr>
+        <tr><td>인증</td><td>Spring Security + JWT</td></tr>
+        <tr><td>체인 연동</td><td><strong>web3j</strong> — Polygon Amoy (ERC-20 USDT)</td></tr>
+        <tr><td>결제</td><td>SSAFY 교육용 금융망 API · 카카오페이 · MetaMask</td></tr>
+        <tr><td>저장소</td><td>AWS S3 (SDK v2) · MinIO (로컬 통합 테스트)</td></tr>
+        <tr><td>프론트엔드</td><td>React 19 · Vite</td></tr>
+      </table>
+    </div>
+
+    <h3>기동 시점에 틀린 것을 잡습니다</h3>
+    <p>
+      <code>ddl-auto=validate</code> 로 두어, 엔티티 매핑이 실제 스키마와 다르면
+      <strong>애플리케이션이 뜨는 순간 에러가 납니다.</strong>
+      스키마는 Flyway가 단일 진실 소스이고, 변경이 필요하면 새 마이그레이션을 추가합니다.
+    </p>
+
+    <h3>넣지 않은 것도 기록했습니다</h3>
+    <p class="note">
+      <strong>API 문서 자동화 도구를 뺐습니다.</strong>
+      Spring Boot 4(Framework 7)와 <strong>Spring Data 버전이 충돌해 기동이 실패</strong>하는 것을 확인했습니다.
+      호환 버전이 나오면 추가하기로 하고 그 사실을 문서에 남겼습니다.
+    </p>
+    <p class="note">
+      <strong>S3 자격증명을 설정 파일에 두지 않습니다.</strong>
+      AWS SDK 기본 자격증명 체인을 써서 로컬은 환경변수, 배포는 <strong>EC2 인스턴스 프로필</strong>을 사용합니다.
+    </p>
+
+    <h3>배포</h3>
+    <p>
+      <strong>초기 EC2 배포 구성을 만들어 서비스를 처음 올렸습니다</strong> —
+      백엔드·프론트엔드 Dockerfile(멀티스테이지), 운영용 compose,
+      Nginx 설정(SPA 서빙과 <code>/api</code> 리버스 프록시), 운영 프로필, 배포 가이드까지
+      <strong>9개 파일 495줄</strong>입니다.
+      이후 <code>j15b205.p.ssafy.io</code> 에서 <strong>2026년 9월 27일까지 운영</strong>했습니다.
+    </p>
+
+    <h3>테스트</h3>
+    <p>
+      담당 도메인 테스트 <strong>5,689줄</strong>을 작성했습니다.
+      MinIO를 띄워 <strong>운영과 동일한 S3 어댑터</strong>로 업로드 · 공개 URL 조회 · 바이트 일치 · 삭제 후 404까지 확인하는
+      통합 테스트도 포함돼 있습니다.
+    </p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap narrow">
+    <h2>한계와 범위</h2>
+    <p class="sec-sub">설계 당시의 판단과 그 대가를 함께 기록했습니다.</p>
+
+    <div class="tablewrap">
+      <table>
+        <tr><th style="width:250px">한계</th><th>상태</th></tr>
+        <tr><td><strong>멱등 키를 형식 검증만 하고 저장하지 않음</strong></td>
+            <td>실제 이중 실행 차단은 <strong>원장의 UNIQUE 제약</strong>이 담당합니다. 키 기반 응답 캐싱은 별도 저장소가 필요해 미구현</td></tr>
+        <tr><td>Quote 소유 결제를 DB로 확인할 수 없음</td>
+            <td>견적 테이블에 결제 식별자 컬럼이 없어 <strong>원화 금액 일치</strong>로 대신 확인합니다. 금액이 같은 남의 견적을 써도 환율만 고정될 뿐 이득이 없고, 사용 표시가 중복 사용을 막습니다</td></tr>
+        <tr><td>테스트넷 기준</td><td>Polygon Amoy에서 검증했습니다. <strong>메인넷 가스비·혼잡 상황은 다룰 수 없었습니다</strong></td></tr>
+        <tr><td>에스크로는 내부 원장</td><td>실 자금 보관은 전자금융거래법 규제 대상이라 <strong>상태 관리만</strong> 수행합니다</td></tr>
+        <tr><td>결과 불명 정산 건</td><td><strong>사람 개입이 필수</strong>입니다. 자동 복구 경로가 없고, 이는 의도한 설계입니다</td></tr>
+      </table>
+    </div>
+
+    <div class="prevnext">
+      <a class="btn" href="blind-dating.html">← Blind Dating</a>
+      <a class="btn" href="../index.html">전체 프로젝트</a>
+      <a class="btn" href="dream-shaper.html">Dream Shaper →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>공구한 · 2026.08~09 · 6인</span>
+    <nav>
+      <a href="../index.html">전체 프로젝트</a>
+      <a href="mailto:duddngud3@gmail.com">duddngud3@gmail.com</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
