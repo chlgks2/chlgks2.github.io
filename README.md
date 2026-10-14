@@ -16,9 +16,3 @@
 | 07 | [SNS Clone](https://chlgks2.github.io/p/nestjs-sns.html) | NestJS 백엔드 |
 | 08 | [H런처](https://chlgks2.github.io/p/hlauncher.html) | StarCraft 안티치트 런처 · 진행 중 |
 | 09 | [LoL 승률 예측](https://chlgks2.github.io/p/lol-winrate.html) | 크롤링부터 학습까지 |
-
-## 직무 전용 페이지
-
-| 페이지 | 내용 |
-|---|---|
-| [영상·이미지 생성 AI — 작업 모음](https://chlgks2.github.io/ai-content.html) | PixG · Blind Dating · **[Bigglez 채용 과제](https://chlgks2.github.io/ai-content.html#bigglez)**(LoRA 직접 학습)를 생성 AI 관점으로 다시 묶은 페이지입니다. ComfyUI 워크플로우 12개를 함께 공개합니다 |
