@@ -96,6 +96,9 @@ h3::before{ content:""; display:inline-block; width:4px; height:17px; background
   border-radius:2px; margin-right:11px; vertical-align:-2px; }
 h4{ font-size:16.5px; margin:26px 0 8px; color:var(--blue-2); font-weight:700; }
 .sec-sub{ color:var(--sub); font-size:16px; margin:0 0 8px; max-width:780px; }
+.kicker{ font-family:"Cascadia Mono",Consolas,ui-monospace,Pretendard,"Malgun Gothic",monospace;
+  font-size:12px; font-weight:800; letter-spacing:.13em; color:var(--blue-2);
+  margin:0 0 12px; }
 p{ margin:14px 0; color:var(--ink-2); }
 strong,b{ color:var(--ink); font-weight:700; }
 em{ color:var(--ink-2); }
