@@ -6,6 +6,9 @@
 <title>Dream Shaper — AI 음성 커버 생성 서비스</title>
 <meta name="description" content="백엔드 인력 이탈로 남은 2주 안에 AI 서버를 직접 구축. 화자 5명 모델 학습 약 194시간, 음정 차이 중앙값 +0.0 cent 검증.">
 <link rel="stylesheet" href="../assets/css/style.css?v=20261015q">
+<!-- 테마 — 되돌리려면 아래 두 줄을 지우십시오 -->
+<link rel="stylesheet" href="../assets/css/theme-light.css?v=20261015k">
+<link rel="stylesheet" href="../assets/css/theme-dream.css?v=20261015">
 </head>
 <body>
 
@@ -13,7 +16,7 @@
   <div class="wrap">
     <a class="home" href="../index.html">← Portfolio</a>
     <nav>
-      <a href="#what">개요</a><a href="#data">데이터</a><a href="#train">학습</a>
+      <a href="#what">개요</a><a href="#demo">시연</a><a href="#data">데이터</a><a href="#train">학습</a>
       <a href="#verify">검증</a><a href="#transfer">파일 전송</a><a href="#limits">한계</a>
       <a href="https://github.com/chlgks2/DreamShaper" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -22,7 +25,7 @@
 
 <div class="hero">
   <div class="wrap">
-    <div class="eyebrow">05 · 2023.09 · 1개월 · 6인</div>
+    <div class="eyebrow">06 · 2023.09 · 1개월 · 6인</div>
     <h1>Dream Shaper<br><span style="font-size:.62em;color:var(--ink-2)">AI 음성 커버 생성 서비스</span></h1>
     <p class="lead">
       원하는 아티스트의 목소리로 노래를 커버하고, DALL·E 2로 앨범 커버까지 만들어 주는 서비스입니다.
@@ -52,10 +55,77 @@
                                 → 결과 화면 (음원 + 커버)</code></pre>
 
     <h3>백엔드 전담이 아니라 AI 서버를 만들었습니다</h3>
-    <figure>
-      <img src="../assets/img/ds-arch.png" alt="서비스 아키텍처">
-      <figcaption>React 프론트엔드가 <strong>서로 다른 두 백엔드</strong>를 호출하는 구조였습니다</figcaption>
-    </figure>
+    <div class="arch">
+      <div class="arch-lg">
+        <span class="lg me">본인 담당</span>
+        <span class="lg team">팀원 담당</span>
+        <span class="lg ext">외부</span>
+      </div>
+
+      <div class="arch-grid">
+        <div class="ab team front">
+          <div class="ab-t">React 프론트엔드</div>
+          <div class="ab-b">가입 · 아티스트 선택 · 곡 업로드<br>커버 스케치 · 결과 재생</div>
+          <div class="ab-w">팀원 제작</div>
+        </div>
+
+        <div class="ar a1"><em>→</em><span>REACT_APP_BACK</span></div>
+
+        <div class="ab team">
+          <div class="ab-t">인증 서버</div>
+          <div class="ab-b"><code>POST /register</code> · <code>POST /login</code></div>
+          <div class="ab-s">FastAPI · MongoDB(motor) · JWT HS256 · bcrypt · 만료 15분</div>
+          <div class="ab-w">팀원 제작 · 저장소 공개됨</div>
+        </div>
+
+        <div class="ar a2"><em>→</em></div>
+
+        <div class="ab ext">
+          <div class="ab-t">MongoDB</div>
+          <div class="ab-b">사용자 계정</div>
+        </div>
+
+        <div class="ar a3"><em>→</em><span>REACT_APP_AI_API</span></div>
+
+        <div class="ab me">
+          <div class="ab-t">AI 서버 <b>본인</b></div>
+          <div class="ab-ep">
+            <div class="ep">
+              <code>POST /convert</code>
+              <span><code>audio_file</code> + <code>song_id</code> + <code>singer_id(1~7)</code><br>
+                    → SVC/RVC + HuBERT 음색 변환</span>
+            </div>
+            <div class="ep">
+              <code>POST /draw</code>
+              <span>사용자 스케치(PNG)<br>→ DALL·E 2 앨범 커버 생성</span>
+            </div>
+          </div>
+          <div class="ab-w">본인 제작 · FastAPI · boto3</div>
+        </div>
+
+        <div class="ar a4"><em>→</em></div>
+
+        <div class="ab-stack">
+          <div class="ab ext">
+            <div class="ab-t">AWS S3</div>
+            <div class="ab-b">결과 음원 · 앨범 커버 저장</div>
+            <div class="ab-w">서버는 경로(key)만 관리</div>
+          </div>
+          <div class="ab ext">
+            <div class="ab-t">OpenAI DALL·E 2</div>
+            <div class="ab-b"><code>Image.create_edit</code> (outpainting)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-foot">
+        <div><b>배포</b> Docker Compose (client:3000 / back:8000) · AWS EC2</div>
+        <div class="warn">AI 서버는 로컬 실행 — <strong>GPU가 필요해 EC2에 올리지 않았습니다</strong> (완성 서버 코드 미확보)</div>
+        <div><b>사용자 동선</b> 가입/로그인 → 아티스트 7명 중 선택 → 곡 업로드 → <code>/convert</code> → 커버 스케치 → <code>/draw</code> → 결과(음원+커버)</div>
+        <div class="src">근거 — <code>dreamshaper_server</code> 저장소 코드 · <code>s3_test/app.py</code>(FastAPI + boto3) · <code>dalle/fa.py</code>(DALL·E 2)</div>
+      </div>
+    </div>
+    <p class="video-cap">React 프론트엔드가 <strong>서로 다른 두 백엔드</strong>를 호출하는 구조였습니다.</p>
     <div class="tablewrap">
       <table>
         <tr><th style="width:230px">구성요소</th><th>담당</th></tr>
@@ -82,13 +152,69 @@
   </div>
 </section>
 
+<section id="demo">
+  <div class="wrap narrow">
+    <h2>실제로 이렇게 동작합니다</h2>
+    <p>
+      가입 → 아티스트 선택 → 곡 업로드 → <strong>음색 변환</strong> → 커버 스케치 → <strong>앨범 커버 생성</strong> 까지
+      한 번에 이어집니다. 아래는 <strong>실제 서비스를 돌려 녹화한 1분 10초짜리 시연</strong>입니다.
+    </p>
+
+    <div class="video">
+      <video src="../assets/video/ds-demo.mp4" poster="../assets/img/ds-demo-poster.jpg"
+             controls preload="metadata" playsinline></video>
+    </div>
+    <p class="video-cap">
+      <b>1분 10초 · 실제 서비스를 돌려 녹화했습니다.</b>
+      오른쪽 터미널에 <strong>FastAPI 서버 로그</strong>가 함께 찍혀 있습니다 —
+      <code>/convert</code> 와 <code>/draw</code> 가 실제로 호출되고 결과 파일이 저장되는 과정입니다.
+    </p>
+
+    <div class="grid2">
+      <figure>
+        <img src="../assets/img/ds-s1-home.png" alt="Dream Shaper 메인 화면" loading="lazy">
+        <figcaption><b>①</b> 메인 — 「아니요? 최애가수가 내 손에?」</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/img/ds-s2-artist.png" alt="아티스트 선택 화면" loading="lazy">
+        <figcaption><b>②</b> 아티스트 선택 — <strong>직접 학습한 화자 모델</strong> 중에서 고릅니다</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/img/ds-s3-convert.png" alt="음색 변환 결과 재생 화면" loading="lazy">
+        <figcaption><b>③</b> 변환 결과 — <strong>원본과 변환본을 나란히</strong> 들어 볼 수 있습니다</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/img/ds-s4-cover.png" alt="앨범 커버 생성 화면" loading="lazy">
+        <figcaption><b>④</b> 앨범 커버 — 스케치를 올리면 <strong>DALL·E 2가 배경을 채워</strong> 줍니다</figcaption>
+      </figure>
+    </div>
+
+    <p class="note">
+      🔑 <strong>이 화면에서 제가 만든 것은 AI 서버입니다.</strong>
+      프론트엔드와 인증 서버는 팀원이 맡았고, 저는 <code>/convert</code> 와 <code>/draw</code> 두 엔드포인트와
+      그 뒤의 음색 변환·커버 생성 파이프라인, S3 저장을 담당했습니다.
+    </p>
+  </div>
+</section>
+
 <section id="data">
   <div class="wrap narrow">
     <h2>데이터가 결과를 갈랐습니다</h2>
-    <figure>
-      <img src="../assets/img/ds-pipeline.png" alt="데이터 파이프라인">
-      <figcaption>음원 확보 → 반주·잡음 분리 → 정규화 → <strong>전량 청취 검수</strong> → 슬라이스 → 학습</figcaption>
-    </figure>
+    <div class="pipe">
+      <div class="pstep"><span class="pn">1</span><b>음원 확보</b>
+        <span>크롤링(연예인 4명)<br><strong>동의받은 강의 녹화본</strong><br>(강사님 1명)</span><em class="auto">자동</em></div>
+      <div class="pstep"><span class="pn">2</span><b>반주·잡음 분리</b>
+        <span>UVR5 · Spleeter 5stems<br>보컬 트랙만 추출</span><em class="auto">자동</em></div>
+      <div class="pstep"><span class="pn">3</span><b>음량 정규화</b>
+        <span>화자별 레벨 통일</span><em class="auto">자동</em></div>
+      <div class="pstep key"><span class="pn">4</span><b>전량 청취 검수</b>
+        <span>헤드셋으로 전 구간 확인<br>FL Studio로 문제 구간 제거</span><em class="hand">수작업</em></div>
+      <div class="pstep"><span class="pn">5</span><b>슬라이스</b>
+        <span>학습 단위로 분할<br>→ 2,527 클립</span><em class="auto">자동</em></div>
+      <div class="pstep done"><span class="pn">6</span><b>학습</b>
+        <span>diff-svc<br>HuBERT-Soft + NSF-HiFiGAN<br>24kHz / hop 128</span><em class="ok">11일</em></div>
+    </div>
+
     <div class="quote">
       <strong>자동화하지 않은 유일한 구간이 「전량 청취 검수」입니다.</strong>
       분리·정규화까지는 도구(UVR5 · Spleeter)가 해주지만,
@@ -141,7 +267,13 @@
     <h3>학습 곡선에서 확인한 것</h3>
     <figure>
       <img src="../assets/img/ds-curve.png" alt="학습 곡선">
-      <figcaption>로그가 온전한 3개 모델의 <code>tr/mel</code> 을 구간별로 평균한 값</figcaption>
+      <figcaption>
+        로그가 온전한 3개 모델의 <code>tr/mel</code> 을 구간별로 평균한 값입니다.
+        화자 5명 중 <strong>로그가 온전한 3명</strong> · <code>diff-svc</code> / HuBERT-Soft + NSF-HiFiGAN ·
+        24kHz · <code>lr 4e-4</code> · <code>batch 10</code>.<br>
+        mel loss는 <strong>5만 step 부근에서 평탄해지고</strong>, 이후 <strong>95만 step(약 30시간) 동안 4~10% 개선</strong>에 그쳤습니다.
+        성시경·서동현 로그는 <strong>파일 손상으로 제외</strong>했고, 강사님 로그는 <strong>21만 step까지만</strong> 남아 있습니다.
+      </figcaption>
     </figure>
     <div class="tablewrap">
       <table>
@@ -181,7 +313,7 @@
     <h2>무엇이 바뀌고 무엇이 유지됐나</h2>
     <figure>
       <img src="../assets/img/ds-voice.png" alt="음색 변환 전후 비교">
-      <figcaption>원본 보컬과 변환 결과를 같은 구간에서 비교. 음정은 유지되고 <strong>배음 구조만 바뀌는 것</strong>이 확인됩니다</figcaption>
+      <figcaption>원본 보컬과 변환 결과를 같은 구간에서 비교. 음정은 유지되고 <strong>배음 구조만 바뀌는 것</strong>이 확인됩니다.<br><strong>스펙트로그램 판 4개는 원본 색 그대로입니다</strong> — 색이 곧 세기라서 바꾸면 다른 값을 말하게 됩니다.</figcaption>
     </figure>
     <div class="tablewrap">
       <table>
@@ -195,10 +327,31 @@
     </div>
 
     <h3>DALL·E 2로 앨범 커버를 만들었습니다</h3>
-    <figure>
-      <img src="../assets/img/ds-cover.png" alt="앨범 커버 생성">
-      <figcaption>사용자 스케치를 받아 DALL·E 2로 앨범 커버를 생성하고 S3에 저장</figcaption>
-    </figure>
+    <p>
+      사용자가 올린 캐릭터 이미지를 받아 <strong>OpenCV로 마스크를 만들고</strong>,
+      DALL·E 2 <code>image.create_edit</code>(outpainting)로 <strong>캐릭터는 그대로 두고 배경과 타이포그래피만</strong>
+      채웁니다. <strong>한 번 호출에 5장을 동시에</strong> 받아 S3에 저장합니다.
+    </p>
+
+    <div class="cover-flow">
+      <figure class="cv-in">
+        <img src="../assets/img/ds-c-input.png" alt="사용자가 올린 입력 캐릭터 이미지" loading="lazy">
+        <figcaption><b>입력</b> 사용자가 올린 캐릭터</figcaption>
+      </figure>
+      <div class="cv-arrow"><span>마스크<br>+ 프롬프트</span><em>→</em></div>
+      <div class="cv-out">
+        <figure><img src="../assets/img/ds-c-1.png" alt="생성된 앨범 커버 1" loading="lazy"><figcaption>생성 1</figcaption></figure>
+        <figure><img src="../assets/img/ds-c-2.png" alt="생성된 앨범 커버 2" loading="lazy"><figcaption>생성 2</figcaption></figure>
+        <figure><img src="../assets/img/ds-c-3.png" alt="생성된 앨범 커버 3" loading="lazy"><figcaption>생성 3</figcaption></figure>
+        <figure><img src="../assets/img/ds-c-4.png" alt="생성된 앨범 커버 4" loading="lazy"><figcaption>생성 4</figcaption></figure>
+        <figure><img src="../assets/img/ds-c-5.png" alt="생성된 앨범 커버 5" loading="lazy"><figcaption>생성 5</figcaption></figure>
+      </div>
+    </div>
+
+    <p class="note">
+      구현 — <code>dalle/fa.py</code> → OpenCV 마스크 생성 → 알파 채널 합성 → OpenAI API 호출 → <strong>결과 5장 저장</strong>.
+      <strong>캐릭터 영역을 마스크에서 빼는 것</strong>이 핵심입니다. 빼지 않으면 사람까지 다시 그려 버립니다.
+    </p>
   </div>
 </section>
 
@@ -265,7 +418,7 @@ async def upload_image(file: UploadFile):
     </p>
 
     <div class="prevnext">
-      <a class="btn" href="gongguhan.html">← 공구한</a>
+      <a class="btn" href="git-gui.html">← Git GUI</a>
       <a class="btn" href="../index.html">전체 프로젝트</a>
       <a class="btn" href="yolo-app.html">엄마 이게뭐야 →</a>
     </div>
