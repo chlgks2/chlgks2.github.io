@@ -8,7 +8,7 @@
 <meta property="og:title" content="Portfolio — Backend · AI Developer">
 <meta property="og:description" content="AI 모델 학습부터 백엔드 서비스 연동까지. 7개 프로젝트의 설계 판단과 실측값.">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="assets/css/style.css?v=20261014">
+<link rel="stylesheet" href="assets/css/style.css?v=20261014d">
 </head>
 <body>
 
@@ -17,7 +17,8 @@
     <a class="home" href="index.html">Portfolio</a>
     <nav>
       <a href="#projects">프로젝트</a>
-      <a href="#approach">개발자로서의 원칙</a>
+      <a href="#process">작업 방식</a>
+      <a href="#approach">원칙</a>
       <a href="#learning">학습 이력</a>
       <a href="#stack">기술 스택</a>
       <a href="#contact">연락</a>
@@ -30,11 +31,36 @@
     <div class="eyebrow">BACKEND · AI DEVELOPER</div>
     <h1>늘 새로운 것에<br><span class="hl">도전</span>하는 개발자</h1>
     <p class="lead">
-      <strong>익숙한&nbsp;방법보다, 새로운&nbsp;방법을&nbsp;먼저&nbsp;시도합니다.</strong>
-      레퍼런스가&nbsp;부족한&nbsp;문제에서도 직접&nbsp;방법을&nbsp;찾고, 실패하면&nbsp;접근을&nbsp;바꿔 해결해&nbsp;왔습니다.
-      픽셀&nbsp;스프라이트&nbsp;자동&nbsp;생성부터 음성&nbsp;변환&nbsp;서비스까지
-      <strong class="lead-end">AI&nbsp;모델&nbsp;학습에서 백엔드&nbsp;연동, 실제&nbsp;서비스까지 직접&nbsp;구현했습니다.</strong>
+      익숙한&nbsp;방법보다 새로운&nbsp;방법을 먼저&nbsp;시도합니다.
+      레퍼런스가&nbsp;없는&nbsp;문제도 직접&nbsp;풀어왔고,
+      AI&nbsp;모델&nbsp;학습부터 백엔드&nbsp;연동, 실제&nbsp;서비스까지 구현했습니다.
     </p>
+    <div class="stage">
+      <div class="stage-field" aria-hidden="true">
+        <span class="pill on">Python</span>
+        <span class="pill on">Java 21</span>
+        <span class="pill on">Spring Boot</span>
+        <span class="pill on">Django</span>
+        <span class="pill">FastAPI</span>
+        <span class="pill">NestJS</span>
+        <span class="pill hot">PyTorch</span>
+        <span class="pill hot">Stable Diffusion</span>
+        <span class="pill hot">ComfyUI</span>
+        <span class="pill">MySQL</span>
+        <span class="pill">PostgreSQL</span>
+        <span class="pill">Redis</span>
+        <span class="pill">JPA</span>
+        <span class="pill">QueryDSL</span>
+        <span class="pill">Docker</span>
+        <span class="pill">AWS</span>
+        <span class="pill">WebSocket</span>
+        <span class="pill">Vue</span>
+        <span class="pill">React</span>
+        <span class="pill">Go</span>
+      </div>
+      <p class="stage-word">PORTFOLIO</p>
+    </div>
+
     <div class="links">
       <a class="btn primary" href="#projects">프로젝트 보기</a>
       <a class="btn" href="https://github.com/chlgks2" target="_blank" rel="noopener">GitHub</a>
@@ -47,6 +73,7 @@
       <div class="kpi"><b>3회</b><span>AI 공모 수상<br>최우수상 2</span></div>
       <div class="kpi"><b>3</b><span>공개 모델<br>HuggingFace</span></div>
     </div>
+
   </div>
 </div>
 
@@ -157,6 +184,67 @@
         </div>
       </a>
 
+    </div>
+  </div>
+</section>
+
+<!-- ── 작업 방식 ───────────────────────────── -->
+<section id="process">
+  <div class="wrap">
+    <h2>문제를 받으면 이 순서로 갑니다</h2>
+    <p class="sec-sub">프로젝트가 달라도 네 단계는 같았습니다.</p>
+
+    <div class="flowchart">
+      <svg viewBox="0 0 1160 190" role="img" aria-labelledby="flow-t">
+        <title id="flow-t">정의 → 구현 → 검증 → 기록으로 이어지는 작업 흐름</title>
+        <g fill="none" stroke-width="2.4" stroke-linecap="round">
+          <path d="M0 150 H1160" stroke="#2f3846"/>
+          <path d="M150 150 C210 150 215 86 275 86 H520 C580 86 585 150 645 150"
+                stroke="#5b8dff"/>
+          <path d="M420 86 C470 86 475 34 525 34 H840 C890 34 895 86 945 86"
+                stroke="#4ec97a"/>
+          <path d="M700 150 C760 150 765 96 825 96 H1045"
+                stroke="#f5a05a"/>
+        </g>
+        <g>
+          <circle cx="150" cy="150" r="7.5" fill="#5b8dff"/>
+          <circle cx="420" cy="86"  r="7.5" fill="#5b8dff"/>
+          <circle cx="525" cy="34"  r="7.5" fill="#4ec97a"/>
+          <circle cx="645" cy="150" r="7.5" fill="#5b8dff"/>
+          <circle cx="700" cy="150" r="7.5" fill="#f5a05a"/>
+          <circle cx="945" cy="86"  r="7.5" fill="#4ec97a"/>
+          <circle cx="1045" cy="96" r="7.5" fill="#f5a05a"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="no">01 / DEFINE</div>
+        <h4>무엇이 되면 끝인지 먼저 정합니다</h4>
+        <p>「잘 만든다」로는 완료를 판단할 수 없습니다.
+          <a href="p/pixg.html">PixG</a>에서는 <strong>게임 엔진이 실제로 읽을 수 있는가</strong>를 기준으로
+          조건 네 가지를 먼저 못박았습니다.</p>
+      </div>
+      <div class="step">
+        <div class="no">02 / BUILD</div>
+        <h4>지금 조건에서 성립하는 구조를 고릅니다</h4>
+        <p>이상적인 구조가 아니라 <strong>남은 일정과 자원 안에서 되는 것</strong>을 고릅니다.
+          GPU 예산이 없어 <a href="p/blind-dating.html">호출 방향을 뒤집었고</a>,
+          5주 일정에선 브로커 대신 DB 테이블을 큐로 썼습니다.</p>
+      </div>
+      <div class="step">
+        <div class="no">03 / VERIFY</div>
+        <h4>지표가 실제 환경을 반영하는지 확인합니다</h4>
+        <p><a href="p/emour.html">Emour</a>에서 <strong>0.73이 실제 대화에서 0.175로</strong> 떨어졌습니다.
+          모델이 아니라 <strong>평가 방식이 틀렸던 것</strong>이라, 모델보다 평가 체계를 먼저 고쳤습니다.</p>
+      </div>
+      <div class="step">
+        <div class="no">04 / RECORD</div>
+        <h4>한계와 대가를 함께 남깁니다</h4>
+        <p>선택에는 늘 대가가 있습니다. <strong>무엇을 포기했는지 적어두지 않으면</strong>
+          다음 사람이 같은 자리에서 다시 고민합니다. 모든 프로젝트 페이지에 「알려진 한계」가 있는 이유입니다.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -450,5 +538,6 @@
   </div>
 </footer>
 
+<script src="assets/js/pill-drop.js?v=20261014" defer></script>
 </body>
 </html>
