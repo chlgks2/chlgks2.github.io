@@ -1,0 +1,17 @@
+/* SNS Clone — NestJS 레드 · 담백한 기술 문서 톤 */
+:root{
+  --bg:#fdfafb; --bg-2:#f7eef1; --card:#ffffff; --card-2:#fcf6f7;
+  --line:#ecdfe3; --line-2:#dcc5cc;
+  --ink:#1d1619; --ink-2:#423036; --sub:#6d5a60;
+  --a:#d1203f; --a-2:#9c1430; --a-soft:#fdeaee; --a-line:#f4c2cd;
+  --b:#3f5d8a; --b-soft:#ecf1f8; --b-line:#c3d2e6;
+}
+.hero{ background:
+  radial-gradient(600px 330px at 14% -14%, #fbd9e1 0%, rgba(255,255,255,0) 62%),
+  radial-gradient(560px 330px at 70% -18%, #dde6f4 0%, rgba(255,255,255,0) 62%),
+  linear-gradient(180deg,#fcf2f5 0%, #fdfafb 100%); }
+h1,h2,h3{ letter-spacing:-.04em; }
+.kpi,.card,.tablewrap,.quote,.note,.dstep .bx,.dnode,.dstates,figure img{ border-radius:12px; }
+.kpi{ box-shadow:0 1px 2px rgba(209,32,63,.08), 0 10px 26px -18px rgba(156,20,48,.45); }
+.btn{ border-radius:10px; }
+.chips span{ border-radius:7px; }

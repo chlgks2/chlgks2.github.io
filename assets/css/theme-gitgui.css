@@ -1,0 +1,34 @@
+/* Git GUI — 통통 튀는 다색 (브랜치 청록 + 가지 보라) */
+:root{
+  --bg:#f7fffd; --bg-2:#e9faf7; --card:#ffffff; --card-2:#f3fdfb;
+  --line:#d4ece8; --line-2:#b3ddd7;
+  --ink:#10211f; --ink-2:#2d4642; --sub:#5e7571;
+  --a:#0c9c93; --a-2:#07716b; --a-soft:#e1f7f4; --a-line:#a9e3dd;
+  --b:#8b5cf0; --b-soft:#f1ecfe; --b-line:#d6c6fb;
+}
+.hero{ background:
+  radial-gradient(580px 330px at 10% -14%, #c9f4ee 0%, rgba(255,255,255,0) 62%),
+  radial-gradient(560px 340px at 50% -18%, #e7ddfd 0%, rgba(255,255,255,0) 62%),
+  radial-gradient(520px 320px at 92% -12%, #fde6d6 0%, rgba(255,255,255,0) 60%),
+  linear-gradient(180deg,#eefdfa 0%, #f7fffd 100%); }
+h1,h2,h3{ letter-spacing:-.05em; }
+
+/* 통통 튀게 — 모서리를 크게, 그림자를 색으로 또렷하게 */
+.kpi,.card,.tablewrap,.quote,.note,.dstep .bx,.dnode,.dstates,figure img{ border-radius:20px; }
+.kpi{ box-shadow:0 4px 0 var(--a-line); }
+.kpi:nth-child(2){ box-shadow:0 4px 0 var(--b-line); }
+.kpi:nth-child(3){ box-shadow:0 4px 0 #ffd5a8; }
+.kpi:nth-child(4){ box-shadow:0 4px 0 #ffc9d8; }
+.btn{ border-radius:999px; box-shadow:0 3px 0 var(--line-2); }
+.btn:hover{ transform:translateY(-2px); box-shadow:0 5px 0 var(--a-line); }
+.btn.primary{ box-shadow:0 3px 0 var(--a-2); }
+.chips span{ border-radius:999px; }
+
+/* 단계 번호를 단계마다 다른 색으로 */
+.dstep .n{ background:var(--a-soft); border-color:var(--a-line); color:var(--a-2); }
+.dstep:nth-child(2) .n{ background:var(--b-soft); border-color:var(--b-line); color:#6a39d0; }
+.dstep:nth-child(3) .n{ background:#fff1e2; border-color:#ffd5a8; color:#b4600c; }
+
+/* 앱 화면은 다크 UI입니다 — 색을 바꾸지 않고 어두운 판으로 감쌉니다 */
+figure:has(img[src$="gh-app.png"]) img{
+  background:#0c1118; padding:14px; border:1px solid var(--line-2); }

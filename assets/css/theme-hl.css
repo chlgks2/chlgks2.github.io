@@ -1,0 +1,19 @@
+/* H런처 — 앰버·강철 (레트로 런처) */
+:root{
+  --bg:#fbf9f4; --bg-2:#f3efe4; --card:#ffffff; --card-2:#faf7ef;
+  --line:#e7e0cf; --line-2:#d2c7ab;
+  --ink:#1f1c15; --ink-2:#423c2e; --sub:#6e6555;
+  --a:#b5700c; --a-2:#8a5208; --a-soft:#fdf3e0; --a-line:#f0d9a8;
+  --b:#44607a; --b-soft:#eaf0f5; --b-line:#c2d2df;
+}
+.hero{ background:
+  radial-gradient(600px 330px at 12% -14%, #f7e3b8 0%, rgba(255,255,255,0) 62%),
+  radial-gradient(560px 330px at 72% -18%, #dde6ef 0%, rgba(255,255,255,0) 62%),
+  linear-gradient(180deg,#f6f1e3 0%, #fbf9f4 100%); }
+h1,h2,h3{ letter-spacing:-.04em; }
+.kpi,.card,.tablewrap,.quote,.note,.dstep .bx,.dnode,.dstates,figure img{ border-radius:10px; }
+.kpi{ border-left:3px solid var(--a-line); }
+.btn{ border-radius:8px; }
+.chips span{ border-radius:6px; }
+/* 실행 화면은 다크 UI입니다 — 색을 바꾸지 않고 테두리만 둡니다 */
+figure:has(img[src$="hl-app.png"]) img{ border:1px solid var(--line-2); }

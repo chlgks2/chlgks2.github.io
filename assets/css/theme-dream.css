@@ -1,0 +1,158 @@
+/* Dream Shaper — 하늘색·밝은 분위기 (AI 음성 커버 생성) */
+:root{
+  --bg:#f6fbff; --bg-2:#e9f4fd; --card:#ffffff; --card-2:#f4fafe;
+  --line:#d7e8f5; --line-2:#bcd8ec;
+  --ink:#10232f; --ink-2:#2f4b5c; --sub:#5f7686;
+  --a:#1186d6; --a-2:#0b5f9c; --a-soft:#e6f3fd; --a-line:#aed7f2;
+  --b:#e07b1f; --b-soft:#fdf1e3; --b-line:#f3cfa4;
+}
+.hero{ background:
+  radial-gradient(620px 340px at 12% -14%, #cfeaff 0%, rgba(255,255,255,0) 62%),
+  radial-gradient(640px 360px at 62% -18%, #e2f3ff 0%, rgba(255,255,255,0) 64%),
+  radial-gradient(520px 320px at 94% -10%, #dff1fb 0%, rgba(255,255,255,0) 60%),
+  linear-gradient(180deg,#edf7ff 0%, #f6fbff 100%); }
+h1,h2,h3{ letter-spacing:-.045em; }
+.kpi,.card,.tablewrap,.quote,.note,.dstep .bx,.dnode,.dstates,figure img{ border-radius:16px; }
+.kpi{ box-shadow:0 1px 2px rgba(17,134,214,.10), 0 10px 26px -18px rgba(11,95,156,.5); }
+.btn{ border-radius:999px; }
+.chips span{ border-radius:999px; }
+
+/* 🔴 스펙트로그램 그림 — 바깥 여백은 밝게 바꿨지만 스펙트로그램 판 4개는
+   원본 그대로입니다. 색이 곧 세기라서 바꾸면 다른 값을 말하게 됩니다 */
+
+/* 글자가 작은 분석 그림은 폭을 넓게 씁니다 */
+figure:has(img[src$="ds-curve.png"]),
+figure:has(img[src$="ds-voice.png"]){
+  width:min(1120px,94vw); margin-left:50%; transform:translateX(-50%); }
+figure:has(img[src$="ds-voice.png"]) figcaption{ max-width:830px; margin-left:auto; margin-right:auto; }
+
+/* 앨범 커버 생성 — 입력 1장 → 결과 5장 */
+.cover-flow{ display:grid; grid-template-columns:auto auto 1fr; gap:18px; align-items:center;
+  margin:26px 0 0; }
+.cover-flow figure{ margin:0; }
+.cover-flow img{ width:100%; border-radius:14px; border:1px solid var(--line-2);
+  background:var(--card); display:block; }
+.cover-flow figcaption{ font-size:12.5px; color:var(--sub); margin-top:7px; text-align:center;
+  line-height:1.5; }
+.cover-flow figcaption b{ color:var(--a-2); font-weight:800; margin-right:4px; }
+.cv-in{ width:184px; }
+.cv-arrow{ display:flex; flex-direction:column; align-items:center; gap:4px;
+  font-size:11.5px; color:var(--sub); line-height:1.45; text-align:center; }
+.cv-arrow em{ font-style:normal; font-size:22px; color:var(--a); line-height:1; }
+.cv-out{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+@media (max-width:720px){
+  .cover-flow{ grid-template-columns:1fr; }
+  .cv-in{ width:100%; max-width:220px; margin:0 auto; }
+  .cv-arrow{ flex-direction:row; gap:10px; }
+  .cv-arrow em{ transform:rotate(90deg); }
+  .cv-out{ grid-template-columns:repeat(2,1fr); }
+}
+
+/* ── 서비스 아키텍처 (이미지를 HTML로 대체) ───────────── */
+.arch{ width:min(1120px,94vw); margin:26px 0 0 50%; transform:translateX(-50%); }
+.arch-lg{ display:flex; gap:10px; justify-content:flex-end; margin-bottom:12px; }
+.arch-lg .lg{ font-size:12.5px; font-weight:700; letter-spacing:-.02em;
+  padding:5px 12px 6px; border-radius:999px; display:inline-flex; align-items:center; gap:7px; }
+.arch-lg .lg::before{ content:""; width:11px; height:11px; border-radius:3px; display:block; }
+.lg.me{ color:#9a4b08; background:#fdf1e3; border:1px solid #f3cfa4; }
+.lg.me::before{ background:#e07b1f; }
+.lg.team{ color:var(--a-2); background:var(--a-soft); border:1px solid var(--a-line); }
+.lg.team::before{ background:var(--a); }
+.lg.ext{ color:#0b6b4f; background:#e4f6ee; border:1px solid #a9ddc8; }
+.lg.ext::before{ background:#149066; }
+
+.arch-grid{ display:grid; grid-template-columns:1fr 118px 1.3fr 68px 1fr;
+  grid-template-rows:auto auto; gap:14px 0; align-items:stretch; }
+.ab{ border-radius:14px; padding:14px 16px 13px; background:var(--card);
+  border:1.5px solid var(--line-2); display:flex; flex-direction:column; justify-content:center; }
+.ab.front{ grid-row:1 / span 2; }
+.ab.team{ border-color:var(--a-line); background:var(--a-soft); }
+.ab.me{ border-color:#eab07a; background:#fff8f0; border-width:2.5px; }
+.ab.ext{ border-color:#a9ddc8; background:#f2fbf7; }
+.ab-t{ font-size:16.5px; font-weight:800; letter-spacing:-.035em; color:var(--a-2);
+  text-align:center; margin-bottom:6px; }
+.ab.me .ab-t{ color:#b4600c; font-size:18px; }
+.ab.ext .ab-t{ color:#0b6b4f; }
+.ab-t b{ font-weight:800; font-size:.82em; padding:2px 9px 3px; border-radius:999px;
+  background:#e07b1f; color:#fff; margin-left:7px; vertical-align:middle; }
+.ab-b{ font-size:13.5px; color:var(--ink-2); text-align:center; line-height:1.6; }
+.ab-s{ font-size:12px; color:var(--sub); text-align:center; line-height:1.55; margin-top:5px; }
+.ab-w{ font-size:12px; font-weight:700; color:var(--a-2); text-align:center; margin-top:8px; }
+.ab.me .ab-w{ color:#b4600c; }
+.ab.ext .ab-w{ color:#0b6b4f; }
+.ab code{ font-size:.92em; }
+.ab-ep{ display:flex; flex-direction:column; gap:9px; margin-top:4px; }
+.ep{ text-align:center; padding:9px 8px; border-radius:10px; background:#fff; border:1px solid #f0ddc6; }
+.ep code{ font-size:13.5px; font-weight:800; color:var(--ink); }
+.ep span{ display:block; font-size:12px; color:var(--sub); line-height:1.55; margin-top:4px; }
+.ab-stack{ display:flex; flex-direction:column; gap:14px; }
+.ab-stack .ab{ flex:1; }
+
+.ar{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+.ar em{ font-style:normal; font-size:26px; line-height:1; color:var(--a); }
+.ar span{ font-family:"Cascadia Mono",Consolas,ui-monospace,Pretendard,"Malgun Gothic",monospace;
+  font-size:9.5px; color:var(--sub); letter-spacing:-.02em; text-align:center; white-space:nowrap; }
+.ar.a3 em,.ar.a4 em{ color:#e07b1f; }
+.ar.a2 em{ color:#149066; }
+
+.arch-foot{ margin-top:18px; padding:14px 18px; border-radius:14px;
+  background:var(--bg-2); border:1px solid var(--line); }
+.arch-foot div{ font-size:13px; color:var(--ink-2); line-height:1.7; }
+.arch-foot b{ color:var(--a-2); margin-right:8px; }
+.arch-foot .warn{ color:#b4600c; }
+.arch-foot .src{ color:var(--sub); font-size:12px; margin-top:4px; }
+
+@media (max-width:880px){
+  .arch-grid{ grid-template-columns:1fr; }
+  .ab.front{ grid-row:auto; }
+  .ar{ flex-direction:row; gap:8px; }
+  .ar em{ transform:rotate(90deg); }
+}
+
+/* ── 데이터 파이프라인 (이미지를 HTML로 대체) ─────────── */
+.pipe{ width:min(1120px,94vw); margin:26px 0 0 50%; transform:translateX(-50%);
+  display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+.pstep{ position:relative; border-radius:14px; padding:30px 12px 12px; text-align:center;
+  background:var(--card); border:1.5px solid var(--a-line);
+  display:flex; flex-direction:column; align-items:center; }
+.pstep .pn{ position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+  width:26px; height:26px; border-radius:999px; background:var(--a); color:#fff;
+  font-size:13px; font-weight:800; display:grid; place-items:center; }
+.pstep b{ font-size:14.5px; font-weight:800; letter-spacing:-.03em; color:var(--a-2);
+  display:block; margin-bottom:6px; }
+.pstep > span{ font-size:12px; color:var(--ink-2); line-height:1.6; flex:1; }
+.pstep em{ font-style:normal; font-size:11.5px; font-weight:800; margin-top:10px;
+  padding:3px 11px 4px; border-radius:999px; }
+.pstep .auto{ color:var(--a-2); background:var(--a-soft); }
+.pstep.key{ border-color:#eab07a; border-width:2.5px; background:#fff8f0; }
+.pstep.key .pn{ background:#e07b1f; }
+.pstep.key b{ color:#b4600c; }
+.pstep .hand{ color:#fff; background:#e07b1f; }
+.pstep.done{ border-color:#a9ddc8; background:#f2fbf7; }
+.pstep.done .pn{ background:#149066; }
+.pstep.done b{ color:#0b6b4f; }
+.pstep .ok{ color:#0b6b4f; background:#e4f6ee; }
+.hand-note{ border-color:#eab07a !important; background:#fff8f0 !important; }
+.hand-note strong:first-child{ color:#b4600c; }
+
+.spk{ margin-top:14px; border-radius:14px; overflow:hidden; border:1px solid var(--line); }
+.spk-head,.spk-row{ display:grid; grid-template-columns:1.1fr 2.2fr .8fr 1fr;
+  gap:12px; align-items:center; padding:10px 16px; }
+.spk-head{ background:var(--bg-2); font-size:12.5px; font-weight:700; color:var(--sub); }
+.spk-row{ font-size:13.5px; color:var(--ink-2); border-top:1px solid var(--line); background:var(--card); }
+.spk-row.hi{ background:#fff8f0; color:#b4600c; font-weight:700; }
+.spk-row .bar{ display:flex; align-items:center; gap:9px; }
+.spk-row .bar i{ display:block; height:16px; border-radius:5px; background:var(--a); }
+.spk-row.hi .bar i{ background:#e07b1f; }
+.spk-row .bar b{ font-size:13px; font-weight:800; color:var(--a-2); }
+.spk-row.hi .bar b{ color:#b4600c; }
+.spk-sum{ margin-top:12px; padding:13px 18px; border-radius:14px;
+  background:var(--bg-2); border:1px solid var(--line); }
+.spk-sum div{ font-size:13px; color:var(--ink-2); line-height:1.7; }
+.spk-sum b{ color:var(--ink); font-size:14.5px; }
+.spk-sum .hi{ color:#b4600c; font-weight:700; }
+@media (max-width:880px){
+  .pipe{ grid-template-columns:repeat(2,1fr); }
+  .spk-head,.spk-row{ grid-template-columns:1fr 1.6fr; }
+  .spk-head span:nth-child(n+3),.spk-row span:nth-child(n+3){ display:none; }
+}

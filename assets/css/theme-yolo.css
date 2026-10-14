@@ -1,0 +1,17 @@
+/* 엄마 이게뭐야 — 산뜻한 라임·레몬 (생활 사물 인식 앱) */
+:root{
+  --bg:#fbfef7; --bg-2:#f1f9e8; --card:#ffffff; --card-2:#f7fcf1;
+  --line:#dfead0; --line-2:#c4dcab;
+  --ink:#1b2415; --ink-2:#3b4a30; --sub:#687a58;
+  --a:#3f9142; --a-2:#2a6b2d; --a-soft:#eaf7e6; --a-line:#bfe3ba;
+  --b:#d99a09; --b-soft:#fdf5e0; --b-line:#f2dfa4;
+}
+.hero{ background:
+  radial-gradient(600px 330px at 12% -14%, #dcf2c8 0%, rgba(255,255,255,0) 62%),
+  radial-gradient(600px 340px at 58% -18%, #fdf0c4 0%, rgba(255,255,255,0) 62%),
+  linear-gradient(180deg,#f3fae9 0%, #fbfef7 100%); }
+h1,h2,h3{ letter-spacing:-.045em; }
+.kpi,.card,.tablewrap,.quote,.note,.dstep .bx,.dnode,.dstates,figure img{ border-radius:18px; }
+.kpi{ box-shadow:0 3px 0 var(--a-line); }
+.kpi:nth-child(2),.kpi:nth-child(4){ box-shadow:0 3px 0 var(--b-line); }
+.btn,.chips span{ border-radius:999px; }
