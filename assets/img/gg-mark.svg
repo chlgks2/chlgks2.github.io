@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="공구한 로고 — 에스크로 방패 안의 토큰">
+  <path d="M100 14 L172 44 V100 C172 146 140 176 100 190 C60 176 28 146 28 100 V44 Z" stroke="#4d86f7" stroke-width="13" stroke-linejoin="round" fill="none"/>
+  <circle cx="100" cy="100" r="40" stroke="#8ebaff" stroke-width="12" fill="none"/>
+  <path d="M78 86 H122"  stroke="#8ebaff" stroke-width="12" stroke-linecap="round"/>
+  <path d="M100 86 V124" stroke="#8ebaff" stroke-width="12" stroke-linecap="round"/>
+  <path d="M88 107 H112" stroke="#8ebaff" stroke-width="9"  stroke-linecap="round"/>
+</svg>

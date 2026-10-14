@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:675px;overflow:hidden;
+    font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:#170a0e;}
+  .card{position:relative;width:1200px;height:675px;display:flex;align-items:center;gap:62px;
+    padding:0 76px;
+    background:
+      radial-gradient(880px 520px at 16% 28%, rgba(240,70,110,.26), transparent 62%),
+      radial-gradient(760px 500px at 88% 82%, rgba(90,130,200,.18), transparent 62%),
+      linear-gradient(145deg,#3a1220 0%,#280c16 48%,#1b080f 100%);}
+  .grid{position:absolute;inset:0;opacity:.6;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image:radial-gradient(760px 520px at 24% 46%,#000 10%,transparent 78%);}
+
+  .tile{position:relative;flex:0 0 300px;width:300px;height:300px;border-radius:70px;
+    background:linear-gradient(165deg,#ffffff 0%,#fff1f4 60%,#ffe2e8 100%);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:0 34px 70px -24px rgba(40,0,12,.8), inset 0 1px 0 rgba(255,255,255,.9),
+               0 0 80px -16px rgba(240,80,120,.55);
+    display:flex;align-items:center;justify-content:center;}
+  .tile svg{width:196px;height:196px;overflow:visible}
+
+  .txt{flex:1;min-width:0;padding-bottom:6px}
+  h1{font-size:84px;font-weight:800;letter-spacing:-.045em;color:#ffffff;line-height:1;
+     margin-bottom:20px;white-space:nowrap}
+  .sub{font-size:28px;font-weight:700;letter-spacing:-.034em;color:#ff9db0;margin-bottom:12px}
+  .feat{font-size:23px;font-weight:600;letter-spacing:-.028em;color:#dcc0c8;line-height:1.5;
+        margin-bottom:30px}
+  .chips{display:flex;gap:11px;flex-wrap:wrap}
+  .chips span{font-size:20px;font-weight:600;letter-spacing:-.02em;color:#dceaf6;
+    padding:9px 20px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.1)}
+  .chips span.on{color:#5e0d22;border-color:rgba(255,255,255,.7);background:rgba(255,214,222,.94)}
+</style></head>
+<body>
+<div class="card">
+  <div class="grid"></div>
+
+  <div class="tile">
+    <svg viewBox="0 0 200 200" fill="none">
+      <rect x="30" y="24"  width="140" height="38" rx="13" fill="#d1203f"/>
+      <rect x="30" y="81"  width="140" height="38" rx="13" fill="#e8566f" opacity=".92"/>
+      <rect x="30" y="138" width="140" height="38" rx="13" fill="#3f5d8a" opacity=".92"/>
+      <g stroke="#ffffff" stroke-width="9" stroke-linecap="round">
+        <path d="M100 62 V81"/><path d="M100 119 V138"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="txt">
+    <h1>SNS Clone</h1>
+    <div class="sub">NestJS 백엔드 · 100% 단독</div>
+    <div class="feat">구조가 무너지는 경험을 한 뒤<br>프레임워크가 구조를 강제하는 쪽을 확인했습니다</div>
+    <div class="chips">
+      <span class="on">NestJS</span>
+      <span class="on">TypeScript</span>
+      <span>TypeORM</span>
+      <span>PostgreSQL</span>
+    </div>
+  </div>
+</div>
+</body></html>

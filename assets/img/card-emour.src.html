@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:675px;overflow:hidden;
+    font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:#17090e;}
+  .card{position:relative;width:1200px;height:675px;display:flex;align-items:center;gap:62px;
+    padding:0 76px;
+    background:
+      radial-gradient(880px 520px at 16% 28%, rgba(240,110,150,.28), transparent 62%),
+      radial-gradient(760px 500px at 88% 82%, rgba(255,170,190,.18), transparent 62%),
+      linear-gradient(145deg,#3d1524 0%,#2a0e18 48%,#1c0911 100%);}
+  .grid{position:absolute;inset:0;opacity:.6;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image:radial-gradient(760px 520px at 24% 46%,#000 10%,transparent 78%);}
+
+  .tile{position:relative;flex:0 0 300px;width:300px;height:300px;border-radius:70px;
+    background:linear-gradient(165deg,#ffffff 0%,#fff0f4 60%,#ffdfe8 100%);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:0 34px 70px -24px rgba(40,0,16,.8), inset 0 1px 0 rgba(255,255,255,.9),
+               0 0 80px -16px rgba(240,100,140,.55);
+    display:flex;align-items:center;justify-content:center;}
+  .tile svg{width:196px;height:196px;overflow:visible}
+
+  .txt{flex:1;min-width:0;padding-bottom:6px}
+  h1{font-size:84px;font-weight:800;letter-spacing:-.045em;color:#ffffff;line-height:1;
+     margin-bottom:20px;white-space:nowrap}
+  .sub{font-size:28px;font-weight:700;letter-spacing:-.034em;color:#ffa3bb;margin-bottom:12px}
+  .feat{font-size:23px;font-weight:600;letter-spacing:-.028em;color:#e3c6cf;line-height:1.5;
+        margin-bottom:30px}
+  .chips{display:flex;gap:11px;flex-wrap:wrap}
+  .chips span{font-size:20px;font-weight:600;letter-spacing:-.02em;color:#dceaf6;
+    padding:9px 20px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.1)}
+  .chips span.on{color:#6b1630;border-color:rgba(255,255,255,.7);background:rgba(255,214,226,.94)}
+</style></head>
+<body>
+<div class="card">
+  <div class="grid"></div>
+
+  <div class="tile">
+    <svg viewBox="0 0 200 200" fill="none">
+      <path d="M26 44 H112 C120 44 126 50 126 58 V100 C126 108 120 114 112 114 H64 L42 134 V114 H26 C18 114 12 108 12 100 V58 C12 50 18 44 26 44 Z"
+            fill="#e4607f"/>
+      <path d="M174 76 H98 C90 76 84 82 84 90 V132 C84 140 90 146 98 146 H140 L162 166 V146 H174 C182 146 188 140 188 132 V90 C188 82 182 76 174 76 Z"
+            fill="#ffffff" stroke="#c23f60" stroke-width="10"/>
+      <path d="M136 98 C130 90 118 92 118 103 C118 113 131 120 136 126 C141 120 154 113 154 103 C154 92 142 90 136 98 Z"
+            fill="#e4607f"/>
+    </svg>
+  </div>
+
+  <div class="txt">
+    <h1>Emour</h1>
+    <div class="sub">커플 대화 감정 분석 메신저</div>
+    <div class="feat">문장 단위 감정 분류를 <br>맥락 인식 모델로 재설계했습니다</div>
+    <div class="chips">
+      <span class="on">KcELECTRA</span>
+      <span class="on">Spring Boot</span>
+      <span>FastAPI</span>
+      <span>실사용 291명</span>
+    </div>
+  </div>
+</div>
+</body></html>

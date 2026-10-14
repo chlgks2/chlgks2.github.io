@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:675px;overflow:hidden;
+    font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:#0c1409;}
+  .card{position:relative;width:1200px;height:675px;display:flex;align-items:center;gap:62px;
+    padding:0 76px;
+    background:
+      radial-gradient(880px 520px at 16% 28%, rgba(120,220,120,.26), transparent 62%),
+      radial-gradient(760px 500px at 88% 82%, rgba(240,200,80,.20), transparent 62%),
+      linear-gradient(145deg,#14301a 0%,#0e2213 48%,#0b180e 100%);}
+  .grid{position:absolute;inset:0;opacity:.6;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image:radial-gradient(760px 520px at 24% 46%,#000 10%,transparent 78%);}
+
+  .tile{position:relative;flex:0 0 300px;width:300px;height:300px;border-radius:70px;
+    background:linear-gradient(165deg,#ffffff 0%,#f2fbe9 60%,#e4f5d4 100%);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:0 34px 70px -24px rgba(0,30,8,.8), inset 0 1px 0 rgba(255,255,255,.9),
+               0 0 80px -16px rgba(140,220,110,.6);
+    display:flex;align-items:center;justify-content:center;}
+  .tile svg{width:196px;height:196px;overflow:visible}
+
+  .txt{flex:1;min-width:0;padding-bottom:6px}
+  h1{font-size:72px;font-weight:800;letter-spacing:-.045em;color:#ffffff;line-height:1;
+     margin-bottom:20px;white-space:nowrap}
+  .sub{font-size:28px;font-weight:700;letter-spacing:-.034em;color:#9fe08a;margin-bottom:12px}
+  .feat{font-size:23px;font-weight:600;letter-spacing:-.028em;color:#bfd4b2;line-height:1.5;
+        margin-bottom:30px}
+  .chips{display:flex;gap:11px;flex-wrap:wrap}
+  .chips span{font-size:20px;font-weight:600;letter-spacing:-.02em;color:#dceaf6;
+    padding:9px 20px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.1)}
+  .chips span.on{color:#15360f;border-color:rgba(255,255,255,.7);background:rgba(206,240,190,.92)}
+</style></head>
+<body>
+<div class="card">
+  <div class="grid"></div>
+
+  <div class="tile">
+    <svg viewBox="0 0 200 200" fill="none">
+      <g stroke="#3f9142" stroke-width="13" stroke-linecap="round">
+        <path d="M24 60 V28 H56"/><path d="M144 28 H176 V60"/>
+        <path d="M176 140 V172 H144"/><path d="M56 172 H24 V140"/>
+      </g>
+      <path d="M62 66 H138 C146 66 152 72 152 80 V116 C152 124 146 130 138 130 H106 L88 148 V130 H62 C54 130 48 124 48 116 V80 C48 72 54 66 62 66 Z"
+            fill="#d99a09"/>
+      <g fill="#ffffff">
+        <circle cx="78" cy="98" r="8"/><circle cx="100" cy="98" r="8"/><circle cx="122" cy="98" r="8"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="txt">
+    <h1>엄마 이게뭐야</h1>
+    <div class="sub">YOLOv8 실시간 객체 탐지 앱</div>
+    <div class="feat">아이가 비추면 AI가 설명하고 말해 줍니다<br>관심사를 부모에게 리포트로 보냅니다</div>
+    <div class="chips">
+      <span class="on">YOLOv8</span>
+      <span class="on">MediaPipe</span>
+      <span>Flask</span>
+      <span>94클래스 · 5,576장</span>
+    </div>
+  </div>
+</div>
+</body></html>

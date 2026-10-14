@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:675px;overflow:hidden;
+    font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:#0f0a1c;}
+  .card{position:relative;width:1200px;height:675px;display:flex;align-items:center;gap:62px;
+    padding:0 76px;
+    background:
+      radial-gradient(880px 520px at 16% 28%, rgba(150,110,245,.28), transparent 62%),
+      radial-gradient(760px 500px at 88% 82%, rgba(240,130,200,.18), transparent 62%),
+      linear-gradient(145deg,#2b1a52 0%,#1d1138 48%,#140c26 100%);}
+  .grid{position:absolute;inset:0;opacity:.6;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image:radial-gradient(760px 520px at 24% 46%,#000 10%,transparent 78%);}
+
+  .tile{position:relative;flex:0 0 300px;width:300px;height:300px;border-radius:70px;
+    background:linear-gradient(165deg,#ffffff 0%,#f5f0ff 60%,#e8dfff 100%);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:0 34px 70px -24px rgba(20,6,44,.8), inset 0 1px 0 rgba(255,255,255,.9),
+               0 0 80px -16px rgba(150,100,245,.55);
+    display:flex;align-items:center;justify-content:center;}
+  .tile svg{width:196px;height:196px;overflow:visible}
+
+  .txt{flex:1;min-width:0;padding-bottom:6px}
+  h1{font-size:74px;font-weight:800;letter-spacing:-.045em;color:#ffffff;line-height:1;
+     margin-bottom:20px;white-space:nowrap}
+  .sub{font-size:28px;font-weight:700;letter-spacing:-.034em;color:#c7aaff;margin-bottom:12px}
+  .feat{font-size:23px;font-weight:600;letter-spacing:-.028em;color:#cfc4e4;line-height:1.5;
+        margin-bottom:30px}
+  .chips{display:flex;gap:11px;flex-wrap:wrap}
+  .chips span{font-size:20px;font-weight:600;letter-spacing:-.02em;color:#dceaf6;
+    padding:9px 20px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.1)}
+  .chips span.on{color:#2f1468;border-color:rgba(255,255,255,.7);background:rgba(226,214,255,.94)}
+</style></head>
+<body>
+<div class="card">
+  <div class="grid"></div>
+
+  <div class="tile">
+    <svg viewBox="0 0 200 200" fill="none">
+      <circle cx="68"  cy="78" r="38" fill="#8b5cf0"/>
+      <circle cx="132" cy="78" r="38" fill="#c3a4fb"/>
+      <path d="M22 174 C22 140 42 122 68 122 C94 122 114 140 114 174 Z" fill="#8b5cf0" opacity=".92"/>
+      <path d="M86 174 C86 140 106 122 132 122 C158 122 178 140 178 174 Z" fill="#c3a4fb" opacity=".92"/>
+      <path d="M14 66 C34 56 58 56 78 66 C84 84 74 96 58 96 C42 96 30 86 24 74 C20 94 8 88 10 74 Z" fill="#2a1a4d"/>
+      <path d="M186 66 C166 56 142 56 122 66 C116 84 126 96 142 96 C158 96 170 86 176 74 C180 94 192 88 190 74 Z" fill="#2a1a4d"/>
+    </svg>
+  </div>
+
+  <div class="txt">
+    <h1>Blind Dating</h1>
+    <div class="sub">성향 기반 블라인드 소개팅</div>
+    <div class="feat">GPU 예산 제약이<br>아키텍처를 결정한 프로젝트입니다</div>
+    <div class="chips">
+      <span class="on">Django</span>
+      <span class="on">ComfyUI</span>
+      <span>Channels</span>
+      <span>SDXL</span>
+    </div>
+  </div>
+</div>
+</body></html>

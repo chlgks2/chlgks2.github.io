@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:675px;overflow:hidden;
+    font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:#0f1110;}
+  .card{position:relative;width:1200px;height:675px;display:flex;align-items:center;gap:62px;
+    padding:0 76px;
+    background:
+      radial-gradient(880px 520px at 16% 28%, rgba(220,180,90,.24), transparent 62%),
+      radial-gradient(760px 500px at 88% 82%, rgba(40,180,165,.20), transparent 62%),
+      linear-gradient(145deg,#2c2a1c 0%,#1c1e18 48%,#121410 100%);}
+  .grid{position:absolute;inset:0;opacity:.6;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image:radial-gradient(760px 520px at 24% 46%,#000 10%,transparent 78%);}
+
+  .tile{position:relative;flex:0 0 300px;width:300px;height:300px;border-radius:70px;
+    background:linear-gradient(165deg,#ffffff 0%,#fbf6e8 60%,#f3ecd6 100%);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:0 34px 70px -24px rgba(26,22,6,.8), inset 0 1px 0 rgba(255,255,255,.9),
+               0 0 80px -16px rgba(214,176,80,.55);
+    display:flex;align-items:center;justify-content:center;}
+  .tile svg{width:196px;height:196px;overflow:visible}
+
+  .txt{flex:1;min-width:0;padding-bottom:6px}
+  h1{font-size:66px;font-weight:800;letter-spacing:-.045em;color:#ffffff;line-height:1;
+     margin-bottom:20px;white-space:nowrap}
+  .sub{font-size:28px;font-weight:700;letter-spacing:-.034em;color:#e3c87f;margin-bottom:12px}
+  .feat{font-size:23px;font-weight:600;letter-spacing:-.028em;color:#cfcbb8;line-height:1.5;
+        margin-bottom:30px}
+  .chips{display:flex;gap:11px;flex-wrap:wrap}
+  .chips span{font-size:20px;font-weight:600;letter-spacing:-.02em;color:#dceaf6;
+    padding:9px 20px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.1)}
+  .chips span.on{color:#4a3a0c;border-color:rgba(255,255,255,.7);background:rgba(243,232,195,.94)}
+</style></head>
+<body>
+<div class="card">
+  <div class="grid"></div>
+
+  <div class="tile">
+    <svg viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="74" stroke="#e8e0c8" stroke-width="20"/>
+      <circle cx="100" cy="100" r="74" stroke="#b08f33" stroke-width="20" stroke-linecap="round"
+              stroke-dasharray="465" stroke-dashoffset="163" transform="rotate(-90 100 100)"/>
+      <g fill="#157a72">
+        <rect x="70"  y="112" width="17" height="26" rx="4"/>
+        <rect x="92"  y="94"  width="17" height="44" rx="4"/>
+        <rect x="114" y="74"  width="17" height="64" rx="4"/>
+      </g>
+      <path d="M68 92 L92 72 L116 84 L140 56" stroke="#157a72" stroke-width="9"
+            stroke-linecap="round" stroke-linejoin="round" opacity=".32"/>
+    </svg>
+  </div>
+
+  <div class="txt">
+    <h1>LoL 승률 예측</h1>
+    <div class="sub">크롤링부터 학습까지 직접</div>
+    <div class="feat">유저 전적을 모아 승률을 예측<br>수집~학습 파이프라인을 처음 끝까지 만든 프로젝트</div>
+    <div class="chips">
+      <span class="on">Python</span>
+      <span class="on">Scikit-Learn</span>
+      <span>크롤링</span>
+      <span>2주 · 3인</span>
+    </div>
+  </div>
+</div>
+</body></html>

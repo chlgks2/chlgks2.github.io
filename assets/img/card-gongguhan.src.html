@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:675px;overflow:hidden;
+    font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;
+    background:#0a0e16;}
+  .card{position:relative;width:1200px;height:675px;display:flex;align-items:center;gap:62px;
+    padding:0 76px;
+    background:
+      radial-gradient(900px 520px at 18% 34%, rgba(77,134,247,.17), transparent 62%),
+      radial-gradient(700px 480px at 88% 78%, rgba(120,200,255,.10), transparent 60%),
+      linear-gradient(145deg,#0c1220 0%,#090d16 52%,#0b1019 100%);}
+  .grid{position:absolute;inset:0;opacity:.5;
+    background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image:radial-gradient(760px 520px at 24% 46%,#000 10%,transparent 78%);}
+
+  .tile{position:relative;flex:0 0 300px;width:300px;height:300px;border-radius:70px;
+    background:linear-gradient(165deg,#ffffff 0%,#f4f8ff 60%,#e9f1ff 100%);
+    border:1px solid rgba(66,141,255,.28);
+    box-shadow:0 0 0 1px rgba(0,0,0,.5), 0 34px 70px -24px rgba(0,0,0,.95),
+               inset 0 1px 0 rgba(255,255,255,.07),
+               0 0 72px -14px rgba(77,134,247,.46);
+    display:flex;align-items:center;justify-content:center;}
+  .tile .wm{width:196px;height:auto;display:block}
+
+  .txt{flex:1;min-width:0;padding-bottom:6px}
+  h1{font-size:88px;font-weight:800;letter-spacing:-.05em;color:#eef3f7;line-height:1;
+     margin-bottom:20px;display:flex;align-items:center;gap:22px}
+  .sub{font-size:28px;font-weight:700;letter-spacing:-.034em;color:#79a9ff;margin-bottom:12px}
+  .feat{font-size:23px;font-weight:600;letter-spacing:-.028em;color:#8e9db1;line-height:1.5;
+        margin-bottom:30px}
+  .chips{display:flex;gap:11px;flex-wrap:wrap}
+  .chips span{font-size:20px;font-weight:600;letter-spacing:-.02em;color:#b9c4d4;
+    padding:9px 20px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.045)}
+  .chips span.on{color:#8ebaff;border-color:rgba(100,150,250,.45);background:rgba(77,134,247,.12)}
+</style></head>
+<body>
+<div class="card">
+  <div class="grid"></div>
+
+  <div class="tile">
+    <img class="wm" src="gg-wordmark.svg" alt="공구한">
+  </div>
+
+  <div class="txt">
+    <h1>공구한</h1>
+    <div class="sub">코인 결제 · 에스크로 · 환불 · 정산</div>
+    <div class="feat">공동구매 플랫폼의 돈이 흐르는 구간 전체<br>체인 영수증을 직접 대조해 결제를 인정</div>
+    <div class="chips">
+      <span class="on">Java 21</span>
+      <span class="on">Spring Boot 4</span>
+      <span>web3j</span>
+      <span>담당 9,053줄</span>
+    </div>
+  </div>
+</div>
+</body></html>
