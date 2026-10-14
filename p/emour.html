@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Emour — 커플 대화 감정 분석 메신저</title>
-<meta name="description" content="문장 단위 감정 분류를 맥락 인식 모델로 재설계해 실사용 정확도 2.2배 개선. 응답 지연 10초 → 1초.">
-<link rel="stylesheet" href="../assets/css/style.css?v=20261014d">
+<meta name="description" content="문장 단위 감정 분류를 맥락 인식 모델로 재설계해 실사용 정확도 2.2배 개선. 관계 신호 축을 더한 15종 라벨 체계 설계, 학습 데이터 3,648건 직접 구축.">
+<link rel="stylesheet" href="../assets/css/style.css?v=20261015q">
+<!-- 테마 — 되돌리려면 아래 두 줄을 지우십시오 -->
+<link rel="stylesheet" href="../assets/css/theme-light.css?v=20261015k">
+<link rel="stylesheet" href="../assets/css/theme-emour.css?v=20261015">
 </head>
 <body>
 
@@ -26,8 +29,9 @@
     <h1>Emour<br><span style="font-size:.62em;color:var(--ink-2)">커플 대화 감정 분석 메신저</span></h1>
     <p class="lead">
       대화 속 감정을 AI가 분석해 보여주는 커플 메신저입니다.
-      문장 단위 감정 분류를 <strong>맥락 인식 모델로 재설계</strong>해 실제 대화 정확도를 2.2배 개선했고,
-      백엔드에서는 타이머 배치를 실시간 처리로 전환해 응답 지연을 10초에서 약 1초로 줄였습니다.
+      문장 단위 감정 분류를 <strong>맥락 인식 모델로 재설계</strong>해 실제 대화 정확도를 2.2배 개선했습니다.
+      커플 대화에 맞춰 <strong>「관계 신호」 축을 더한 15종 라벨 체계</strong>를 직접 설계하고,
+      학습 데이터 3,648건을 전량 구축했습니다.
     </p>
     <div class="links">
       <a class="btn" href="https://github.com/chlgks2/Emour" target="_blank" rel="noopener">GitHub</a>
@@ -37,7 +41,7 @@
     <div class="kpis">
       <div class="kpi"><b>291명</b><span>베타 실사용자<br>(약 145쌍)</span></div>
       <div class="kpi"><b>2.2배</b><span>감정분석 정확도<br>macro-F1 0.175 → 0.39</span></div>
-      <div class="kpi"><b>10초 → 1초</b><span>감정분석 응답 지연</span></div>
+      <div class="kpi"><b>15종</b><span>감정 라벨 체계<br>관계 신호 축 직접 설계</span></div>
       <div class="kpi"><b>3,648건</b><span>학습 데이터<br>전량 직접 구축</span></div>
     </div>
 
@@ -174,23 +178,64 @@
 
   tokenizer(context, target, truncation="longest_first", max_length=128)</code></pre>
 
-    <figure>
-      <img class="bare" src="../assets/img/emour-perf.png" alt="맥락 인식 모델 전환 효과">
-      <figcaption>
+    <div class="chart">
+      <p class="chart-t">문장 단위 → 맥락 인식 모델 전환 효과</p>
+      <p class="chart-s">동일 실데이터 test · 비교 기준은 우리 데이터를 학습하지 않은 배포 모델로 고정 (데이터 누수 0)</p>
+      <div class="cmp">
+        <div>
+          <h5>전체 성능 &nbsp;macro-F1</h5>
+          <span class="gain">× 2.2</span>
+          <div class="vbars">
+            <div class="vbar"><span class="v">0.175</span>
+              <div class="fill old" style="height:45%"></div>
+              <span class="lb">배포 단문모델</span></div>
+            <div class="vbar"><span class="v">0.390</span>
+              <div class="fill" style="height:100%"></div>
+              <span class="lb">신규 맥락모델</span></div>
+          </div>
+        </div>
+        <div>
+          <h5>기존에 아예 못 잡던 감정이 복구됨 &nbsp;F1</h5>
+          <div class="vbars">
+            <div class="vbar"><span class="v dim">0.00</span><div class="fill old" style="height:2%"></div><span class="lb">당황</span></div>
+            <div class="vbar"><span class="v">0.50</span><div class="fill" style="height:100%"></div><span class="lb">당황</span></div>
+            <div class="vbar"><span class="v dim">0.00</span><div class="fill old" style="height:2%"></div><span class="lb">슬픔</span></div>
+            <div class="vbar"><span class="v">0.40</span><div class="fill" style="height:80%"></div><span class="lb">슬픔</span></div>
+            <div class="vbar"><span class="v dim">0.00</span><div class="fill old" style="height:2%"></div><span class="lb">놀람</span></div>
+            <div class="vbar"><span class="v">0.22</span><div class="fill" style="height:44%"></div><span class="lb">놀람</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <p class="chart-cap">
         비교 기준을 <strong>우리 데이터를 학습하지 않은 배포 모델</strong>로 고정해 데이터 누수를 0으로 만든 뒤 측정했습니다.
         모델을 비교하는 과정에서 평가셋 오염으로 점수가 뒤집히는 현상을 발견해 잡은 것입니다.
-      </figcaption>
-    </figure>
+      </p>
+    </div>
 
     <h3>학습 데이터를 전량 직접 구축했습니다</h3>
-    <figure>
-      <img class="bare" src="../assets/img/emour-data.png" alt="학습 데이터 구성">
-      <figcaption>
-        공개 말뭉치(AI Hub)는 상담체에 가까워 커플 채팅 도메인과 달랐습니다.
-        팀원들과 상황(1주일차·2년차·싸움·놀람당황)을 나눠 롤플레잉하고,
-        배포 후에는 실사용자 대화를 추출해 <strong>3인 교차 라벨링</strong>했습니다.
-      </figcaption>
-    </figure>
+    <div class="chart">
+      <p class="chart-t">학습 데이터 3,648건 — 전부 직접 구축했습니다</p>
+      <p class="chart-s">공개 말뭉치(AI Hub)로는 커플 채팅 도메인 성능이 나오지 않아 전량 자체 구축했습니다</p>
+      <div class="stack">
+        <div class="s1" style="flex:2193">2,193</div>
+        <div class="s2" style="flex:858">858</div>
+        <div class="s3" style="flex:447">447</div>
+        <div class="s4" style="flex:150;min-width:58px">150</div>
+      </div>
+      <div class="stlegend">
+        <div class="l1"><b>실유저 대화</b>배포 DB에서 추출 · <i>3인 교차 라벨링</i></div>
+        <div class="l2"><b>합성</b>생성 후 <i>사람이 전수 검수</i></div>
+        <div class="l3"><b>팀 롤플레이</b>1주일차 · 2년차 · 싸움 · 놀람당황</div>
+        <div class="l4"><b>대조쌍</b><i>학습 전용 — 평가에는 넣지 않음</i></div>
+      </div>
+      <p class="chart-cap">
+        공개 말뭉치는 상담체에 가까워 커플 채팅과 달랐습니다.
+        <strong>대조쌍은 같은 문장이 앞선 맥락에 따라 다른 감정을 갖는 쌍</strong>이라
+        성격이 달라 빗금으로 표시했고, <strong>학습에만 쓰고 평가에는 넣지 않았습니다.</strong>
+      </p>
+    </div>
 
     <h4>대조쌍 150건 — 모델이 맥락 대신 키워드를 외우는 것을 막았습니다</h4>
     <p>
@@ -211,12 +256,32 @@
       사용자들이 실제로 주고받은 대화 로그를 저장해 팀원들과 다시 라벨링하고,
       그 데이터로 재학습한 모델이 최종 결과물이 됐습니다.
     </p>
-    <figure>
-      <img class="bare" src="../assets/img/emour-labels.png" alt="최종 모델 라벨별 성능">
-      <figcaption>
-        HuggingFace에 함께 올린 <code>eval_report.txt</code> 실측값입니다.
-        15종 다중분류에서 랜덤 추측의 macro-F1은 약 0.067 수준입니다.</figcaption>
-    </figure>
+    <div class="chart">
+      <p class="chart-t">최종 모델 라벨별 성능</p>
+      <p class="chart-s">15종 · 실데이터 test 660건 · macro-F1 0.5065</p>
+      <div class="hrows">
+        <div class="hrow top"><span class="nm">고마움<i>n=4</i></span><span class="track"><span class="fill" style="width:88.9%"></span></span><span class="v">0.889</span></div>
+        <div class="hrow top"><span class="nm">미안함<i>n=15</i></span><span class="track"><span class="fill" style="width:73.3%"></span></span><span class="v">0.733</span></div>
+        <div class="hrow top"><span class="nm">평범<i>n=261</i></span><span class="track"><span class="fill" style="width:68.9%"></span></span><span class="v">0.689</span></div>
+        <div class="hrow top"><span class="nm">궁금<i>n=58</i></span><span class="track"><span class="fill" style="width:55.0%"></span></span><span class="v">0.550</span></div>
+        <div class="hrow top"><span class="nm">부끄러움<i>n=5</i></span><span class="track"><span class="fill" style="width:54.5%"></span></span><span class="v">0.545</span></div>
+        <div class="hrow top"><span class="nm">힘듦<i>n=20</i></span><span class="track"><span class="fill" style="width:53.1%"></span></span><span class="v">0.531</span></div>
+        <div class="hrow top"><span class="nm">화남<i>n=66</i></span><span class="track"><span class="fill" style="width:52.9%"></span></span><span class="v">0.529</span></div>
+        <div class="hrow"><span class="nm">걱정<i>n=16</i></span><span class="track"><span class="fill" style="width:50.0%"></span></span><span class="v">0.500</span></div>
+        <div class="hrow"><span class="nm">슬픔<i>n=22</i></span><span class="track"><span class="fill" style="width:48.8%"></span></span><span class="v">0.488</span></div>
+        <div class="hrow"><span class="nm">놀람<i>n=24</i></span><span class="track"><span class="fill" style="width:43.3%"></span></span><span class="v">0.433</span></div>
+        <div class="hrow"><span class="nm">기쁨<i>n=37</i></span><span class="track"><span class="fill" style="width:40.0%"></span></span><span class="v">0.400</span></div>
+        <div class="hrow"><span class="nm">설렘<i>n=24</i></span><span class="track"><span class="fill" style="width:36.7%"></span></span><span class="v">0.367</span></div>
+        <div class="hrow"><span class="nm">당황<i>n=47</i></span><span class="track"><span class="fill" style="width:36.0%"></span></span><span class="v">0.360</span></div>
+        <div class="hrow"><span class="nm">서운함<i>n=23</i></span><span class="track"><span class="fill" style="width:30.4%"></span></span><span class="v">0.304</span></div>
+        <div class="hrow"><span class="nm">편안<i>n=38</i></span><span class="track"><span class="fill" style="width:27.8%"></span></span><span class="v">0.278</span></div>
+      </div>
+      <p class="avgline">점선 위쪽 <b>7종이 평균(macro-F1 0.5065) 이상</b>입니다 — 감정 경계가 모호한 「편안 · 서운함 · 당황」이 아래에 몰려 있고, 교차 라벨링에서도 이견이 많았던 구간입니다.</p>
+    </div>
+    <p class="chart-cap">
+      HuggingFace에 함께 올린 <code>eval_report.txt</code> 실측값입니다.
+      15종 다중분류에서 랜덤 추측의 macro-F1은 약 0.067 수준입니다.
+    </p>
     <div class="note">
       <strong>3차 모델(0.39)과 최종 모델(0.5065)은 test 분할이 다릅니다.</strong>
       최종 모델의 test는 실사용자 데이터가 들어와 111건 → 660건으로 커졌고 분포도 달라졌습니다.
@@ -261,20 +326,37 @@
   <div class="wrap narrow">
     <h2>백엔드</h2>
 
-    <h3>감정 분석이 최대 10초 늦게 나왔습니다</h3>
+    <h3>배치로 묶을 이유가 없었습니다</h3>
     <p>
       초기 구현은 <strong>"10개 누적 또는 10초 idle"</strong> 배치였습니다.
-      메시지를 모아 한 번에 분석하면 AI 서버 호출을 줄일 수 있습니다.
+      메시지를 모아 한 번에 분석하면 AI 서버 호출을 줄일 수 있다고 봤습니다.
       그런데 대화가 뜸하면 10개가 모이지 않고, idle 타이머가 만료될 때까지 최대 10초를 기다려야 했습니다.
-      실제로 베타 테스트에서 <strong>"감정분석이 느리다"</strong> 는 피드백을 받았습니다.
+      베타 테스트에서 <strong>"감정분석이 느리다"</strong> 는 피드백을 받았습니다.
     </p>
-    <figure>
-      <img class="bare" src="../assets/img/emour-realtime.png" alt="배치 → 실시간 전환">
-      <figcaption>
-        앙상블(단문+맥락)과 조건부 라우팅도 함께 측정해 비교한 뒤,
-        이득 대비 비용과 복잡도를 근거로 「맥락 단독 + 즉시 분석」을 채택했습니다.
-      </figcaption>
-    </figure>
+    <div class="note">
+      🔴 <strong>이 지연은 제가 만든 것입니다.</strong>
+      1:1 커플 채팅은 애초에 호출량이 문제가 되는 규모가 아니었는데,
+      <strong>호출을 아껴야 한다는 전제를 검증하지 않고</strong> 배치를 넣었습니다.
+      그래서 이 구간은 <strong>성능을 개선한 일이 아니라, 잘못 깐 전제를 걷어낸 일</strong>로 적습니다.
+    </div>
+    <div class="chart">
+      <p class="chart-t">베타 테스트 피드백 「감정분석이 느리다」</p>
+      <p class="chart-s">걷어내기 전후 · 앙상블(단문+맥락)과 조건부 라우팅도 함께 측정해 비교했습니다</p>
+      <div class="lat">
+        <span class="nm">타이머 배치<i>10개 누적 또는 10초 idle</i></span>
+        <span class="track"><span class="fill" style="width:100%"></span></span>
+        <span class="v">최대 10초</span>
+      </div>
+      <p class="latnote">idle 타이머 제거 · 슬라이딩 윈도우 맥락</p>
+      <div class="lat best">
+        <span class="nm">폴링마다 즉시 분석<i>채택</i></span>
+        <span class="track"><span class="fill" style="width:10%"></span></span>
+        <span class="v">약 1초</span>
+      </div>
+      <p class="chart-cap">
+        이득 대비 비용과 복잡도를 근거로 <strong>「맥락 단독 + 즉시 분석」</strong>을 채택했습니다.
+      </p>
+    </div>
 
     <h4>AI 계약을 먼저 고정했습니다</h4>
     <pre><code>POST /analyze
@@ -289,43 +371,62 @@
     </p>
 
     <h3>담당 도메인 구현</h3>
-    <div class="tablewrap">
-      <table>
-        <tr><th style="width:120px">도메인</th><th>내용</th></tr>
-        <tr><td><strong>인증</strong></td>
-            <td>
-              이메일 인증을 <strong>선행</strong>하는 3단계 회원가입 — 인증 완료 후에만 회원 레코드 생성 ·
-              코드는 <code>SecureRandom</code> 6자리, Redis TTL 관리(코드 5분 / 인증완료 30분)<br>
-              JWT Access/Refresh 분리 발급, <strong>Refresh만 Redis에 저장</strong> — 재발급 시 저장값과 대조해
-              탈취·로그아웃 토큰 차단(토큰 회수 수단 확보)<br>
-              Google 소셜 로그인 — ID 토큰을 서버가 <code>tokeninfo</code>로 검증 + <code>aud</code> 일치 확인,
-              client secret 불필요<br>
-              <strong>계정 열거 방지</strong> — 로그인 실패를 "이메일 없음 / 비번 틀림" 구분 없이 동일 응답
-            </td></tr>
-        <tr><td><strong>회원</strong></td>
-            <td>
-              <code>app_user</code> 엔티티 설계 · 상태 관리(<code>ACTIVE/INACTIVE/WITHDRAWN</code>) ·
-              탈퇴는 soft delete + refresh 삭제<br>
-              상태 변경을 setter 대신 의미 메서드(<code>verifyEmail</code> / <code>changePassword</code> / <code>withdraw</code>)로 캡슐화<br>
-              동시성 제어 — <code>PESSIMISTIC_WRITE</code> 락으로 커플 초대방 동시 생성 방지
-            </td></tr>
-        <tr><td><strong>앨범</strong></td>
-            <td>
-              커플룸 단위 스코프 · 소유권 검증 · <code>/photos</code> 업로드·조회·삭제·메모<br>
-              <strong><code>FileStorage</code> 인터페이스로 저장소 추상화</strong> — DB에는 전체 URL이 아니라
-              <strong>key(<code>yyyy/MM/dd/{uuid}.ext</code>)만 저장</strong>하고 응답 시 prefix를 조립해,
-              저장소를 옮겨도 데이터를 고치지 않습니다
-            </td></tr>
-      </table>
+    <div class="dom">
+      <div class="dcard">
+        <h5>인증</h5>
+        <ul>
+          <li>이메일 인증을 <b>선행</b>하는 3단계 회원가입 — 인증을 마친 뒤에만 회원 레코드를 만듭니다.
+            코드는 <code>SecureRandom</code> 6자리이고 Redis TTL로 관리합니다 (코드 5분 · 인증완료 30분)</li>
+          <li>JWT Access / Refresh 분리 발급, <b>Refresh만 Redis에 저장</b> — 재발급 때 저장값과 대조해
+            탈취·로그아웃 토큰을 차단합니다 (토큰 회수 수단 확보)</li>
+          <li>Google 소셜 로그인 — ID 토큰을 서버가 <code>tokeninfo</code> 로 검증하고
+            <code>aud</code> 일치까지 확인해 client secret 없이 처리합니다</li>
+          <li><b>계정 열거 방지</b> — 로그인 실패를 「이메일 없음 / 비밀번호 틀림」 구분 없이 같은 응답으로 돌려줍니다</li>
+        </ul>
+      </div>
+      <div class="dcard">
+        <h5>회원</h5>
+        <ul>
+          <li><code>app_user</code> 엔티티 설계와 상태 관리
+            (<code>ACTIVE</code> · <code>INACTIVE</code> · <code>WITHDRAWN</code>) —
+            탈퇴는 soft delete 와 refresh 삭제를 함께 수행합니다</li>
+          <li>상태 변경을 setter 대신 <b>의미가 드러나는 메서드</b>로 캡슐화했습니다 —
+            <code>verifyEmail</code> · <code>changePassword</code> · <code>withdraw</code></li>
+          <li>동시성 제어 — <code>PESSIMISTIC_WRITE</code> 락으로 커플 초대방이 동시에 두 개 만들어지는 것을 막습니다</li>
+        </ul>
+      </div>
+      <div class="dcard">
+        <h5>앨범</h5>
+        <ul>
+          <li>커플룸 단위 스코프와 소유권 검증 · <code>/photos</code> 업로드 · 조회 · 삭제 · 메모</li>
+          <li><b><code>FileStorage</code> 인터페이스로 저장소를 추상화</b>했습니다.
+            DB에는 전체 URL이 아니라 <b>key 만 저장</b>하고 (<code>yyyy/MM/dd/{uuid}.ext</code>)
+            응답할 때 prefix 를 조립합니다</li>
+          <li>그래서 <b>저장소를 옮겨도 데이터를 고칠 필요가 없습니다</b></li>
+        </ul>
+      </div>
     </div>
 
     <h3>서비스 구조</h3>
-    <pre><code>[React Client]
-   │  REST / JWT          ↕ WebSocket (STOMP)
-[Spring Boot]  ── Redis (채팅 이벤트 전달 · Refresh TTL)
-   │            ── MySQL (회원 · 커플방 · 채팅 · 분석 결과)
-   │  맥락 최대 10개 + 대상 문장
-[FastAPI + KcELECTRA]  감정 15종 분류</code></pre>
+    <div class="arch">
+      <div class="lay">
+        <div class="t">React Client</div>
+        <div class="d">채팅 화면 · 감정 대시보드</div>
+      </div>
+      <div class="link">REST / JWT <b>↕</b> WebSocket (STOMP)</div>
+      <div class="lay key">
+        <div class="t">Spring Boot<em>API · 인증 · 실시간</em></div>
+        <div class="side">
+          <span>Redis — 채팅 이벤트 전달 · Refresh TTL</span>
+          <span>MySQL — 회원 · 커플방 · 채팅 · 분석 결과</span>
+        </div>
+      </div>
+      <div class="link">맥락 최대 10개 <b>+</b> 대상 문장</div>
+      <div class="lay">
+        <div class="t">FastAPI + KcELECTRA<em>추론 서버</em></div>
+        <div class="d">감정 15종 분류 · HuggingFace Hub 에서 모델을 받아 기동</div>
+      </div>
+    </div>
     <ol>
       <li>사용자가 메시지를 전송하면 Spring Boot가 MySQL에 저장합니다.</li>
       <li>미분석 메시지를 <strong>직전 대화 맥락과 함께</strong> AI 서버로 보냅니다. <em>(발신자를 A/B로 매핑해 학습 형식과 일치)</em></li>

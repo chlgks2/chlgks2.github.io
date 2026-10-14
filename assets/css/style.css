@@ -153,12 +153,12 @@ td strong{ color:var(--ink); }
   color:var(--sub); font-size:14.5px; }
 .note strong{ color:var(--ink-2); }
 
-code{ font-family:"JetBrains Mono",Consolas,Menlo,monospace; font-size:.87em;
+code{ font-family:"JetBrains Mono",Consolas,Menlo,ui-monospace,Pretendard,"Malgun Gothic",monospace; font-size:.87em;
   background:#1b2332; border:1px solid #2b3648; border-radius:6px;
   padding:2px 7px; color:#9dc0ff; }
 pre{ background:#161d2a; border:1px solid var(--line-2); border-left:3px solid var(--blue);
   border-radius:10px; padding:18px 20px; overflow-x:auto; font-size:13px; line-height:1.7;
-  font-family:"JetBrains Mono",Consolas,Menlo,monospace; color:#c8d0de; margin:20px 0; }
+  font-family:"JetBrains Mono",Consolas,Menlo,ui-monospace,Pretendard,"Malgun Gothic",monospace; color:#c8d0de; margin:20px 0; }
 pre code{ background:none; border:none; padding:0; color:inherit; font-size:inherit; }
 
 /* ── 비디오 ───────────────────────────────── */
@@ -251,9 +251,9 @@ footer nav{ margin-left:auto; display:flex; gap:18px; flex-wrap:wrap; }
 
 /* 칩 (모델명·파라미터) */
 .chips{ margin-top:7px; display:flex; flex-wrap:wrap; gap:6px; }
-.chips span{ font-family:"Cascadia Mono",Consolas,ui-monospace,monospace; font-size:12px;
-  letter-spacing:0; background:var(--bg-2); border:1px solid var(--line); color:var(--ink-2);
-  padding:2px 8px; border-radius:6px; }
+.chips span{ font-family:"Cascadia Mono",Consolas,ui-monospace,Pretendard,"Malgun Gothic",monospace; font-size:12.5px;
+  letter-spacing:-.005em; background:var(--bg-2); border:1px solid var(--line); color:var(--ink-2);
+  padding:4px 10px; border-radius:7px; line-height:1.5; }
 .chips span.on{ border-color:#3c5a9e; background:var(--blue-bg); color:var(--blue-2); font-weight:700; }
 
 /* 가로 구성도 */
@@ -266,7 +266,7 @@ footer nav{ margin-left:auto; display:flex; gap:18px; flex-wrap:wrap; }
 .dnode .h i{ font-style:normal; font-weight:600; color:var(--sub); font-size:12.5px; }
 .dnode .pill{ font-size:11px; font-weight:800; padding:2px 8px; border-radius:20px;
   background:var(--accent-bg); color:#f7b477; border:1px solid #6b4a22; }
-.dnode .s{ font-family:"Cascadia Mono",Consolas,ui-monospace,monospace; font-size:11.5px;
+.dnode .s{ font-family:"Cascadia Mono",Consolas,ui-monospace,Pretendard,"Malgun Gothic",monospace; font-size:11.5px;
   letter-spacing:0; color:var(--sub); margin-top:5px; }
 .dnode .b{ margin-top:9px; font-size:13.5px; color:var(--ink-2); line-height:1.6; }
 .dnode .b b{ color:var(--ink); }
@@ -284,7 +284,7 @@ footer nav{ margin-left:auto; display:flex; gap:18px; flex-wrap:wrap; }
   border-radius:12px; padding:12px 15px 14px; }
 .dstates .h{ font-size:13.5px; font-weight:800; color:var(--sub); letter-spacing:-.02em; }
 .dstates .r{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:10px; }
-.dstates .st{ font-family:"Cascadia Mono",Consolas,ui-monospace,monospace; font-size:12.5px;
+.dstates .st{ font-family:"Cascadia Mono",Consolas,ui-monospace,Pretendard,"Malgun Gothic",monospace; font-size:12.5px;
   letter-spacing:0; font-weight:700; padding:3px 10px; border-radius:7px;
   border:1px solid var(--line); background:var(--bg-2); color:var(--ink-2); }
 .dstates .st.b{ border-color:#3c5a9e; background:var(--blue-bg); color:var(--blue-2); }
@@ -312,7 +312,7 @@ footer nav{ margin-left:auto; display:flex; gap:18px; flex-wrap:wrap; }
 /* 문제 정의 3단 카드 (2026-10-14) */
 .roster3{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; margin:26px 0 8px; }
 .rc3{ background:var(--card); border:1px solid var(--line); border-radius:13px; padding:17px 18px 18px; }
-.rc3 .n3{ font-family:"Cascadia Mono",Consolas,ui-monospace,monospace; font-size:13px;
+.rc3 .n3{ font-family:"Cascadia Mono",Consolas,ui-monospace,Pretendard,"Malgun Gothic",monospace; font-size:13px;
   font-weight:800; color:var(--blue-2); letter-spacing:.04em; }
 .rc3 .t3{ font-size:16px; font-weight:800; letter-spacing:-.035em; margin-top:9px; }
 .rc3 p{ font-size:13.5px; color:var(--ink-2); line-height:1.66; margin:9px 0 0; }
@@ -365,16 +365,122 @@ footer nav{ margin-left:auto; display:flex; gap:18px; flex-wrap:wrap; }
   opacity:.97; }
 .stage-cap{ font-size:13px; color:var(--sub); text-align:center; margin:16px 0 0; }
 
-/* 작업 방식 */
-.flowchart{ margin:38px 0 0; }
-.flowchart svg{ width:100%; height:auto; display:block; overflow:visible; }
-.steps{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:26px; margin-top:26px; }
-.step .no{ font-family:"Cascadia Mono",Consolas,ui-monospace,monospace; font-size:11.5px;
-  font-weight:800; letter-spacing:.09em; color:var(--blue-2); }
+/* ── git flow 그래프 ───────────────────────── */
+.gitflow{ margin:40px 0 4px; --gf1:#5b8dff; --gf2:#4ec97a; --gf3:#f5a05a; --gf4:#a78bfa; }
+.gitflow svg{ width:100%; height:auto; display:block; overflow:visible; }
+
+.gitflow path{ fill:none; stroke-linecap:round; stroke-linejoin:round; }
+/* 기본값은 「다 그려진 상태」 — 스크립트가 없어도 그래프가 보인다 */
+.gf-trunk{ stroke:var(--line-2); stroke-width:2.2; stroke-dasharray:1; stroke-dashoffset:0; }
+.gf-line{ stroke-width:2.6; stroke-dasharray:1; stroke-dashoffset:0;
+  transition:stroke-width .22s ease; }
+.gf-run{ stroke-width:3.4; stroke-dasharray:.055 1; stroke-dashoffset:1.055; opacity:0; }
+.gf-dot{ transform-box:fill-box; transform-origin:center; transform:scale(1);
+  transition:transform .22s cubic-bezier(.34,1.6,.52,1); }
+.gf-halo{ fill:none; stroke-width:1.6; opacity:0; }
+.gf-tag{ text-anchor:middle; font-family:"Cascadia Mono",Consolas,ui-monospace,
+  Pretendard,"Malgun Gothic",monospace; font-size:13px; font-weight:700;
+  letter-spacing:.02em; opacity:.82; }
+.gf-m{ fill:var(--bg); stroke:var(--line-2); stroke-width:2.2;
+  transform-box:fill-box; transform-origin:center; transform:scale(1); }
+
+/* 스크립트가 붙으면 감춘 뒤, 화면에 들어올 때 그린다 */
+.gitflow.armed .gf-trunk,.gitflow.armed .gf-line{ stroke-dashoffset:1; }
+.gitflow.armed .gf-dot,.gitflow.armed .gf-m{ transform:scale(0); }
+.gitflow.armed .gf-tag{ opacity:0; }
+
+.gf-br[data-i="1"] .gf-line,.gf-br[data-i="1"] .gf-run{ stroke:var(--gf1); }
+.gf-br[data-i="2"] .gf-line,.gf-br[data-i="2"] .gf-run{ stroke:var(--gf2); }
+.gf-br[data-i="3"] .gf-line,.gf-br[data-i="3"] .gf-run{ stroke:var(--gf3); }
+.gf-br[data-i="4"] .gf-line,.gf-br[data-i="4"] .gf-run{ stroke:var(--gf4); }
+.gf-br[data-i="1"] .gf-dot,.gf-br[data-i="1"] .gf-tag{ fill:var(--gf1); }
+.gf-br[data-i="2"] .gf-dot,.gf-br[data-i="2"] .gf-tag{ fill:var(--gf2); }
+.gf-br[data-i="3"] .gf-dot,.gf-br[data-i="3"] .gf-tag{ fill:var(--gf3); }
+.gf-br[data-i="4"] .gf-dot,.gf-br[data-i="4"] .gf-tag{ fill:var(--gf4); }
+.gf-br[data-i="1"] .gf-halo{ stroke:var(--gf1); }
+.gf-br[data-i="2"] .gf-halo{ stroke:var(--gf2); }
+.gf-br[data-i="3"] .gf-halo{ stroke:var(--gf3); }
+.gf-br[data-i="4"] .gf-halo{ stroke:var(--gf4); }
+
+/* 화면에 들어오면 한 단계씩 그려진다 */
+.gitflow.armed.run .gf-trunk{ animation:gf-draw .7s ease forwards; }
+.gitflow.armed.run .gf-line{ animation:gf-draw .78s cubic-bezier(.45,.05,.3,1) forwards; }
+.gitflow.armed.run .gf-dot{ animation:gf-pop .42s cubic-bezier(.34,1.6,.52,1) forwards; }
+.gitflow.armed.run .gf-tag{ animation:gf-tag .4s ease forwards; }
+.gitflow.armed.run .gf-m{ animation:gf-pop .36s cubic-bezier(.34,1.6,.52,1) forwards; }
+.gitflow.armed.run .gf-run{ animation:gf-run 6.4s cubic-bezier(.5,0,.5,1) infinite; }
+
+.gitflow.armed.run .gf-br[data-i="1"] .gf-line{ animation-delay:.42s; }
+.gitflow.armed.run .gf-br[data-i="2"] .gf-line{ animation-delay:.94s; }
+.gitflow.armed.run .gf-br[data-i="3"] .gf-line{ animation-delay:1.46s; }
+.gitflow.armed.run .gf-br[data-i="4"] .gf-line{ animation-delay:1.98s; }
+.gitflow.armed.run .gf-br[data-i="1"] .gf-dot{ animation-delay:.84s; }
+.gitflow.armed.run .gf-br[data-i="2"] .gf-dot{ animation-delay:1.36s; }
+.gitflow.armed.run .gf-br[data-i="3"] .gf-dot{ animation-delay:1.88s; }
+.gitflow.armed.run .gf-br[data-i="4"] .gf-dot{ animation-delay:2.40s; }
+.gitflow.armed.run .gf-br[data-i="1"] .gf-tag{ animation-delay:.98s; }
+.gitflow.armed.run .gf-br[data-i="2"] .gf-tag{ animation-delay:1.50s; }
+.gitflow.armed.run .gf-br[data-i="3"] .gf-tag{ animation-delay:2.02s; }
+.gitflow.armed.run .gf-br[data-i="4"] .gf-tag{ animation-delay:2.54s; }
+.gitflow.armed.run .gf-m[data-i="1"]{ animation-delay:1.10s; }
+.gitflow.armed.run .gf-m[data-i="2"]{ animation-delay:1.62s; }
+.gitflow.armed.run .gf-m[data-i="3"]{ animation-delay:2.14s; }
+.gitflow.armed.run .gf-m[data-i="4"]{ animation-delay:2.66s; }
+.gitflow.armed.run .gf-br[data-i="1"] .gf-run{ animation-delay:3.0s; }
+.gitflow.armed.run .gf-br[data-i="2"] .gf-run{ animation-delay:3.3s; }
+.gitflow.armed.run .gf-br[data-i="3"] .gf-run{ animation-delay:3.6s; }
+.gitflow.armed.run .gf-br[data-i="4"] .gf-run{ animation-delay:3.9s; }
+
+@keyframes gf-draw{ from{ stroke-dashoffset:1; } to{ stroke-dashoffset:0; } }
+@keyframes gf-pop{ from{ transform:scale(0); } to{ transform:scale(1); } }
+@keyframes gf-tag{ from{ opacity:0; transform:translateY(5px); }
+                   to{ opacity:.82; transform:translateY(0); } }
+@keyframes gf-run{
+  0%{ stroke-dashoffset:1.055; opacity:0; }
+  4%{ opacity:.95; }
+  30%{ stroke-dashoffset:0; opacity:.95; }
+  34%,100%{ stroke-dashoffset:0; opacity:0; } }
+@keyframes gf-halo{
+  0%{ transform:scale(.7); opacity:.75; }
+  100%{ transform:scale(1.5); opacity:0; } }
+
+/* 카드에 올리면 그 브랜치만 살아난다 */
+.gitflow .gf-br.lit .gf-line{ stroke-width:4; }
+.gitflow .gf-br.lit .gf-tag{ opacity:1; }
+.gitflow .gf-br.lit .gf-halo{ transform-box:fill-box; transform-origin:center;
+  animation:gf-halo 1.1s ease-out infinite; }
+.gitflow .gf-br{ transition:opacity .22s ease; }
+.gitflow .gf-br.dim{ opacity:.3; }
+
+.steps{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:26px; margin-top:22px; }
+.step{ padding-top:16px; border-top:2px solid var(--line); transition:border-color .22s ease; }
+.step[data-i="1"].lit{ border-top-color:#5b8dff; }
+.step[data-i="2"].lit{ border-top-color:#4ec97a; }
+.step[data-i="3"].lit{ border-top-color:#f5a05a; }
+.step[data-i="4"].lit{ border-top-color:#a78bfa; }
+.step .no{ font-family:"Cascadia Mono",Consolas,ui-monospace,Pretendard,"Malgun Gothic",monospace;
+  font-size:11.5px; font-weight:800; letter-spacing:.09em; color:var(--blue-2); }
+.step[data-i="2"] .no{ color:#7fdba1; }
+.step[data-i="3"] .no{ color:#f7b477; }
+.step[data-i="4"] .no{ color:#c3adfd; }
 .step h4{ margin:9px 0 8px; font-size:17px; font-weight:800; letter-spacing:-.035em; color:var(--ink); }
 .step p{ margin:0; font-size:13.5px; color:var(--sub); line-height:1.7; }
+
+@media (prefers-reduced-motion:reduce){
+  .gitflow.armed .gf-trunk,.gitflow.armed .gf-line{ stroke-dashoffset:0; }
+  .gitflow.armed .gf-dot,.gitflow.armed .gf-m{ transform:scale(1); }
+  .gitflow.armed .gf-tag{ opacity:.82; }
+  .gitflow .gf-run{ display:none; }
+  .gitflow *{ animation:none !important; }
+}
 @media (max-width:860px){
   .steps{ grid-template-columns:repeat(2,1fr); gap:22px; }
+  .gitflow{ margin:34px 0 2px; }
+  .gitflow .gf-tag{ display:none; }
+  .gitflow .gf-line,.gitflow .gf-run{ stroke-width:5; }
+  .gitflow .gf-trunk{ stroke-width:4; }
+  .gitflow .gf-dot{ r:13; }
+  .gitflow .gf-m{ r:9; stroke-width:4; }
   .stage-field{ height:auto; display:flex; flex-wrap:wrap; gap:8px;
     align-items:flex-end; justify-content:center; padding-bottom:4px; }
   .stage-field .pill{ position:static !important; visibility:visible !important;

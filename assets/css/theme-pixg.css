@@ -1,0 +1,28 @@
+/* PixG — 장난감처럼 통통 튀는 · 다색 (픽셀 스프라이트 생성기) */
+:root{
+  --bg:#fffdf6; --bg-2:#fff6e3; --card:#ffffff; --card-2:#fffaf0;
+  --line:#ece2cc; --line-2:#ddcfae;
+  --ink:#241f17; --ink-2:#4e463a; --sub:#766c5c;
+  --a:#f0902b; --a-2:#a6540a; --a-soft:#fff2e0; --a-line:#f7d3a8;
+  --b:#2fa37a; --b-soft:#e8f8f1; --b-line:#b6e5d2;
+}
+.hero{ background:
+  radial-gradient(520px 300px at 14% -12%, #ffe3b8 0%, rgba(255,255,255,0) 60%),
+  radial-gradient(560px 320px at 52% -18%, #d8f2e6 0%, rgba(255,255,255,0) 62%),
+  radial-gradient(560px 330px at 88% -14%, #e2e4ff 0%, rgba(255,255,255,0) 62%),
+  linear-gradient(180deg,#fff8ea 0%, #fffdf6 100%); }
+h1,h2,h3{ letter-spacing:-.05em; }
+/* 통통 튀는 느낌 — 모서리를 더 둥글게, 그림자를 또렷하게 */
+.kpi,.card,.tablewrap,.quote,.note,.dstep .bx,.dnode,.dstates,figure img{ border-radius:20px; }
+.kpi{ box-shadow:0 4px 0 var(--a-line); }
+.kpi:nth-child(2){ box-shadow:0 4px 0 var(--b-line); }
+.kpi:nth-child(3){ box-shadow:0 4px 0 #cdd1ff; }
+.kpi:nth-child(4){ box-shadow:0 4px 0 #f7c9d5; }
+.btn{ border-radius:999px; box-shadow:0 3px 0 var(--line-2); }
+.btn:hover{ transform:translateY(-2px); box-shadow:0 5px 0 var(--a-line); }
+.btn.primary{ box-shadow:0 3px 0 var(--a-2); }
+.chips span{ border-radius:999px; }
+.gifs img{ border-radius:18px; }
+/* 도식·픽셀아트가 모두 다크 배경이라 어두운 판으로 감쌉니다 */
+figure img{ background:#0f131d; padding:16px 12px; border:1px solid var(--line-2); }
+.gifs img{ padding:10px; }

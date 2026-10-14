@@ -1,0 +1,20 @@
+/* Emour — 밝고 러블리 · 코랄 핑크 (커플 대화 감정 분석) */
+:root{
+  --bg:#fffafb; --bg-2:#fdeff2; --card:#ffffff; --card-2:#fff5f7;
+  --line:#f3dfe4; --line-2:#e9c9d1;
+  --ink:#2b2026; --ink-2:#5c4850; --sub:#7d6771;
+  --a:#e4607f; --a-2:#c23f60; --a-soft:#ffeff3; --a-line:#f7c9d5;
+  --b:#c98a2e; --b-soft:#fdf5e8; --b-line:#f0dcb8;
+}
+.hero{ background:
+  radial-gradient(860px 420px at 76% -24%, #ffe1e9 0%, rgba(255,255,255,0) 62%),
+  radial-gradient(620px 320px at 8% 8%, #fff2e8 0%, rgba(255,255,255,0) 58%),
+  linear-gradient(180deg,#fff4f7 0%, #fffafb 100%); }
+h1,h2{ letter-spacing:-.045em; }
+.hero h1 .hl{ color:var(--a); }
+.kpi{ border-radius:18px; }
+.card,.tablewrap,.dstep .bx,.dnode,.dstates{ border-radius:18px; }
+.btn{ border-radius:999px; }
+.quote{ border-radius:0 18px 18px 0; }
+/* 차트를 코랄 톤으로 다시 칠했으므로 어두운 판을 걷어냅니다 */
+figure img{ background:transparent; padding:0; border:1px solid var(--line); }

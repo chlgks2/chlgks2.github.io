@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 850" role="img" aria-labelledby="gb-flow-title gb-flow-desc" class="gb-flow-diagram">
+  <title id="gb-flow-title">공구한 서비스 플로차트</title>
+  <desc id="gb-flow-desc">홈에서 상품 탐색, 찜, 마이페이지, 판매자센터로 분기합니다. 구매는 상세 화면, 로그인 확인, 배송지, 결제, 주문 완료로 이어집니다. 판매자 인증을 마치면 상품 등록, 선택적인 AI 정보 입력과 검토, 공동구매 개설 및 판매 관리를 진행합니다.</desc>
+  <defs>
+    <marker id="gb-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#49556b"/></marker>
+    <marker id="gb-flow-blue-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#5b8dff"/></marker>
+  </defs>
+  <style>
+    .flow-edge { fill:none; stroke:#49556b; stroke-width:1.3; stroke-dasharray:3 4; marker-end:url(#gb-flow-arrow); }
+    .flow-edge.blue { stroke:#5b8dff; marker-end:url(#gb-flow-blue-arrow); }
+    .flow-node { fill:#161c27; stroke:#2f3846; stroke-width:1.2; }
+    .flow-node.main { fill:#16203a; stroke:#3c5a9e; stroke-width:1.2; }
+    .flow-node.sub { fill:#1a202b; stroke:#2a3242; stroke-width:1.1; }
+    .flow-node.end { fill:#132318; stroke:#2d5c3e; stroke-width:1.1; }
+    .flow-label { font-family:Pretendard,"Malgun Gothic",sans-serif; font-size:15px; fill:#b9c0ce; text-anchor:middle; }
+    .flow-label.main { fill:#8fb2ff; font-weight:700; }
+    .flow-note { font-family:Pretendard,"Malgun Gothic",sans-serif; font-size:11px; fill:#8a92a3; text-anchor:middle; }
+  </style>
+<path class="flow-edge" d="M590 94V150H110V210"/>
+<path class="flow-edge" d="M590 150H350V210"/>
+<path class="flow-edge" d="M590 150V210"/>
+<path class="flow-edge" d="M590 150H1070V210"/>
+<path class="flow-edge" d="M110 254V300"/>
+<path class="flow-edge" d="M110 344V390"/>
+<path class="flow-edge blue" d="M110 434V480"/>
+<text class="flow-note" x="165" y="461">로그인 상태</text>
+<path class="flow-edge" d="M110 524V570"/>
+<path class="flow-edge" d="M110 614V660"/>
+<path class="flow-edge blue" d="M190 412H270"/>
+<text class="flow-note" x="230" y="401">미로그인</text>
+<path class="flow-edge blue" d="M350 434V453H220V502H190"/>
+<text class="flow-note" x="320" y="470">로그인 후 복귀</text>
+<path class="flow-edge" d="M590 254V300"/>
+<path class="flow-edge" d="M590 344V390"/>
+<path class="flow-edge" d="M590 434V480"/>
+<path class="flow-edge" d="M590 524V570"/>
+<path class="flow-edge" d="M670 502H700V682H670"/>
+<path class="flow-edge" d="M700 682V772H670"/>
+<path class="flow-edge blue" d="M1070 254V300"/>
+<text class="flow-note" x="1125" y="285">로그인 필요</text>
+<path class="flow-edge blue" d="M990 322H910"/>
+<text class="flow-note" x="950" y="310">인증 전</text>
+<path class="flow-edge blue" d="M1070 344V390"/>
+<text class="flow-note" x="1120" y="372">인증 완료</text>
+<path class="flow-edge blue" d="M830 344V370H950V412H990"/>
+<path class="flow-edge" d="M1070 434V456H830V480"/>
+<path class="flow-edge" d="M1070 456V480"/>
+<path class="flow-edge" d="M830 524V570"/>
+<path class="flow-edge" d="M830 614V660"/>
+<path class="flow-edge" d="M830 704V750"/>
+<rect class="flow-node main" x="510" y="50" width="160" height="44" rx="8"/>
+<text class="flow-label main" x="590" y="77">공구한 홈</text>
+<text class="flow-note" x="590" y="111">/</text>
+<rect class="flow-node main" x="30" y="210" width="160" height="44" rx="8"/>
+<text class="flow-label main" x="110" y="237">상품 탐색</text>
+<rect class="flow-node main" x="270" y="210" width="160" height="44" rx="8"/>
+<text class="flow-label main" x="350" y="237">찜한 상품</text>
+<text class="flow-note" x="350" y="271">로그인 필요</text>
+<rect class="flow-node main" x="510" y="210" width="160" height="44" rx="8"/>
+<text class="flow-label main" x="590" y="237">마이페이지</text>
+<text class="flow-note" x="590" y="271">로그인 필요</text>
+<rect class="flow-node main" x="990" y="210" width="160" height="44" rx="8"/>
+<text class="flow-label main" x="1070" y="237">판매자센터 진입</text>
+<rect class="flow-node sub" x="30" y="300" width="160" height="44" rx="8"/>
+<text class="flow-label sub" x="110" y="327">상품 상세</text>
+<rect class="flow-node " x="30" y="390" width="160" height="44" rx="8"/>
+<text class="flow-label " x="110" y="417">로그인 여부 확인</text>
+<rect class="flow-node " x="270" y="390" width="160" height="44" rx="8"/>
+<text class="flow-label " x="350" y="417">로그인 / 회원가입</text>
+<rect class="flow-node " x="30" y="480" width="160" height="44" rx="8"/>
+<text class="flow-label " x="110" y="507">배송지 입력</text>
+<rect class="flow-node " x="30" y="570" width="160" height="44" rx="8"/>
+<text class="flow-label " x="110" y="597">결제</text>
+<rect class="flow-node end" x="30" y="660" width="160" height="44" rx="8"/>
+<text class="flow-label end" x="110" y="687">주문 완료</text>
+<rect class="flow-node sub" x="510" y="300" width="160" height="44" rx="8"/>
+<text class="flow-label sub" x="590" y="327">내 정보 확인</text>
+<rect class="flow-node sub" x="510" y="390" width="160" height="44" rx="8"/>
+<text class="flow-label sub" x="590" y="417">주문 내역</text>
+<rect class="flow-node " x="510" y="480" width="160" height="44" rx="8"/>
+<text class="flow-label " x="590" y="507">주문 상세</text>
+<rect class="flow-node " x="510" y="570" width="160" height="44" rx="8"/>
+<text class="flow-label " x="590" y="597">구매 확정</text>
+<rect class="flow-node " x="510" y="660" width="160" height="44" rx="8"/>
+<text class="flow-label " x="590" y="687">반품 신청</text>
+<rect class="flow-node " x="510" y="750" width="160" height="44" rx="8"/>
+<text class="flow-label " x="590" y="777">분쟁 신청</text>
+<rect class="flow-node " x="990" y="300" width="160" height="44" rx="8"/>
+<text class="flow-label " x="1070" y="327">판매자 권한 확인</text>
+<rect class="flow-node sub" x="750" y="300" width="160" height="44" rx="8"/>
+<text class="flow-label sub" x="830" y="327">판매자 인증</text>
+<rect class="flow-node main" x="990" y="390" width="160" height="44" rx="8"/>
+<text class="flow-label main" x="1070" y="417">판매자센터</text>
+<text class="flow-note" x="1070" y="451">/seller</text>
+<rect class="flow-node sub" x="750" y="480" width="160" height="44" rx="8"/>
+<text class="flow-label sub" x="830" y="507">상품 등록</text>
+<rect class="flow-node sub" x="990" y="480" width="160" height="44" rx="8"/>
+<text class="flow-label sub" x="1070" y="507">판매 관리</text>
+<text class="flow-note" x="1070" y="541">공동구매 · 주문 · 반품 · 정산</text>
+<rect class="flow-node sub" x="750" y="570" width="160" height="44" rx="8"/>
+<text class="flow-label sub" x="830" y="597">AI 정보 입력 / 검토</text>
+<text class="flow-note" x="830" y="631">상품 등록 화면 내 선택 기능</text>
+<rect class="flow-node " x="750" y="660" width="160" height="44" rx="8"/>
+<text class="flow-label " x="830" y="687">공동구매 개설</text>
+<rect class="flow-node end" x="750" y="750" width="160" height="44" rx="8"/>
+<text class="flow-label end" x="830" y="777">등록 완료</text>
+<g transform="translate(950 60)">
+  <rect class="flow-node main" width="28" height="9" rx="2"/><text class="flow-note" x="70" y="9">주요 화면</text>
+  <rect class="flow-node sub" y="24" width="28" height="9" rx="2"/><text class="flow-note" x="70" y="33">세부 기능</text>
+  <path class="flow-edge blue" d="M0 55H28"/><text class="flow-note" x="70" y="59">조건 분기</text>
+</g></svg>

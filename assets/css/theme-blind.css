@@ -1,0 +1,19 @@
+/* Blind Dating — 밝고 러블리하되 Emour 와 다르게 · 라일락 보라 */
+:root{
+  --bg:#fcfaff; --bg-2:#f3eefc; --card:#ffffff; --card-2:#f9f5ff;
+  --line:#e7dff5; --line-2:#d3c6ec;
+  --ink:#241e2e; --ink-2:#4e4560; --sub:#6e657f;
+  --a:#8b5cf0; --a-2:#6b3bd0; --a-soft:#f3edff; --a-line:#d9c9f8;
+  --b:#d9558c; --b-soft:#fdeef5; --b-line:#f4c8dc;
+}
+.hero{ background:
+  radial-gradient(880px 440px at 80% -26%, #ece0ff 0%, rgba(255,255,255,0) 64%),
+  radial-gradient(640px 340px at 6% 4%, #ffe4f0 0%, rgba(255,255,255,0) 60%),
+  linear-gradient(180deg,#f6f0ff 0%, #fcfaff 100%); }
+h1,h2{ letter-spacing:-.045em; }
+.kpi,.card,.tablewrap,.dstep .bx,.dnode,.dstates{ border-radius:17px; }
+.btn{ border-radius:999px; }
+.quote{ border-radius:0 17px 17px 0; }
+/* 모바일 화면 캡처가 핑크 계열이라 보라 테두리로 묶습니다 */
+.phones img{ border:1px solid var(--a-line); border-radius:16px; }
+.feat{ border-top-color:var(--line); }

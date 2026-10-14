@@ -1,0 +1,21 @@
+/* 공구한 — 밝고 블루 톤 (결제·에스크로·정산) */
+:root{
+  --bg:#fbfcfe; --bg-2:#eff4fb; --card:#ffffff; --card-2:#f6f9fd;
+  --line:#dfe6f0; --line-2:#c8d3e3;
+  --ink:#141a24; --ink-2:#3f4a5a; --sub:#657385;
+  --a:#2f6fe4; --a-2:#1a4fb8; --a-soft:#eaf1ff; --a-line:#c2d6fa;
+  --b:#b26a1f; --b-soft:#fdf3e6; --b-line:#efd6b2;
+}
+.hero{ background:
+  radial-gradient(900px 440px at 80% -24%, #dfeaff 0%, rgba(255,255,255,0) 64%),
+  linear-gradient(180deg,#eef4fc 0%, #fbfcfe 100%); }
+h1,h2{ letter-spacing:-.04em; }
+.kpi,.card,.tablewrap,.dstep .bx,.dnode,.dstates{ border-radius:14px; }
+.btn{ border-radius:10px; }
+.quote{ border-radius:0 14px 14px 0; }
+/* 서비스 캡처가 밝은 UI라 테두리만 또렷하게 */
+figure img,.ba img{ border:1px solid var(--line-2); }
+/* 서비스 캡처는 밝아서 그대로 두고, 다크로 그린 플로차트만 어두운 판에 올립니다 */
+figure img[src$="gg-flow-light.svg"]{ background:#fff; padding:18px 14px; border-color:var(--line); }
+/* 플로차트만 본문보다 넓게 펼쳐 글자가 작아지지 않게 합니다 */
+figure:has(img[src$="gg-flow-light.svg"]){ width:min(1080px,92vw); margin-left:50%; transform:translateX(-50%); }

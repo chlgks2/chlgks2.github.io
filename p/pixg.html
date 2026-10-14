@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PixG — AI 픽셀 스프라이트 시트 생성기</title>
 <meta name="description" content="프롬프트 한 번으로 게임에 바로 넣을 수 있는 스프라이트 시트를 생성. 메타버스 아카데미 최종 프로젝트 최우수상.">
-<link rel="stylesheet" href="../assets/css/style.css?v=20261014d">
+<link rel="stylesheet" href="../assets/css/style.css?v=20261015q">
+<!-- 테마 — 되돌리려면 아래 두 줄을 지우십시오 -->
+<link rel="stylesheet" href="../assets/css/theme-light.css?v=20261015k">
+<link rel="stylesheet" href="../assets/css/theme-pixg.css?v=20261015">
 </head>
 <body>
 
@@ -54,16 +57,75 @@
       그래서 <strong>"무엇이 충족돼야 실제로 쓸 수 있는가"를 요구조건 4개로 먼저 못박았습니다.</strong>
     </p>
 
-    <div class="grid2">
-      <figure>
-        <img src="../assets/img/pixg-req.png" alt="요구조건 4개">
-        <figcaption>정의한 요구조건 4개 — <strong>캐릭터 특징 유지 · 미세하게 다른 동작 · 배경 제거 · 균일한 이미지 간격</strong></figcaption>
-      </figure>
-      <figure>
-        <img src="../assets/img/pixg-compare.png" alt="경쟁 서비스 비교">
-        <figcaption>같은 기준으로 비교한 결과 — <strong>DALL·E 3 · Pixelvibe는 2개 충족, PixG는 4개 전부</strong></figcaption>
-      </figure>
+    <div class="shift">
+      <div class="bx">
+        <h6>기존 방식</h6>
+        <p>스프라이트 <em>직접</em> 디자인</p>
+        <p>애니메이션 <em>직접</em> 디자인</p>
+        <p><em>직접</em> 배경 제거</p>
+      </div>
+      <div class="ar">→</div>
+      <div class="bx to">
+        <h6>PixG</h6>
+        <p>스프라이트 <em>자동</em> 생성</p>
+        <p>애니메이션 <em>자동</em> 생성</p>
+        <p><em>자동</em> 배경 제거</p>
+      </div>
     </div>
+
+    <h4>게임 엔진이 읽을 수 있으려면 네 가지가 모두 맞아야 합니다</h4>
+    <div class="reqs">
+      <div class="req4"><div class="n">01</div><div class="t">캐릭터 특징 유지</div>
+        <div class="d">프레임마다 같은 인물로 보여야 합니다</div></div>
+      <div class="req4"><div class="n">02</div><div class="t">미세하게 다른 동작</div>
+        <div class="d">너무 같으면 정지, 너무 다르면 끊깁니다</div></div>
+      <div class="req4"><div class="n">03</div><div class="t">배경 제거</div>
+        <div class="d">투명 배경이어야 맵 위에 올라갑니다</div></div>
+      <div class="req4"><div class="n">04</div><div class="t">균일한 이미지 간격</div>
+        <div class="d">간격이 어긋나면 엔진이 프레임을 못 자릅니다</div></div>
+    </div>
+
+    <h4>같은 기준으로 경쟁 서비스와 비교했습니다</h4>
+    <div class="vs">
+      <div class="vscol">
+        <h6>DALL·E 3</h6>
+        <img src="../assets/img/pixg-c-dalle.png" alt="DALL·E 3 생성 결과" loading="lazy">
+        <ul>
+          <li class="ok">캐릭터 특징 유지</li>
+          <li class="ok">미세하게 다른 동작</li>
+          <li>배경 제거</li>
+          <li>균일한 이미지 간격</li>
+        </ul>
+        <div class="vscount">2 / 4 충족</div>
+      </div>
+      <div class="vscol">
+        <h6>Pixelvibe</h6>
+        <img src="../assets/img/pixg-c-pixelvibe.png" alt="Pixelvibe 생성 결과" loading="lazy">
+        <ul>
+          <li>캐릭터 특징 유지</li>
+          <li class="ok">미세하게 다른 동작</li>
+          <li>배경 제거</li>
+          <li>균일한 이미지 간격</li>
+        </ul>
+        <div class="vscount">1 / 4 충족</div>
+      </div>
+      <div class="vscol win">
+        <h6>PixG</h6>
+        <img src="../assets/img/pixg-c-pixg.png" alt="PixG 생성 결과" loading="lazy">
+        <ul>
+          <li class="ok">캐릭터 특징 유지</li>
+          <li class="ok">미세하게 다른 동작</li>
+          <li class="ok">배경 제거</li>
+          <li class="ok">균일한 이미지 간격</li>
+        </ul>
+        <div class="vscount">4 / 4 충족</div>
+      </div>
+    </div>
+    <p class="chart-cap">
+      세 서비스에 <strong>같은 조건으로 요청</strong>해 받은 결과입니다.
+      경쟁 서비스는 「픽셀 느낌의 이미지」까지는 만들지만,
+      <strong>배경 제거와 균일 배치에서 멈춰 게임 엔진에 바로 넣을 수 없습니다.</strong>
+    </p>
 
     <div class="quote">
       <strong>"픽셀 이미지를 잘 만든다"는 목표로는 무엇을 해야 할지, 언제 끝났다고 할지 알 수 없습니다.</strong>
@@ -126,10 +188,47 @@
         <strong>ControlNet</strong>은 자세(OpenPose)를 받아 <strong>프레임마다 동작만 바꿉니다</strong></figcaption>
     </figure>
 
-    <figure>
-      <img src="../assets/img/pixg-arch.png" alt="기술 융합 구조도">
-      <figcaption>생성 → 후처리 → 배치로 이어지는 전체 구조</figcaption>
-    </figure>
+    <div class="fusion">
+      <div class="fcol">
+        <h6>SERVER</h6>
+        <div class="who">팀원 2명</div>
+        <div class="step">캐릭터 스프라이트 시트 생성 페이지</div>
+        <div class="step">건물 및 사물 생성 페이지</div>
+        <div class="step">미리보기 및 다운로드 페이지</div>
+        <ul>
+          <li>UI/UX 디자인 및 구현</li>
+          <li>마우스오버 · 스크롤 등 화면 효과</li>
+          <li>메인 및 로딩 영상 수정</li>
+        </ul>
+      </div>
+      <div class="fcol mine">
+        <h6>AI</h6>
+        <div class="who">본인 담당</div>
+        <div class="step">Inference — 캐릭터 · 건물/사물 생성 모델</div>
+        <div class="step">Post Processing — 배경 제거</div>
+        <div class="step">Post Processing — 고해상도 변환</div>
+        <ul>
+          <li><strong>Stable Diffusion</strong> — 이미지 생성</li>
+          <li><strong>PyTorch</strong> — 업스케일링 모델(ESRGAN) 적용</li>
+          <li><strong>OpenCV</strong> — 균일한 간격 배치 · GIF 변환</li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h6>DATA SCIENCE</h6>
+        <div class="who">팀원 2명</div>
+        <div class="step">기획안 작성 및 시장조사</div>
+        <div class="step">시장성 검증을 위한 인터뷰</div>
+        <div class="step">생성 모델 실험 지원</div>
+        <ul>
+          <li>Stable Diffusion — 이미지 생성 실험</li>
+        </ul>
+      </div>
+    </div>
+    <p class="chart-cap">
+      프론트에서 받은 프롬프트가 <strong>AI 추론 → 후처리(배경 제거 · 고해상도 변환)</strong> 를 거쳐
+      다시 미리보기 · 다운로드 페이지로 돌아옵니다.
+      <strong>가운데 AI 열 전체가 제 담당</strong>이었습니다.
+    </p>
 
     <h3>생성 결과</h3>
     <div class="gifs">
