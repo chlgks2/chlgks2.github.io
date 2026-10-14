@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Git GUI 로고 — 갈라졌다 다시 합쳐지는 git 브랜치">
+  <!-- 메인 줄기 -->
+  <path d="M68 180 V20" stroke="#2ec4c4" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <!-- 갈라졌다가 다시 합쳐지는 가지 -->
+  <path d="M68 152 C68 128 136 140 136 118 V86 C136 64 68 76 68 52" stroke="#b06ccf" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <!-- 커밋 점 -->
+  <circle cx="68"  cy="180" r="16" fill="#101722" stroke="#2ec4c4" stroke-width="12"/>
+  <circle cx="136" cy="102" r="15" fill="#101722" stroke="#b06ccf" stroke-width="11"/>
+  <circle cx="68"  cy="102" r="15" fill="#101722" stroke="#2ec4c4" stroke-width="11"/>
+  <circle cx="68"  cy="20"  r="20" fill="#2ec4c4"/>
+</svg>
