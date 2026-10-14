@@ -135,7 +135,7 @@
       // 애니메이션을 못 쓰는 환경에서도 알약이 보이도록 한 줄로 눕힌다
       pills.forEach(function (el) {
         el.style.transform = ''; el.style.left = ''; el.style.top = '';
-        el.style.visibility = ''; el.style.position = '';
+        el.style.visibility = ''; el.style.position = ''; el.style.display = '';
       });
       field.classList.add('is-static');
     }
@@ -144,12 +144,16 @@
       cancelAnimationFrame(frame);
       field.classList.remove('is-static');
       var rect = field.getBoundingClientRect();
-      if (rect.width < 300) { layoutStatic(); return; }
+      if (rect.width < 280) { layoutStatic(); return; }
       var floor = rect.height - 4;
       world = new World(rect.width, floor, 470);
       world.top = -340;
 
-      bodies = pills.map(function (el, i) {
+      // 좁은 화면에서는 알약 수를 줄입니다 — 20개가 다 떨어지면 쌓일 자리가 없습니다
+      var keep = rect.width < 430 ? 15 : (rect.width < 720 ? 18 : pills.length);
+      pills.forEach(function (el, i) { el.style.display = i < keep ? '' : 'none'; });
+
+      bodies = pills.slice(0, keep).map(function (el, i) {
         el.style.position = 'absolute';
         el.style.left = '0'; el.style.top = '0';
         el.style.visibility = 'hidden';
